@@ -24,29 +24,25 @@ export default function ExplorePage() {
   }, []);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Explore</h1>
-
-      <div className="grid grid-cols-3 gap-2 auto-rows-[150px] sm:auto-rows-[180px] md:auto-rows-[200px]">
+    <div className="flex flex-col items-center justify-center mt-10 lg:px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
         {images.map((image, index) => {
-          const isBig = (index + 1) % 4 === 0;
+          const isTall = index % 5 === 2; 
 
           return (
             <div
               key={image.id}
-              className={`relative overflow-hidden rounded-md group cursor-pointer ${
-                isBig ? "col-span-3 row-span-2 md:row-span-3" : ""
-              }`}
+              className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
             >
-              {/* Image */}
               <img
                 src={image.url}
                 alt={`Explore ${image.id}`}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
+                  isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
+                }`}
               />
 
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div className="flex gap-4 text-white text-sm font-medium">
                   <div className="flex items-center gap-1">
                     <Heart className="w-4 h-4" />
