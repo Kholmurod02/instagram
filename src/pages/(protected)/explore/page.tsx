@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Heart, MessageCircle } from "lucide-react";
 
@@ -62,3 +63,4 @@ export default function ExplorePage() {
     </div>
   );
 }
+
