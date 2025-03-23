@@ -1,12 +1,11 @@
-const Avatar = () => {
+type ReelsDivProps = {
+	img: string
+}
+const Avatar: React.FC<ReelsDivProps> = ({ img }) => {
 	return (
 		<div>
 			<div className='w-[170px] h-[170px] rounded-full overflow-hidden'>
-				<img
-					src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-mQ4m3Wa3ejCjc_ou5MpeHrd9Xe-rDg5-7A&s'
-					alt=''
-					className='object-cover'
-				/>
+				<img src={img} alt='' className='object-cover' />
 			</div>
 		</div>
 	)
