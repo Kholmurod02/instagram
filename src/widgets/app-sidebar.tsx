@@ -15,7 +15,7 @@ import {
   User, 
   Menu, 
   Instagram,
-  Settings 
+  Settings  
 } from "lucide-react"
 
 
