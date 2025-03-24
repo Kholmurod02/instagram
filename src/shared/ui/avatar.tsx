@@ -4,7 +4,7 @@ type ReelsDivProps = {
 const Avatar: React.FC<ReelsDivProps> = ({ img }) => {
 	return (
 		<div>
-			<div className='w-[170px] h-[170px] rounded-full overflow-hidden'>
+			<div>
 				<img src={img} alt='' className='object-cover' />
 			</div>
 		</div>
