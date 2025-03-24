@@ -1,4 +1,4 @@
-import {  Compass, Home, Inbox, Search, Settings } from "lucide-react"
+import {  Compass, Home, Search, Settings } from "lucide-react"
 
 import {
   Sidebar,

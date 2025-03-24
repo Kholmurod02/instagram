@@ -1,6 +1,6 @@
 const RecomendedUsers = () => {
   return (
-	<div className='border-2 py-3 text-white'>
+	<div className='py-3 text-white'>
 		 <div className='flex justify-between items-center'>
 			<div className='flex gap-3 items-center'>
 				 <div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
