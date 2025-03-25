@@ -4,7 +4,7 @@ type ReelsDivProps = {
 const ReelsDiv: React.FC<ReelsDivProps> = ({ img }) => {
 	return (
 		<div>
-			<aside className='w-[300px] h-[500px]'>
+			<aside className='lg:w-[300px] h-[150px] lg:h-[500px]'>
 				<img src={img} className='object-cover w-full h-full' alt='' />
 			</aside>
 		</div>
