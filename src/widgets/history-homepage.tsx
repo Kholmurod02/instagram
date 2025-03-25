@@ -5,7 +5,7 @@ type THistory = {
 const HistoryHomepage: React.FC<THistory> = ({children}) => {
   return (
 	<>
-		 <div className="flex gap-5 shrink-0">
+		 <div className="md:py-0 py-3 flex gap-5 shrink-0">
 			{children}
 		</div>
 	</>

@@ -10,7 +10,7 @@ export default function HomePage() {
 	return (
 		<>
 			<main>
-				<div className='w-full md:pl-10 flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10 px-4 md:px-0'>
+				<div className='w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10 px-4 md:px-0'>
 					<div className='md:w-[50%] w-[40%]'>
 						<div
 							className='w-full flex gap-5 py-4 overflow-x-auto overflow-y-hidden'
@@ -68,7 +68,7 @@ export default function HomePage() {
 							</ul>
 
 							<p className='text-gray-500 py-4 text-[14px]'>
-								© 2025 Instagram from Meta
+								© 2025 Instagram from Softclub
 							</p>
 						</div>
 					</div>
@@ -127,8 +127,8 @@ export default function HomePage() {
 						</div>
 
 						<span className='text-xs sm:text-sm'>
-							© 2025 Instagram from Meta
-						</span>
+							© 2025 Instagram from Softclub
+						</span>	
 					</div>
 				</div>
 			</footer>
