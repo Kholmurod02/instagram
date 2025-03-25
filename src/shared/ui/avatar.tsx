@@ -1,16 +1,51 @@
-import { Avatar as RadixAvatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import * as React from "react"
+import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
-type ReelsDivProps = {
-	img: string
+import { cn } from "@/shared/lib/utils"
+
+function Avatar({
+  className,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+  return (
+    <AvatarPrimitive.Root
+      data-slot="avatar"
+      className={cn(
+        "relative flex size-8 shrink-0 overflow-hidden rounded-full",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-const Avatar: React.FC<ReelsDivProps> = ({ img }) => {
-	return (
-		<RadixAvatar>
-			<AvatarImage src={img} alt="avatar" className="w-12 h-12 rounded-full object-cover" />
-			<AvatarFallback>?</AvatarFallback>
-		</RadixAvatar>
-	)
+function AvatarImage({
+  className,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+  return (
+    <AvatarPrimitive.Image
+      data-slot="avatar-image"
+      className={cn("aspect-square size-full", className)}
+      {...props}
+    />
+  )
+}
+
+function AvatarFallback({
+  className,
+  ...props
+}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
+  return (
+    <AvatarPrimitive.Fallback
+      data-slot="avatar-fallback"
+      className={cn(
+        "bg-muted flex size-full items-center justify-center rounded-full",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 export { Avatar, AvatarImage, AvatarFallback }
