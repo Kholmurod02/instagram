@@ -6,7 +6,7 @@ type StoryCircleType = {
 const StorySection: React.FC<StoryCircleType> = ({ children }) => {
   return (
     <div>
-      <section className="lg:flex hidden gap-[30px] py-[50px] items-center">
+      <section className="flex w-[90%] m-auto gap-[30px] py-[10px] items-center">
         {children} 
       </section>
     </div>
