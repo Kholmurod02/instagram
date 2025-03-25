@@ -1,4 +1,4 @@
-import Avatar from '@/shared/ui/avatar'
+// import Avatar from '@/shared/ui/avatar'
 import ReelsDiv from '@/shared/ui/reels-div'
 import StoryCircle from '@/shared/ui/story-circle'
 import HeaderSectionProfile from '@/widgets/header-section-profile'
@@ -10,7 +10,7 @@ export default function ProfileByNamePage(){
   return <div className='ml-[300px] overflow-hidden max-w-[900px] w-full py-[50px] '>
     123
     <section className='flex gap-[100px] items-center'>
-      <Avatar img={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-mQ4m3Wa3ejCjc_ou5MpeHrd9Xe-rDg5-7A&s"}/>
+      {/* <Avatar img={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-mQ4m3Wa3ejCjc_ou5MpeHrd9Xe-rDg5-7A&s"}/> */}
       <HeaderSectionProfile/>
     </section>
     <StorySection>
