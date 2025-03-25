@@ -64,7 +64,7 @@ const PostUsersHomepage = () => {
 							<Button
 								variant='ghost'
 								size='icon'
-								className='absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50'
+								className='absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50'
 								onClick={prevSlide}
 							>
 								<ChevronLeft className='h-6 w-6' />
@@ -74,7 +74,7 @@ const PostUsersHomepage = () => {
 							<Button
 								variant='ghost'
 								size='icon'
-								className='absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50'
+								className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50'
 								onClick={nextSlide}
 							>
 								<ChevronRight className='h-6 w-6' />

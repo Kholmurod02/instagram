@@ -10,10 +10,10 @@ export default function HomePage() {
 	return (
 		<>
 			<main>
-				<div className='w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10 px-4 md:px-0'>
-					<div className='md:w-[50%] w-[40%]'>
+				<div className='w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
+					<div className='md:w-[50%] w-[95%] m-auto'>
 						<div
-							className='w-full flex gap-5 py-4 overflow-x-auto overflow-y-hidden'
+							className='w-full max-w-[100vw] flex-nowrap flex py-4 overflow-x-auto overflow-y-hidden'
 							style={{
 								scrollbarWidth: 'none',
 								msOverflowStyle: 'none',
@@ -75,7 +75,7 @@ export default function HomePage() {
 				</div>
 			</main>
 
-			<footer className='w-[40%] md:w-full text-gray-300 py-6 md:py-10 px-4 md:px-6 text-xs sm:text-sm'>
+			<footer className='w-[100%] md:w-full text-gray-300 py-6 md:py-10 px-4 md:px-6 text-xs sm:text-sm'>
 				<div className='max-w-6xl mx-auto'>
 					{/* Ссылки - адаптивное отображение */}
 					<div className='flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4 mb-4'>
