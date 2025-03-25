@@ -40,7 +40,7 @@ export default function HomePage() {
 							<PostUsersHomepage />
 						</PostsHomepage>
 					</div>
-					<div className='md:block hidden md:w-[45%] lg:w-[35%] h-[600px]'>
+					<div className='md:block hidden md:w-[45%] px-4 lg:w-[35%] h-[600px]'>
 						<AboutMe />
 						<div className='flex justify-between'>
 							<h2 className='text-gray-300'>Recomendate for you</h2>
