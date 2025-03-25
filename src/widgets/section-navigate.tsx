@@ -10,19 +10,19 @@ const SectionNavigate = () => {
 		<section className='flex gap-[60px] justify-center w-[95%] border-t-[gray] border-t-[1px] py-[10px] text-[#fff]'>
       <aside className='flex gap-[10px] items-center '>
       <PostIcon/>
-      <p className=''>POSTS</p>
+      <p className='lg:block hidden'>POSTS</p>
       </aside>
       <aside className='flex gap-[10px] items-center'>
       <ReelsIcon/>
-      <p className=''>REELS</p>
+      <p className='lg:block hidden'>REELS</p>
       </aside>
       <aside className='flex gap-[10px] items-center'>
       <SavedIcon/>
-      <p className=''>SAVED</p>
+      <p className='lg:block hidden'>SAVED</p>
       </aside>
       <aside className='flex gap-[10px] items-center'>
       <TaggedIcon/>
-      <p className=''>TAGGED</p>
+      <p className='lg:block hidden'>TAGGED</p>
       </aside>
     </section>		
 	 </div>

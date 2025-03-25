@@ -5,10 +5,10 @@ const SavedIcon = () => {
 				aria-label=''
 				className='x1lliihq x1n2onr6 x1roi4f4'
 				fill='currentColor'
-				height='12'
+				height='20'
 				role='img'
 				viewBox='0 0 24 24'
-				width='12'
+				width='20'
 			>
 				<title></title>
 				<polygon
