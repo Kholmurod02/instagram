@@ -1,41 +1,32 @@
-import { Link, SettingsIcon } from 'lucide-react'
+import { Button } from '@/shared/ui/button'
+import InfoFollowers from '@/shared/ui/infoFollowers'
+import InfoProfile from '@/shared/ui/infoProfile'
+import { SettingsIcon } from 'lucide-react'
 
 const HeaderSectionProfile = () => {
 	return (
 		<div>
 			<aside className='flex flex-col gap-[20px]'>
-				<div className='flex gap-[10px] items-center'>
-					<p className='text-[#fff] text-[20px] '>daster_011_</p>
+				<div className='flex gap-[10px] items-start lg:items-center flex-col lg:flex-row'>
+					<p className='text-[#fff] text-[20px]'>daster_011_</p>
 					<div className='flex gap-[10px] items-center'>
-						<button className='px-[10px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
+						<Button className='px-[20px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
 							Edit Profile
-						</button>
-						<button className='px-[10px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
+						</Button>
+						<Button className='px-[20px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
 							View archive
-						</button>
-						<SettingsIcon className='text-[#fff] cursor-pointer' size={32} />
+						</Button>
+						<SettingsIcon
+							className='text-[#fff] lg:block hidden cursor-pointer'
+							size={32}
+						/>
 					</div>
 				</div>
-				<div className='flex gap-[40px] items-center '>
-					<p className='text-[gray] text-[18px]'>
-						<span className='text-[#fff]'>12 </span>posts
-					</p>
-					<p className='text-[gray] text-[18px]'>
-						<span className='text-[#fff]'>34 </span>followers
-					</p>
-					<p className='text-[gray] text-[18px]'>
-						<span className='text-[#fff]'>359 </span>following
-					</p>
+				<div className='lg:block hidden'>
+					<InfoFollowers />
 				</div>
-				<div className=''>
-					<p className='text-[#fff] text-[20px]'>daster</p>
-					<p className='text-[#fff] text-[20px]'>My youtube chanel</p>
-					<div className='flex gap-[10px] items-center'>
-						<Link className='text-[gray] ' size={20} />
-						<p className='text-blue-500 text-[20px] cursor-pointer'>
-							www.example.gmail.com
-						</p>
-					</div>
+				<div className='lg:block hidden'>
+					<InfoProfile />
 				</div>
 			</aside>
 		</div>
