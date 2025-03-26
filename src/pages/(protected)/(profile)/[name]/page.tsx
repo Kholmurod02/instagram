@@ -37,7 +37,7 @@ export default function ProfileByNamePage() {
 			</div>
 			<Tabs className='border-t-[1px] border-[gray] py-[10px]'>
 				<TabsList className='flex justify-center gap-[50px]'>
-					<TabsTrigger
+					<TabsTrigger 
 						value='Tabs1'
 						className='flex cursor-pointer gap-[10px] items-center'
 					>
