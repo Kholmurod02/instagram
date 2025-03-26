@@ -1,4 +1,3 @@
-import History from '@/features/history/history'
 import PostUsersHomepage from '@/features/posts-users-homepage/post-users-homepage'
 import RecomendedUsers from '@/features/recomended-user-homepage/recomended-users'
 import AboutMe from '@/widgets/about-me-homepage'
@@ -19,19 +18,7 @@ export default function HomePage() {
 								msOverflowStyle: 'none',
 							}}
 						>
-							<HistoryHomepage>
-								{/*здесь массив истории будет рендерится */}
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-							</HistoryHomepage>
+							<HistoryHomepage />
 						</div>
 
 						<PostsHomepage>
