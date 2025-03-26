@@ -10,7 +10,7 @@ export default function HomePage() {
 	return (
 		<>
 			<main>
-				<div className='w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
+				<div className='md:w-[90%] w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
 					<div className='md:w-[50%] w-[95%] m-auto'>
 						<div
 							className='w-full max-w-[100vw] flex-nowrap flex py-4 overflow-x-auto overflow-y-hidden'
