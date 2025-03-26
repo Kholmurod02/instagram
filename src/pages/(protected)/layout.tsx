@@ -11,6 +11,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <Outlet/>
       </main>
-    </SidebarProvider>
+    </SidebarProvider>   
   )
 }

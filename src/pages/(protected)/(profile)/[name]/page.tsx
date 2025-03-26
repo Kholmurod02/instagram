@@ -24,7 +24,7 @@ export default function ProfileByNamePage() {
 					/>
 					<AvatarFallback>SC</AvatarFallback>
 				</Avatar>
-				<HeaderSectionProfile />
+				<HeaderSectionProfile /> 
 			</section>
 			<div className='lg:hidden w-[90%] m-auto block'>
 				<InfoProfile />
