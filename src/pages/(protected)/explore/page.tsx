@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Heart, MessageCircle } from "lucide-react";
-
+ 
 const mockImages = [ 
   { id: 1, url: "https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif", likes: 120, comments: 45 },
   { id: 2, url: "https://media0.giphy.com/media/l3vR85PnGsBwu1PFK/giphy.gif", likes: 95, comments: 18 },
