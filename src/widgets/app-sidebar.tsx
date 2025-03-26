@@ -1,4 +1,3 @@
-'use client'
 
 import {
 	Compass,
@@ -14,10 +13,13 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
+import InstagramPostModal from './instagram-post-modal'
 
 export default function AppSidebar() {
 	const [expanded, setExpanded] = useState(true)
 	const [isMobile, setIsMobile] = useState(false)
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+
 
 	useEffect(() => {
 		const checkScreenSize = () => {
@@ -64,11 +66,12 @@ export default function AppSidebar() {
 					</Link>
 					<button
 						className='flex flex-col items-center justify-center p-2'
-						onClick={() => console.log('Create clicked')}
+						onClick={() => setIsCreateOpen(true)}
 					>
 						<PlusSquare className='w-6 h-6' />{' '}
 						{/* Кнопка создания */}
 					</button>
+          <InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
 					<Link
 						to='/reels'
 						className='flex flex-col items-center justify-center p-2'
@@ -155,11 +158,11 @@ export default function AppSidebar() {
 					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${
 						expanded ? 'justify-start space-x-4' : 'justify-center'
 					}`}
-					onClick={() => {
-						console.log('Create clicked')
-					}}
+					onClick={() => setIsCreateOpen(true)}
 				>
 					<PlusSquare className='w-6 h-6' />
+          <InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
+
 					{expanded && <span>Создать</span>}
 				</button>
 

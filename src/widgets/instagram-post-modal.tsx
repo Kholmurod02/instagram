@@ -1,4 +1,3 @@
-// 'use client'
 import type React from 'react'
 import { useState, useRef, type ChangeEvent, useEffect } from 'react'
 import {
@@ -26,19 +25,19 @@ import {
 	TooltipTrigger,
 } from '@/shared/ui/tooltip'
 import { cn } from '../shared/lib/utils'
-import Normal from '../assests/Normal.jpg'
-import Clarendon from '../assests/clarendon.jpg'
-import Gingham from '../assests/gingham.jpg'
-import Moon from '../assests/moon.jpg'
-import Lark from '../assests/lark.jpg'
-import Juno from '../assests/juno.jpg'
-import Aden from '../assests/aden.jpg'
-import Crema from '../assests/crema.jpg'
-import Ludwig from '../assests/ludwig.jpg'
-import Perpetua from '../assests/perpetua.jpg'
-import Reyes from '../assests/reyes.jpg'
-import Slumber from '../assests/slumber.jpg'
-// import { useAddPostMutation } from '@/entities/comment/api/post/postApi'
+import Normal from '../assets/Normal.jpg'
+import Clarendon from '../assets/Clarendon.jpg'
+import Gingham from '../assets/Gingham.jpg'
+import Moon from '../assets/Moon.jpg'
+import Lark from '../assets/Lark.jpg'
+import Juno from '../assets/Juno.jpg'
+import Aden from '../assets/Aden.jpg'
+import Crema from '../assets/Crema.jpg'
+import Ludwig from '../assets/Ludwig.jpg'
+import Perpetua from '../assets/Perpetua.jpg'
+import Reyes from '../assets/Reyes.jpg'
+import Slumber from '../assets/Slumber.jpg'
+import { useAddPostMutation } from '@/entities/post/postApi'
 
 type Step = 'upload' | 'crop' | 'edit' | 'details'
 type Filter =
@@ -64,7 +63,7 @@ export default function InstagramPostModal({
 	open: boolean
 	setOpen: (open: boolean) => void
 }) {
-	// const [AddPost, { isLoading }] = useAddPostMutation()
+	const [AddPost, { isLoading }] = useAddPostMutation()
 	const [selectedImages, setSelectedImages] = useState<
 		Array<{
 			originalFile: File
@@ -150,7 +149,7 @@ export default function InstagramPostModal({
 		}
 		formData.append('Content', caption)
 		try {
-			// await AddPost(formData)
+			await AddPost(formData)
 			resetModal()
 		} catch (error) {
 			console.error(error)
@@ -653,14 +652,14 @@ export default function InstagramPostModal({
 							<div className='flex items-center gap-2'>
 								<div className='w-8 h-8 rounded-full bg-gray-500 overflow-hidden'>
 									<img
-										src='/placeholder.svg?height=32&width=32'
+										src={Normal}
 										width={32}
 										height={32}
 										alt='Profile'
 										className='object-cover'
 									/>
 								</div>
-								<span className='text-sm text-white'>bussshhhhra</span>
+								<span className='text-sm text-white'>User</span>
 							</div>
 
 							<div className='relative'>
@@ -849,9 +848,9 @@ export default function InstagramPostModal({
 						variant='link'
 						className='text-blue-500 hover:text-blue-600 font-semibold'
 						onClick={handlePost}
-						// disabled={isLoading}
+						disabled={isLoading}
 					>
-						{/* {isLoading ? 'Uploading...' : 'Share'} */}
+						{isLoading ? 'Uploading...' : 'Share'}
 					</Button>
 				)
 			default:
