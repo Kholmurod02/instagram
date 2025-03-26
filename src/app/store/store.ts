@@ -1,7 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { ProfileApi } from './profileSlice/profileSlice'
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    [ProfileApi.reducerPath] : ProfileApi.reducer
+  },
+  middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(ProfileApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
