@@ -79,7 +79,7 @@ export default function ProfileByNamePage() {
 				<StoryModal
 					open={openModal}
 					setOpen={setOpenModal}
-					storyData={StoryData}
+					storyData={StoryData} 
 				/>
 				<HeaderSectionProfile
 					userName={profileData.data?.userName}
