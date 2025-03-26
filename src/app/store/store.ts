@@ -1,5 +1,7 @@
 import { postApi } from '@/entities/post/postApi'
 import { configureStore } from '@reduxjs/toolkit'
+import { reelsApi } from '../providers/reels'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 export const store = configureStore({
   reducer: {
