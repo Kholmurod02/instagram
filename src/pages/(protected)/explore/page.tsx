@@ -1,35 +1,31 @@
-// "use client";
-
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Heart, MessageCircle } from "lucide-react";
 import { useGetPostsQuery } from "../../../entities/post/postApi";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 export default function ExplorePage() {
   const [page, setPage] = useState(1);
+  const { data: posts, isLoading, error, isFetching } = useGetPostsQuery(page);
   const [images, setImages] = useState<
     { id: string; url: string; likes: number; comments: number }[]
   >([]);
-  const { data: posts, isLoading, error, isFetching } = useGetPostsQuery(page);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const lastImageRef = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     if (posts?.data) {
-      // Only add new posts if they don't already exist
-      const newPosts = posts.data.filter(
-        (post: any) => !images.some((img) => img.id === post.postId)
-      ).map((post: any) => ({
-        id: post.postId,
-        url: `https://instagram-api.softclub.tj/images/${post.images[0]}`,
-        likes: post.postLikeCount || 0,
-        comments: post.commentCount || 0,
-      }));
-
-      setImages((prev) => [...prev, ...newPosts]);
+      setImages((prev) => [
+        ...prev,
+        ...posts.data.map((post: any) => ({
+          id: post.postId,
+          url: `https://instagram-api.softclub.tj/images/${post.images[0]}`,
+          likes: post.postLikeCount || 0,
+          comments: post.commentCount || 0,
+        })),
+      ]);
       setHasMore(posts.data.length > 0);
     }
-  }, [posts?.data]);
+  }, [posts]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -42,26 +38,16 @@ export default function ExplorePage() {
   );
 
   useEffect(() => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-
-    observerRef.current = new IntersectionObserver(handleObserver, {
+    const observer = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: "100px",
+      rootMargin: "20px",
       threshold: 0.1,
     });
 
-    if (lastImageRef.current) {
-      observerRef.current.observe(lastImageRef.current);
-    }
+    if (observerRef.current) observer.observe(observerRef.current);
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [handleObserver, images]);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   if (error) {
     return (
@@ -76,12 +62,10 @@ export default function ExplorePage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
         {images.map((image, index) => {
           const isTall = index % 5 === 2;
-          const isLastImage = index === images.length - 1;
 
           return (
             <div
               key={image.id}
-              ref={isLastImage ? lastImageRef : null}
               className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
             >
               <img
@@ -108,13 +92,26 @@ export default function ExplorePage() {
             </div>
           );
         })}
+
+        {(isLoading || isFetching) &&
+          Array.from({ length: 6 }).map((_, index) => {
+            const isTall = index % 5 === 2;
+            return (
+              <div
+                key={`skeleton-${index}`}
+                className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
+              >
+                <Skeleton
+                  className={`w-full ${
+                    isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
+                  }`}
+                />
+              </div>
+            );
+          })}
       </div>
 
-      {isFetching && (
-        <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      )}
+      <div ref={observerRef} className="h-10" />
 
       {!hasMore && !isFetching && (
         <div className="py-8 text-center text-gray-500">
