@@ -179,4 +179,3 @@ export function ChatByIdPage() {
     </div>
   )
 }
-
