@@ -7,6 +7,7 @@ import ChatByIdPage from '@/pages/(protected)/chats/[id]/page'
 import LayoutChats from '@/pages/(protected)/chats/layout'
 import ExplorePage from '@/pages/(protected)/explore/page'
 import Layout from '@/pages/(protected)/layout'
+import ReelsPage from '@/pages/(protected)/reels/page'
 import { BrowserRouter, Route, Routes } from 'react-router'
 
 export default function Router(){
@@ -22,6 +23,7 @@ export default function Router(){
 					<Route path=":id" element={<ChatByIdPage />} />
 				</Route>
 				<Route path=':name' element={<ProfileByNamePage />} />
+				<Route path='reels' element={<ReelsPage/>}/>
 				<Route />
 			</Route>
 		</Routes>
