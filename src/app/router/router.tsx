@@ -7,6 +7,7 @@ import { ChatByIdPage } from '@/pages/(protected)/chats/[id]/page'
 import LayoutChats from '@/pages/(protected)/chats/layout'
 import ExplorePage from '@/pages/(protected)/explore/page'
 import Layout from '@/pages/(protected)/layout'
+import ReelsPage from '@/pages/(protected)/reels/page'
 import { BrowserRouter, Route, Routes } from 'react-router'
 
 export default function Router() {
@@ -18,6 +19,7 @@ export default function Router() {
 				<Route element={<Layout />}>
 					<Route path='/' element={<HomePage />} />
 					<Route path='explore' element={<ExplorePage />} />
+					<Route path='reels' element={<ReelsPage />} />
 					<Route path='chats' element={<LayoutChats />}>
 						<Route index element={<DefaulChatPage />} />
 						<Route path=':id' element={<ChatByIdPage />} />

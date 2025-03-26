@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Edit, ChevronDown } from "lucide-react"
 import { Avatar } from "@/shared/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import userImg from '@/assets/UserIcon.png'
-import { Outlet } from "react-router"
+import { Outlet, useLocation, useNavigate, useParams } from "react-router"
 
 // User data type
 interface UserType {
@@ -20,37 +20,32 @@ interface UserType {
 
 export default function LayoutChats() {
   const [activeTab, setActiveTab] = useState("messages")
+  const [selectedChat, setSelectedChat] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
 
-  // User data
-  const userData: UserType = {
-    sendUserId: "5a4ef730-cf5f-427e-af20-73c7cf601d3e",
-    sendUserName: "murodbek",
-    sendUserImage: "08591c0a-2e99-4b92-b342-c9fbda7c7d82.jpg",
-    chatId: 257,
-    receiveUserId: "9f55c4f8-c453-435d-bc53-5a77ef0cfdcd",
-    receiveUserName: "string",
-    receiveUserImage: "5155995b-c13a-481d-8f79-8502413912ba.png",
-  }
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768) // Tailwind's md breakpoint
+    }
+    
+    checkIfMobile()
+    window.addEventListener('resize', checkIfMobile)
+    
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
 
-  // Mock data for highlights
-  const highlights = [
-    {
-      id: 1,
-      title: "Заметка...",
-      image: userImg,
-    },
-    {
-      id: 2,
-      title: "Ь7",
-      image: userImg,
-    },
-    {
-      id: 3,
-      title: "Shahboz Sharipov",
-      subtitle: "Фармона ждат дорем",
-      image: userImg,
-    },
-  ]
+  // Sync selected chat with URL params
+  useEffect(() => {
+    if (params.id) {
+      setSelectedChat(Number(params.id))
+    } else {
+      setSelectedChat(null)
+    }
+  }, [params.id])
 
   // Mock data for messages
   const mockMessages = [
@@ -75,32 +70,23 @@ export default function LayoutChats() {
       time: "9 ч.",
       avatar: userImg,
     },
-    {
-      id: 3,
-      name: "Umarali Yusufov",
-      message: "Вы отправили вложение.",
-      time: "9 ч.",
-      avatar: userImg,
-    },
-    {
-      id: 3,
-      name: "Umarali Yusufov",
-      message: "Вы отправили вложение.",
-      time: "9 ч.",
-      avatar: userImg,
-    },
-    {
-      id: 3,
-      name: "Umarali Yusufov",
-      message: "Вы отправили вложение.",
-      time: "9 ч.",
-      avatar: userImg,
-    },
   ]
 
+  const handleSelectChat = (chatId: number) => {
+    navigate(`/chats/${chatId}`) // Update URL when chat is selected
+  }
+
+  const handleBackToList = () => {
+    navigate('/chats') // Navigate back to list view
+  }
+
+  // On mobile, if we're viewing a chat, show back button to return to list
+  const showBackButton = isMobile && selectedChat !== null
+
   return (
-    <div className="flex w-full h-full">
-      <div className="flex flex-col w-[700px] h-full bg-black text-white border-r border-gray-800">
+    <div className="flex w-full h-full overflow-hidden">
+      {/* Left sidebar - always visible on desktop, conditionally on mobile */}
+      <div className={`${showBackButton ? 'hidden' : 'flex'} md:flex flex-col w-[120%] md:w-[500px] h-full bg-black text-white border-r border-gray-800`}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800 w-full">
           <div className="flex items-center gap-2">
@@ -111,8 +97,6 @@ export default function LayoutChats() {
             <Edit className="h-6 w-6" />
           </button>
         </div>
-
-      
 
         {/* Tabs and Messages */}
         <Tabs 
@@ -129,20 +113,18 @@ export default function LayoutChats() {
               >
                 Сообщения
               </TabsTrigger>
-              <TabsTrigger
-                value="requests"
-                className="bg-transparent text-lg font-semibold text-gray-400 hover:text-white"
-              >
-                Запросы
-              </TabsTrigger>
             </TabsList>
           </div>
 
           {/* Messages Tab Content */}
           <TabsContent value="messages" className="flex-1 overflow-y-auto mt-0 w-full">
-            <div className="w-full  ">
+            <div className="w-full">
               {mockMessages.map((message) => (
-                <div key={message.id} className="flex items-center gap-3 p-4 hover:bg-gray-800 transition-colors w-full">
+                <div 
+                  key={message.id} 
+                  className={`flex items-center gap-3 p-4 hover:bg-gray-800 transition-colors w-full cursor-pointer ${selectedChat === message.id ? 'bg-gray-800' : ''}`}
+                  onClick={() => handleSelectChat(message.id)}
+                >
                   <Avatar className="h-12 w-12 rounded-full">
                     <img
                       src={message.avatar}
@@ -160,14 +142,38 @@ export default function LayoutChats() {
               ))}
             </div>
           </TabsContent>
-
-          {/* Requests Tab Content */}
-          <TabsContent value="requests" className="flex-1 p-4 w-full">
-            <p className="text-center text-gray-400">No requests yet</p>
-          </TabsContent>
         </Tabs>
       </div>
-      <Outlet className="flex-1"/>
+
+      {/* Right content area - full width on mobile when chat selected */}
+      <div className={`${!selectedChat && isMobile ? 'hidden' : 'flex'} flex-1 flex-col h-full bg-black`}>
+        {/* Back button for mobile */}
+        {showBackButton && (
+          <div className="md:hidden flex items-center p-4 border-b border-gray-800">
+            <button 
+              onClick={handleBackToList}
+              className="flex items-center gap-2 text-white"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Back to messages
+            </button>
+          </div>
+        )}
+        <Outlet />
+      </div>
     </div>
   )
 }

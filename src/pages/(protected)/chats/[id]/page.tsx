@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/shared/ui
 import { Input } from "@/shared/ui/input"
 import { cn } from "@/shared/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar"
+import { useNavigate } from "react-router"
 
 const formSchema = z.object({
   message: z.string().min(1, {
@@ -26,6 +27,8 @@ type Message = {
 }
 
 export function ChatByIdPage() {
+
+  const navigate = useNavigate()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -74,13 +77,19 @@ export function ChatByIdPage() {
     form.reset()
   }
 
+  const handleBackToList = () => {
+    navigate('/chats') // Navigate back to list view
+  }
+
   return (
     <div className="flex flex-col h-screen w-full max-w-md mx-auto bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft
+              onClick={handleBackToList}
+            className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-2">
             <Avatar>
