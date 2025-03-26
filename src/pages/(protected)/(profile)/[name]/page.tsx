@@ -29,13 +29,6 @@ export default function ProfileByNamePage() {
 	if (profileLoading) return <p className=''>Loading...</p>
 	if (postsError) return <p className=''>Error</p>
 	if (postsLoading) return <p className=''>Loading...</p>
-	console.log('====================================')
-	console.log('====================================')
-
-	// localStorage.setItem(
-	// 	'token',
-	// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI5ZjU1YzRmOC1jNDUzLTQzNWQtYmM1My01YTc3ZWYwY2ZkY2QiLCJuYW1lIjoic3RyaW5nIiwiZW1haWwiOiJzdHJpbmciLCJzdWIiOiI1MTU1OTk1Yi1jMTNhLTQ4MWQtOGY3OS04NTAyNDEzOTEyYmEucG5nIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc0Mjk3MjA3MywiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.rNjERoK0oiCLfyd8Zn2wRUmVOwkJUlfPRB76z4Q5I9E'
-	// )
 	return (
 		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] w-full py-[50px]'>
 			<section className='flex w-[90%] m-auto gap-[20px] lg:gap-[100px] items-center'>
@@ -62,9 +55,11 @@ export default function ProfileByNamePage() {
 					about={profileData.data?.about}
 				/>
 			</div>
+      <div className='lg:block hidden'>
 			<StorySection>
 				<StoryCircle />
 			</StorySection>
+      </div>
 			<div className='lg:hidden block'>
 				<InfoFollowers
 					posts={profileData.data?.postCount}
@@ -105,9 +100,11 @@ export default function ProfileByNamePage() {
 				</TabsList>
 			</Tabs>
 			<ReelsContainer>
-				{postsData.map((post : string) => (
+				{postsData.map((post: { images: unknown[]  , postLikeCount : number , comments : object }) => (
 					<ReelsDiv
 						img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+            likes={post.postLikeCount}
+            comments={post.comments}
 					/>
 				))}
 			</ReelsContainer>
