@@ -1,14 +1,14 @@
 import { postApi } from '@/entities/post/postApi'
+import { reelsApi } from '@/entities/reels/reels'
 import { configureStore } from '@reduxjs/toolkit'
-import { reelsApi } from '../providers/reels'
-import { setupListeners } from '@reduxjs/toolkit/query'
 
 export const store = configureStore({
   reducer: {
     [postApi.reducerPath]: postApi.reducer, 
+    [reelsApi.reducerPath]: reelsApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(postApi.middleware),
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware().concat(postApi.middleware, reelsApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

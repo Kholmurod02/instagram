@@ -19,6 +19,7 @@ export default function Router() {
 				<Route element={<Layout />}>
 					<Route path='/' element={<HomePage />} />
 					<Route path='explore' element={<ExplorePage />} />
+					<Route path='reels' element={<ReelsPage />} />
 					<Route path='chats' element={<LayoutChats />}>
 						<Route index element={<DefaulChatPage />} />
 						<Route path=':id' element={<ChatByIdPage />} />

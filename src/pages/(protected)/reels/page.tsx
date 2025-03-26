@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel'
 import { Bookmark, Ellipsis, Heart, MessageCircle, Send } from 'lucide-react'
-import {  useGetReelsQuery, useLikeReelMutation } from '@/app/providers/reels'
+import { useGetReelsQuery, useLikeReelMutation } from '@/entities/reels/reels'
 
 export default function ReelsPage() {
   const [activeVideo, setActiveVideo] = React.useState<number | null>(null)
