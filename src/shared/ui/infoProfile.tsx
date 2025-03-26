@@ -1,4 +1,3 @@
-import { Link } from 'lucide-react'
 const InfoProfile = ({firstName,about}:{firstName:string , about : string}) => {
 	return (
 		<div>
