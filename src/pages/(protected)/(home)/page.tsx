@@ -40,7 +40,7 @@ export default function HomePage() {
 							<PostUsersHomepage />
 						</PostsHomepage>
 					</div>
-					<div className='md:block hidden md:w-[45%] px-4 overflow-x-hidden lg:w-[35%] h-[600px]'>
+					<div className='md:block hidden md:w-[45%] overflow-x-hidden lg:w-[35%] h-[600px]'>
 						<AboutMe />
 						<div className='flex justify-between'>
 							<h2 className='text-gray-300'>Recomendate for you</h2>
@@ -75,7 +75,7 @@ export default function HomePage() {
 				</div>
 			</main>
 
-			<footer className='w-[100%] md:w-full text-gray-300 py-6 md:py-10 px-4 md:px-6 text-xs sm:text-sm'>
+			<footer className='w-[100%] md:w-full text-gray-300 py-6 md:py-10 md:px-6 text-xs sm:text-sm'>
 				<div className='max-w-6xl mx-auto'>
 					{/* Ссылки - адаптивное отображение */}
 					<div className='flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4 mb-4'>
