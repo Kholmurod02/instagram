@@ -18,12 +18,17 @@ export const ProfileApi = createApi({
 			query: () => '/UserProfile/get-my-profile',
 			providesTags: ['Profile'],
 		}),
-		getMyPosts : build.query({
-			query : () => "/Post/get-my-posts",
+		getMyPosts: build.query({
+			query: () => '/Post/get-my-posts',
 			providesTags: ['Profile'],
-		})
+		}),
+		getMyStories: build.query({
+			query: () => '/Story/get-my-stories',
+			providesTags: ['Profile'],
+		}),
 	}),
 })
 
-export const { useGetMyProfileQuery } = ProfileApi 
-export const { useGetMyPostsQuery } = ProfileApi 
+export const { useGetMyProfileQuery } = ProfileApi
+export const { useGetMyPostsQuery } = ProfileApi
+export const { useGetMyStoriesQuery } = ProfileApi
