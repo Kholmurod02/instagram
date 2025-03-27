@@ -69,7 +69,7 @@ export default function InstagramPostModal({
 	  Array<{
 		 originalFile: File
 		 previewUrl: string
-		 type?: "image" | "video"
+		 type?: "image" | "video" 
 	  }>
 	>([])
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -103,44 +103,129 @@ export default function InstagramPostModal({
 	  })
 	}
  
-	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-	  const files = e.target.files
-	  if (files && files.length > 0) {
-		 const fileArray = Array.from(files)
-		 const base64Urls = await Promise.all(
-			fileArray.map(async (file) => ({
-			  originalFile: file,
-			  previewUrl: await fileToBase64(file),
-			  type: file.type.startsWith("video/") ? "video" : "image",
-			})),
-		 )
-		 setSelectedImages(base64Urls)
-		 setCurrentImageIndex(0)
-		 setStep("crop")
-	  }
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const applyFiltersToImage = async (imageUrl: string, filter: Filter, adjustments: any): Promise<File> => {
+	  return new Promise((resolve, reject) => {
+		 const img = new Image()
+		 img.crossOrigin = "anonymous"
+		 img.onload = () => {
+			const canvas = document.createElement("canvas")
+			const ctx = canvas.getContext("2d")
+ 
+			canvas.width = img.width
+			canvas.height = img.height
+ 
+			if (!ctx) {
+			  reject(new Error("Could not get canvas context"))
+			  return
+			}
+ 
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+ 
+			let filterString = ""
+ 
+			filterString += `brightness(${1 + adjustments.brightness / 100}) `
+			filterString += `contrast(${1 + adjustments.contrast / 100}) `
+			filterString += `opacity(${1 - adjustments.fade / 100}) `
+			filterString += `saturate(${1 + adjustments.saturation / 100}) `
+ 
+			if (adjustments.temperature > 0) {
+			  filterString += `sepia(${adjustments.temperature / 100}) `
+			} else {
+			  filterString += `hue-rotate(${adjustments.temperature}deg) `
+			}
+ 
+			if (filter !== "Original") {
+			  filterString += getFilterStyle(filter)
+			}
+ 
+			ctx.filter = filterString
+			ctx.globalCompositeOperation = "source-in"
+ 
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+ 
+			if (adjustments.vignette > 0) {
+			  const gradient = ctx.createRadialGradient(
+				 canvas.width / 2,
+				 canvas.height / 2,
+				 0,
+				 canvas.width / 2,
+				 canvas.height / 2,
+				 Math.max(canvas.width, canvas.height) / 2,
+			  )
+ 
+			  gradient.addColorStop(0, "rgba(0,0,0,0)")
+			  gradient.addColorStop(0.8, "rgba(0,0,0,0)")
+			  gradient.addColorStop(1, `rgba(0,0,0,${adjustments.vignette / 50})`)
+ 
+			  ctx.fillStyle = gradient
+			  ctx.globalCompositeOperation = "source-over"
+			  ctx.fillRect(0, 0, canvas.width, canvas.height)
+			}
+ 
+			canvas.toBlob(
+			  (blob) => {
+				 if (!blob) {
+					reject(new Error("Could not create blob from canvas"))
+					return
+				 }
+ 
+				 const fileName = `filtered_image_${Date.now()}.jpg`
+				 const filteredFile = new File([blob], fileName, { type: "image/jpeg" })
+				 resolve(filteredFile)
+			  },
+			  "image/jpeg",
+			  0.95,
+			)
+		 }
+ 
+		 img.onerror = () => {
+			reject(new Error("Failed to load image"))
+		 }
+ 
+		 img.src = imageUrl
+	  })
 	}
  
-	const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-	  e.preventDefault()
-	  const files = e.dataTransfer.files
-	  if (files && files.length > 0) {
-		 const mediaFiles = Array.from(files).filter(
-			(file) => file.type.startsWith("image/") || file.type.startsWith("video/"),
-		 )
-		 if (mediaFiles.length > 0) {
-			const base64Urls = await Promise.all(
-			  mediaFiles.map(async (file) => ({
-				 originalFile: file,
-				 previewUrl: await fileToBase64(file),
-				 type: file.type.startsWith("video/") ? "video" : "image",
-			  })),
-			)
-			setSelectedImages(base64Urls)
-			setCurrentImageIndex(0)
-			setStep("crop")
-		 }
-	  }
-	}
+	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (files && files.length > 0) {
+		  const fileArray = Array.from(files);
+		  const base64Urls = await Promise.all(
+			 fileArray.map(async (file) => ({
+				originalFile: file,
+				previewUrl: await fileToBase64(file),
+				type: file.type.startsWith("video/") ? ("video" as const) : ("image" as const),
+			 }))
+		  );
+		  setSelectedImages(base64Urls);
+		  setCurrentImageIndex(0);
+		  setStep("crop");
+		}
+	 };
+	 
+	 const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		const files = e.dataTransfer.files;
+		if (files && files.length > 0) {
+		  const mediaFiles = Array.from(files).filter(
+			 (file) => file.type.startsWith("image/") || file.type.startsWith("video/")
+		  );
+		  if (mediaFiles.length > 0) {
+			 const base64Urls = await Promise.all(
+				mediaFiles.map(async (file) => ({
+				  originalFile: file,
+				  previewUrl: await fileToBase64(file),
+				  type: file.type.startsWith("video/") ? ("video" as const) : ("image" as const),
+				}))
+			 );
+			 setSelectedImages(base64Urls);
+			 setCurrentImageIndex(0);
+			 setStep("crop");
+		  }
+		}
+	 };
+	 
  
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault()
@@ -148,15 +233,21 @@ export default function InstagramPostModal({
  
 	const handlePost = async () => {
 	  const formData = new FormData()
-	  for (const image of selectedImages) {
-		 formData.append("Images", image.originalFile)
-	  }
-	  formData.append("Content", caption)
 	  try {
+		 for (const media of selectedImages) {
+			if (media.type === "image") {
+			  const filteredFile = await applyFiltersToImage(media.previewUrl, filter, adjustments)
+			  formData.append("Images", filteredFile)
+			} else {
+			  formData.append("Images", media.originalFile)
+			}
+		 }
+ 
+		 formData.append("Content", caption)
 		 await AddPost(formData)
 		 resetModal()
 	  } catch (error) {
-		 console.error(error)
+		 console.error("Error processing or uploading media:", error)
 	  }
 	}
  
@@ -206,7 +297,6 @@ export default function InstagramPostModal({
 		 setCurrentImageIndex((prev) => prev + 1)
 	  }
 	}
- 
 	const prevImage = () => {
 	  if (currentImageIndex > 0) {
 		 setCurrentImageIndex((prev) => prev - 1)
@@ -849,8 +939,8 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	return (
-	  <Dialog open={open} onOpenChange={setOpen}>
+	return ( 
+<Dialog open={open} onOpenChange={(val) => setOpen(val)}>
 		 <DialogContent
 			aria-describedby={undefined}
 			className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none"
