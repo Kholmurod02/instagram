@@ -155,7 +155,7 @@ export default function ReelsPage() {
                                 </button>
                               </div>
                             )}
-                            <div className="flex items-center space-x-3 text-white absolute bottom-[20px] left-[70px] z-30">
+                            <div className="flex items-center space-x-3 text-white absolute bottom-[-20px] left-[70px] z-30">
                               <img
                                 src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
                                 className="rounded-full w-12 h-12 border-2 border-white"
@@ -172,7 +172,7 @@ export default function ReelsPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="absolute bottom-[0px] z-10 right-5 flex flex-col items-center space-y-4">
+                      <div className="absolute bottom-[-40px] z-10 right-5 flex flex-col items-center space-y-4">
                         <div className="flex flex-col items-center">
                           <Heart
                             className={`w-6 h-6 ${reel.postLike ? 'text-red-500 fill-amber-700' : 'text-white'}`}
