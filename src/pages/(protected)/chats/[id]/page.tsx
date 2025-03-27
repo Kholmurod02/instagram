@@ -133,7 +133,7 @@ export function ChatByIdPage() {
               <Button type="button" variant="ghost" size="icon" className="rounded-full"><Sticker className="h-5 w-5" /></Button>
               <Button type="button" variant="ghost" size="icon" className="rounded-full"><Heart className="h-5 w-5" /></Button>
             </div>
-          </form>
+          </form> 
         </Form>
       </div>
     </div>
