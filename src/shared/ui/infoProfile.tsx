@@ -1,20 +1,13 @@
-import { Link } from 'lucide-react'
-const InfoProfile = () => {
+const InfoProfile = ({firstName,about}:{firstName:string , about : string}) => {
 	return (
 		<div>
-			<div className=''>
+			<div className='py-[20px] lg:py-0 lg:px-0 px-[10px]'>
 				<p className='text-[#fff] text-[12px] font-bold lg:text-[20px]'>
-					daster
+					{firstName}
 				</p>
 				<p className='text-[#fff] text-[12px] lg:text-[20px]'>
-					My youtube chanel
+					{about}
 				</p>
-				<div className='flex gap-[10px] items-center'>
-					<Link className='text-[gray] ' size={20} />
-					<p className='text-blue-500 text-[20px] cursor-pointer'>
-						www.example.gmail.com
-					</p>
-				</div>
 			</div>
 		</div>
 	)

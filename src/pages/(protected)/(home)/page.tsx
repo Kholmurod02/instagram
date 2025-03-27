@@ -1,4 +1,3 @@
-import History from '@/features/history/history'
 import PostUsersHomepage from '@/features/posts-users-homepage/post-users-homepage'
 import RecomendedUsers from '@/features/recomended-user-homepage/recomended-users'
 import AboutMe from '@/widgets/about-me-homepage'
@@ -9,7 +8,7 @@ import RecomendedUserHomepage from '@/widgets/recomended-user-homepage'
 export default function HomePage() {
 	return (
 		<>
-			<main>
+			<main className="transition-all duration-300 ease-in-out">
 				<div className='md:w-[90%] w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
 					<div className='md:w-[50%] w-[95%] m-auto'>
 						<div
@@ -19,19 +18,7 @@ export default function HomePage() {
 								msOverflowStyle: 'none',
 							}}
 						>
-							<HistoryHomepage>
-								{/*здесь массив истории будет рендерится */}
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-								<History />
-							</HistoryHomepage>
+							<HistoryHomepage />
 						</div>
 
 						<PostsHomepage>

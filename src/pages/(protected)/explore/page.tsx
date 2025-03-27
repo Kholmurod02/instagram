@@ -1,66 +1,134 @@
+"use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Heart, MessageCircle } from "lucide-react";
-
-const mockImages = [
-  { id: 1, url: "https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif", likes: 120, comments: 45 },
-  { id: 2, url: "https://media0.giphy.com/media/l3vR85PnGsBwu1PFK/giphy.gif", likes: 95, comments: 18 },
-  { id: 3, url: "https://media4.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif", likes: 150, comments: 22 },
-  { id: 4, url: "https://media2.giphy.com/media/3oKIPtjElfqwMOTbH2/giphy.gif", likes: 87, comments: 12 },
-  { id: 5, url: "https://media2.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif", likes: 200, comments: 55 },
-  { id: 6, url: "https://media2.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif", likes: 111, comments: 30 },
-  { id: 7, url: "https://media2.giphy.com/media/l41lVSYDBC0UVQJCE/giphy.gif", likes: 97, comments: 15 },
-  { id: 8, url: "https://media2.giphy.com/media/xT9IgIc0lryrxvqVGM/giphy.gif", likes: 132, comments: 27 },
-  { id: 9, url: "https://media2.giphy.com/media/3o6ZtpxSZbQRRnwCKQ/giphy.gif", likes: 76, comments: 8 },
-  { id: 10, url: "https://media1.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif", likes: 143, comments: 41 },
-];
+import { useGetPostsQuery } from "../../../entities/post/postApi";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { InstagramDialog } from "./exploreModal";
 
 export default function ExplorePage() {
+  const [page, setPage] = useState(1);
+  const { data: posts, isLoading, error, isFetching } = useGetPostsQuery(page);
   const [images, setImages] = useState<
-    { id: number; url: string; likes: number; comments: number }[]
+    { id: string; url: string; likes: number; comments: number }[]
   >([]);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [selectedPost, setSelectedPost] = useState(null);
+
 
   useEffect(() => {
-    setImages(mockImages);
-  }, []);
+    if (posts?.data) {
+      setImages((prev) => [
+        ...prev,
+        ...posts.data.map((post: any) => ({
+          id: post.postId,
+          url: `https://instagram-api.softclub.tj/images/${post.images[0]}`,
+          likes: post.postLikeCount || 0,
+          commentCount: post.commentCount || 0,
+          comments: post.comments,
+          caption: post.caption||"salom",
+          createdAt: post.datePublished,
+          user: {
+            username: post.userName,
+            avatarUrl: post.userImage,
+          },
+        })),
+      ]);
+      setHasMore(posts.data.length > 0);
+    }
+  }, [posts]);
+
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMore && !isFetching) {
+        setPage((prev) => prev + 1);
+      }
+    },
+    [hasMore, isFetching]
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: "20px",
+      threshold: 0.1,
+    });
+
+    if (observerRef.current) observer.observe(observerRef.current);
+
+    return () => observer.disconnect();
+  }, [handleObserver]);
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen text-red-500">
+        Error loading posts: {"message" in error ? error.message : "Unknown error"}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center mt-10 lg:px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
         {images.map((image, index) => {
-          const isTall = index % 5 === 2; 
+          const isTall = index % 5 === 2;
 
           return (
-            <div
-              key={image.id}
-              className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
-            >
-              <img
-                src={image.url}
-                alt={`Explore ${image.id}`}
-                className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
-                  isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
-                }`}
-              />
-
-              <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="flex gap-4 text-white text-sm font-medium">
-                  <div className="flex items-center gap-1">
-                    <Heart className="w-4 h-4" />
-                    <span>{image.likes}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MessageCircle className="w-4 h-4" />
-                    <span>{image.comments}</span>
+            <InstagramDialog key={image.id} post={image}>
+              <div
+                className={`relative w-full cursor-pointer ${isTall ? "sm:row-span-2" : ""}`}
+                onClick={() => setSelectedPost(image)}
+              >
+                <img
+                  src={image.url}
+                  alt={`Explore ${image.id}`}
+                  className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
+                    isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
+                  }`}
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="flex gap-4 text-white text-sm font-medium">
+                    <div className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      <span>{image.likes}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="w-4 h-4" />
+                      <span>{image.commentCount} </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </InstagramDialog>
           );
         })}
+
+        {(isLoading || isFetching) &&
+          Array.from({ length: 6 }).map((_, index) => {
+            const isTall = index % 5 === 2;
+            return (
+              <div
+                key={`skeleton-${index}`}
+                className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
+              >
+                <Skeleton
+                  className={`w-full ${
+                    isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
+                  }`}
+                />
+              </div>
+            );
+          })}
       </div>
-      
+
+      <div ref={observerRef} className="h-10" />
+
+      {!hasMore && !isFetching && (
+        <div className="py-8 text-center text-gray-500">No more posts to load</div>
+      )}
     </div>
   );
 }
-

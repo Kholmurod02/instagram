@@ -5,11 +5,12 @@ export const postApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://instagram-api.softclub.tj',
     prepareHeaders: (headers) => {
-      // const token = localStorage.getItem('token'); 
-      localStorage.getItem('token'); 
-      // if (token) {
-        headers.set('Authorization', `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI5ZjU1YzRmOC1jNDUzLTQzNWQtYmM1My01YTc3ZWYwY2ZkY2QiLCJuYW1lIjoic3RyaW5nIiwiZW1haWwiOiJzdHJpbmciLCJzdWIiOiI1MTU1OTk1Yi1jMTNhLTQ4MWQtOGY3OS04NTAyNDEzOTEyYmEucG5nIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiVXNlciIsImV4cCI6MTc0MzA1NzI5MCwiaXNzIjoiaW5zdGFncmFtLWdyb3VwIiwiYXVkIjoiaW5zdGFncmFtLWFwaSJ9.uo65tZXRd4qF0dMzJaBkHR2Pn2eXQcF0Wsq_AbW5UeU`);
-      // }
+
+      const access_token = localStorage.getItem('access_token'); 
+      if (access_token) {
+        headers.set('Authorization', `Bearer ${access_token}`);
+      }
+
       return headers;
     },
   }),
@@ -23,7 +24,13 @@ export const postApi = createApi({
       }),
       invalidatesTags: ['Posts'],
     }),
+    getPosts: builder.query({
+      query: () => '/Post/get-posts',
+      providesTags: ['Posts'],
+    }),
+
   }),
 });
 
-export const { useAddPostMutation } = postApi;
+export const { useAddPostMutation,useGetPostsQuery
+} = postApi;

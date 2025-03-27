@@ -6,6 +6,8 @@ import { Avatar } from "@/shared/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import userImg from '@/assets/UserIcon.png'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router"
+import {  useGetChatsQuery } from "@/entities/chats/chat-api"
+import {jwtDecode} from 'jwt-decode'
 
 // User data type
 interface UserType {
@@ -23,18 +25,20 @@ export default function LayoutChats() {
   const [selectedChat, setSelectedChat] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
-  const location = useLocation()
+  // const location = useLocation()
   const params = useParams()
+
+  const { data, error, isLoading } = useGetChatsQuery()
 
   // Check if mobile on mount and resize
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768) // Tailwind's md breakpoint
     }
-    
+
     checkIfMobile()
     window.addEventListener('resize', checkIfMobile)
-    
+
     return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
 
@@ -48,29 +52,7 @@ export default function LayoutChats() {
   }, [params.id])
 
   // Mock data for messages
-  const mockMessages = [
-    {
-      id: 1,
-      name: "Шариф Юсупов",
-      message: "Шариф отправил(-а) вложение.",
-      time: "1 ч.",
-      avatar: userImg,
-    },
-    {
-      id: 2,
-      name: "Тую маъракакхо",
-      message: "Бла ридм ай хандара",
-      time: "4 ч.",
-      avatar: userImg,
-    },
-    {
-      id: 3,
-      name: "Umarali Yusufov",
-      message: "Вы отправили вложение.",
-      time: "9 ч.",
-      avatar: userImg,
-    },
-  ]
+  
 
   const handleSelectChat = (chatId: number) => {
     navigate(`/chats/${chatId}`) // Update URL when chat is selected
@@ -83,6 +65,18 @@ export default function LayoutChats() {
   // On mobile, if we're viewing a chat, show back button to return to list
   const showBackButton = isMobile && selectedChat !== null
 
+
+
+  const [tokenId , setTokenId] = useState(null)
+  const [userName , setUserName] = useState("")
+
+  useEffect(()=>{
+    const accessToken = localStorage.getItem("access_token")
+      setTokenId(jwtDecode(accessToken).sid)
+      setUserName(jwtDecode(accessToken).name)
+  },[])
+  
+
   return (
     <div className="flex w-full h-full overflow-hidden">
       {/* Left sidebar - always visible on desktop, conditionally on mobile */}
@@ -90,7 +84,9 @@ export default function LayoutChats() {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-800 w-full">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold">khairulloev.01</h1>
+          <h1 className="text-xl font-bold">
+              {userName}
+                  </h1>
             <ChevronDown className="h-5 w-5" />
           </div>
           <button className="p-2">
@@ -99,10 +95,10 @@ export default function LayoutChats() {
         </div>
 
         {/* Tabs and Messages */}
-        <Tabs 
-          defaultValue="messages" 
-          value={activeTab} 
-          onValueChange={setActiveTab} 
+        <Tabs
+          defaultValue="messages"
+          value={activeTab}
+          onValueChange={setActiveTab}
           className="flex-1 flex flex-col w-full h-[calc(100%-200px)]"
         >
           <div className="border-b border-gray-800 w-full">
@@ -119,24 +115,24 @@ export default function LayoutChats() {
           {/* Messages Tab Content */}
           <TabsContent value="messages" className="flex-1 overflow-y-auto mt-0 w-full">
             <div className="w-full">
-              {mockMessages.map((message) => (
-                <div 
-                  key={message.id} 
-                  className={`flex items-center gap-3 p-4 hover:bg-gray-800 transition-colors w-full cursor-pointer ${selectedChat === message.id ? 'bg-gray-800' : ''}`}
-                  onClick={() => handleSelectChat(message.id)}
+              {data?.data?.map((chat) => (
+                <div
+                  key={chat.chatId}
+                  className={`flex items-center gap-3 p-4 hover:bg-gray-800 transition-colors w-full cursor-pointer ${selectedChat === chat.id ? 'bg-gray-800' : ''}`}
+                  onClick={() => handleSelectChat(chat.chatId)}
                 >
                   <Avatar className="h-12 w-12 rounded-full">
                     <img
-                      src={message.avatar}
-                      alt={message.name}
+                      src={`https://instagram-api.softclub.tj/images/${chat.sendUserId === tokenId ? chat?.receiveUserImage : chat.sendUserImage}`}
+                      alt={chat.sendUserId === tokenId ? chat?.receiveUserName[0] : chat.sendUserName[0]}
                       className="h-full w-full object-cover"
                     />
                   </Avatar>
                   <div className="flex-1">
-                    <h3 className="font-semibold">{message.name}</h3>
-                    <p className="text-gray-400 text-sm">
-                      {message.message} · {message.time}
-                    </p>
+                    <h3 className="font-semibold">{chat.sendUserId === tokenId ? chat?.receiveUserName : chat.sendUserName}</h3>
+                    {/* <p className="text-gray-400 text-sm">
+                      {chat.chat} · {chat.time}
+                    </p> */}
                   </div>
                 </div>
               ))}
@@ -150,19 +146,19 @@ export default function LayoutChats() {
         {/* Back button for mobile */}
         {showBackButton && (
           <div className="md:hidden flex items-center p-4 border-b border-gray-800">
-            <button 
+            <button
               onClick={handleBackToList}
               className="flex items-center gap-2 text-white"
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <line x1="19" y1="12" x2="5" y2="12"></line>
