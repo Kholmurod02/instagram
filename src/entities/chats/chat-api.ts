@@ -1,0 +1,29 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+export const chatApi = createApi({
+    reducerPath: "chatsCache", // Лучше исправить "chatsCash" на "chatsCache"
+    baseQuery: fetchBaseQuery({ 
+        baseUrl: "https://instagram-api.softclub.tj",
+        prepareHeaders: (headers) => {
+            const access_token = localStorage.getItem("access_token");
+            
+            if (access_token) {
+                headers.set("Authorization", `Bearer ${access_token}`);      
+            }
+            return headers;
+        },
+    }),
+    tagTypes: ["Chats"], // Исправил на Chats (с большой буквы, это стандарт Redux)
+    endpoints: (builder) => ({
+        getChats: builder.query({
+            query: () => "/Chat/get-chats",
+            providesTags: ["Chats"], // Чаты кешируются
+        }),
+        getChatById: builder.query({
+            query: (id) => `/Chat/get-chat-by-id?chatId=${id}`,
+            providesTags: (result, error, id) => [{ type: "Chats", id }], // Кеширование по ID
+        }),
+    }),
+});
+
+export const { useGetChatsQuery, useGetChatByIdQuery } = chatApi;
