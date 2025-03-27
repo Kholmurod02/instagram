@@ -148,7 +148,7 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
             <div className="h-full w-full bg-black rounded-md overflow-hidden">
               {storyData.data?.stories.length > 0 && (
                 <video
-                  ref={(el) => (videoRefs.current[currentIndex] = el)} // Привязываем реф к видео
+                  ref={(el) => {videoRefs.current[currentIndex] = el}} 
                   autoPlay
                   key={storyData.data?.stories[currentIndex].id}
                   className="w-full h-full object-contain"
