@@ -3,22 +3,24 @@ import { postApi } from '@/entities/post/postApi'
 import { reelsApi } from '@/entities/reels/reels'
 import { configureStore } from '@reduxjs/toolkit'
 import { ProfileApi } from './profileSlice/profileSlice'
+import { historyApi } from '@/entities/story-homepage/story-homepage'
 
 export const store = configureStore({
   reducer: {
     [postApi.reducerPath]: postApi.reducer,
     [reelsApi.reducerPath]: reelsApi.reducer,
-<<<<<<< HEAD
-    [chatApi.reducerPath]: chatApi.reducer
+    [chatApi.reducerPath]: chatApi.reducer,
+    [ProfileApi.reducerPath]: ProfileApi.reducer, 
+    [historyApi.reducerPath]: historyApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(postApi.middleware, reelsApi.middleware, chatApi.middleware),
-=======
-    [ProfileApi.reducerPath] : ProfileApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(postApi.middleware, reelsApi.middleware, ProfileApi.middleware),
->>>>>>> e3beddc98a34fcc5d38bb9cfa49a41140172d6be
+    getDefaultMiddleware().concat(
+      postApi.middleware,
+      reelsApi.middleware,
+      chatApi.middleware,
+      ProfileApi.middleware,
+      historyApi.middleware
+    ),
 })
 
 export type RootState = ReturnType<typeof store.getState>
