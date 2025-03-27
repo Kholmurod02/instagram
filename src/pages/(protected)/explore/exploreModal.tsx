@@ -12,7 +12,6 @@ import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
 import { Input } from '@/shared/ui/input'
 import { cn } from '../../../shared/lib/utils'
-import Like from '@/features/component/Like'
 
 interface Post {
 	id: string
@@ -97,7 +96,7 @@ export function InstagramDialog({
 						<div className='p-3 border-t border-b'>
 							<div className='flex justify-between'>
 								<div className='flex gap-2'>
-								<Like postId={post.id} initialLiked={post.liked} initialLikes={post.likes} />
+									<LikeButton initialLikes={post.postLikeCount} />
 									<Button
 										variant='ghost'
 										size='icon'
