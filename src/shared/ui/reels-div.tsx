@@ -7,7 +7,7 @@ type ReelsDivProps = {
 }
 const ReelsDiv: React.FC<ReelsDivProps> = ({ img , likes , comments }) => {
 	return (
-		<div className='relative group overflow-hidden'>
+		<div className='relative group cursor-pointer overflow-hidden'>
 			<aside className='lg:w-[300px] h-[150px] lg:h-[500px]'>
 				<img
 					src={img}
