@@ -69,7 +69,7 @@ export default function InstagramPostModal({
 	  Array<{
 		 originalFile: File
 		 previewUrl: string
-		 type?: "image" | "video" // Make type optional with a default
+		 type?: "image" | "video"
 	  }>
 	>([])
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
