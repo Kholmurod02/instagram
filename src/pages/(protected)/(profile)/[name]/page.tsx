@@ -148,7 +148,7 @@ export default function ProfileByNamePage() {
 					}) => (
 						<ReelsDiv
 							img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
-							likes={post.postLikeCount}
+							likes={post.postLikeCount} 
 							comments={post.comments}
 						/>
 					)
