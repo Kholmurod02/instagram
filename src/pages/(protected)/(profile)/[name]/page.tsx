@@ -11,29 +11,105 @@ import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
+import { useGetMyPostsQuery } from '@/app/store/profileSlice/profileSlice'
+import { useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
+import StoriesCircle from '@/widgets/storiesCircle'
+import { useState } from 'react'
+import { StoryModal } from '@/widgets/StoriesModal'
 
 export default function ProfileByNamePage() {
+	const [isViewed, setIsViewed] = useState(false)
+	const [openModal, setOpenModal] = useState(false)
+	function clickOpenModal() {
+		setIsViewed(true)
+		setOpenModal(true)
+	}
+	const {
+		data: profileData,
+		error: profileError,
+		isLoading: profileLoading,
+	} = useGetMyProfileQuery(undefined)
+	const {
+		data: postsData,
+		error: postsError,
+		isLoading: postsLoading,
+	} = useGetMyPostsQuery(undefined)
+	const {
+		data: StoryData,
+		error: StoryError,
+		isLoading: StoryLoading,
+	} = useGetMyStoriesQuery(undefined)
+
+	if (profileError) return <p className=''>Error</p>
+	if (profileLoading) return <p className=''>Loading...</p>
+	if (postsError) return <p className=''>Error</p>
+	if (postsLoading) return <p className=''>Loading...</p>
+	if (StoryError) return <p className=''>Error</p>
+	if (StoryLoading) return <p className=''>Loading...</p>
+
+	console.log('====================================')
+	console.log(StoryData.data.stories)
+	console.log('====================================')
 	return (
-		<div className='lg:ml-[100px] ml-0 overflow-hidden max-w-[900px] w-full py-[50px]'>
+		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] w-full py-[50px]'>
 			<section className='flex w-[90%] m-auto gap-[20px] lg:gap-[100px] items-center'>
-				<Avatar>
-					<AvatarImage
-						src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-mQ4m3Wa3ejCjc_ou5MpeHrd9Xe-rDg5-7A&s'
-						className='lg:w-[200px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
-						alt='Profile Image'
-					/>
-					<AvatarFallback>SC</AvatarFallback>
-				</Avatar>
-				<HeaderSectionProfile />
+				<div
+					className={`rounded-full cursor-pointer p-[2px] ${
+						isViewed
+							? 'bg-gray-500'
+							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
+					}`}
+				>
+					<Avatar onClick={clickOpenModal}>
+						<AvatarImage
+							src={`https://instagram-api.softclub.tj/images/${profileData.data.image}`}
+							className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+							alt='Profile Image'
+						/>
+						<AvatarFallback>
+							<AvatarImage
+								src='https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
+								className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+								alt='Profile Image'
+							/>
+						</AvatarFallback>
+					</Avatar>
+				</div>
+				<StoryModal
+					open={openModal}
+					setOpen={setOpenModal}
+					storyData={StoryData} 
+				/>
+				<HeaderSectionProfile
+					userName={profileData.data?.userName}
+					posts={profileData.data?.postCount}
+					followers={profileData.data?.subscribersCount}
+					following={profileData.data?.subscriptionsCount}
+					firstName={profileData.data?.firstName}
+					about={profileData.data?.about}
+				/>
 			</section>
 			<div className='lg:hidden w-[90%] m-auto block'>
-				<InfoProfile />
+				<InfoProfile
+					firstName={profileData.data?.firstName}
+					about={profileData.data?.about}
+				/>
 			</div>
-			<StorySection>
-				<StoryCircle />
-			</StorySection>
+			<div className='hidden lg:flex gap-[20px] items-center'>
+				<StorySection>
+					<StoryCircle />
+				</StorySection>
+				<div className='flex gap-[20px] items-center'>
+					<StoriesCircle />
+				</div>
+			</div>
 			<div className='lg:hidden block'>
-				<InfoFollowers />
+				<InfoFollowers
+					posts={profileData.data?.postCount}
+					followers={profileData.data?.subscribersCount}
+					following={profileData.data?.subscriptionsCount}
+				/>
 			</div>
 			<Tabs className='border-t-[1px] border-[gray] py-[10px]'>
 				<TabsList className='flex justify-center gap-[50px]'>
@@ -68,9 +144,19 @@ export default function ProfileByNamePage() {
 				</TabsList>
 			</Tabs>
 			<ReelsContainer>
-				<ReelsDiv img='https://media4.giphy.com/media/8t6ef4FCRAAOgS2EnQ/giphy.gif?cid=6c09b952alimog7hjq2kzudoxrgtqtmmswlg6b3zfwwnh88p&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g' />
-				<ReelsDiv img='https://media4.giphy.com/media/8t6ef4FCRAAOgS2EnQ/giphy.gif?cid=6c09b952alimog7hjq2kzudoxrgtqtmmswlg6b3zfwwnh88p&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g' />
-				<ReelsDiv img='https://media4.giphy.com/media/8t6ef4FCRAAOgS2EnQ/giphy.gif?cid=6c09b952alimog7hjq2kzudoxrgtqtmmswlg6b3zfwwnh88p&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g' />
+				{postsData.map(
+					(post: {
+						images: unknown[]
+						postLikeCount: number
+						comments: object
+					}) => (
+						<ReelsDiv
+							img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+							likes={post.postLikeCount}
+							comments={post.comments}
+						/>
+					)
+				)}
 			</ReelsContainer>
 		</div>
 	)

@@ -610,8 +610,7 @@ export default function InstagramPostModal({
 								 "cursor-pointer flex flex-col items-center",
 								 filter === filterName && "text-blue-500",
 							  )}
-							  onClick={() => setFilter(filterName as Filter)}
-							>
+							  onClick={() => setFilter(filterName as Filter)}>
 							  <div className="w-16 h-16 rounded overflow-hidden mb-1">
 								 {balloonImageLoaded ? (
 									<img
