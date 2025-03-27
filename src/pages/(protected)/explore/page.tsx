@@ -1,7 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+"use client";
+
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Heart, MessageCircle } from "lucide-react";
 import { useGetPostsQuery } from "../../../entities/post/postApi";
 import { Skeleton } from "@/shared/ui/skeleton";
+import { InstagramDialog } from "./exploreModal";
 
 export default function ExplorePage() {
   const [page, setPage] = useState(1);
@@ -11,6 +14,7 @@ export default function ExplorePage() {
   >([]);
   const observerRef = useRef<HTMLDivElement>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     if (posts?.data) {
@@ -21,6 +25,12 @@ export default function ExplorePage() {
           url: `https://instagram-api.softclub.tj/images/${post.images[0]}`,
           likes: post.postLikeCount || 0,
           comments: post.commentCount || 0,
+          caption: post.caption,
+          createdAt: post.createdAt,
+          user: {
+            username: post.username,
+            avatarUrl: post.userAvatar,
+          },
         })),
       ]);
       setHasMore(posts.data.length > 0);
@@ -64,32 +74,33 @@ export default function ExplorePage() {
           const isTall = index % 5 === 2;
 
           return (
-            <div
-              key={image.id}
-              className={`relative w-full ${isTall ? "sm:row-span-2" : ""}`}
-            >
-              <img
-                src={image.url}
-                alt={`Explore ${image.id}`}
-                className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
-                  isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
-                }`}
-                loading="lazy"
-              />
-
-              <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="flex gap-4 text-white text-sm font-medium">
-                  <div className="flex items-center gap-1">
-                    <Heart className="w-4 h-4" />
-                    <span>{image.likes}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MessageCircle className="w-4 h-4" />
-                    <span>{image.comments}</span>
+            <InstagramDialog key={image.id} post={image}>
+              <div
+                className={`relative w-full cursor-pointer ${isTall ? "sm:row-span-2" : ""}`}
+                onClick={() => setSelectedPost(image)}
+              >
+                <img
+                  src={image.url}
+                  alt={`Explore ${image.id}`}
+                  className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
+                    isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
+                  }`}
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="flex gap-4 text-white text-sm font-medium">
+                    <div className="flex items-center gap-1">
+                      <Heart className="w-4 h-4" />
+                      <span>{image.likes}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="w-4 h-4" />
+                      <span>{image.comments}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </InstagramDialog>
           );
         })}
 
@@ -114,9 +125,7 @@ export default function ExplorePage() {
       <div ref={observerRef} className="h-10" />
 
       {!hasMore && !isFetching && (
-        <div className="py-8 text-center text-gray-500">
-          No more posts to load
-        </div>
+        <div className="py-8 text-center text-gray-500">No more posts to load</div>
       )}
     </div>
   );

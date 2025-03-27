@@ -34,7 +34,6 @@ export function InstagramDialog({ children, post }: {
       </DialogTrigger>
       <DialogContent className="max-w-5xl p-0 gap-0 overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 h-[80vh]">
-          {/* Left side - Post content */}
           <div className="bg-black flex items-center justify-center">
             <img
               src={post.mediaUrl}
@@ -43,15 +42,13 @@ export function InstagramDialog({ children, post }: {
             />
           </div>
 
-          {/* Right side - Comments */}
           <div className="flex flex-col h-full">
-            {/* Header */}
             <div className="flex items-center justify-between p-3 border-b">
               <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src={post.user?.avatarUrl || "/placeholder.svg"} alt={post.user?.username} />
                   <AvatarFallback>
-                    {post.user?.username.slice(0, 2).toUpperCase() || "PO"}
+                    {post.user?.username?.slice(0, 2).toUpperCase() || "PO"}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -63,9 +60,7 @@ export function InstagramDialog({ children, post }: {
               </Button>
             </div>
 
-            {/* Comments section */}
             <div className="flex-1 overflow-y-auto p-3 space-y-1">
-              {/* Original post caption */}
               {post.caption && (
                 <CommentItem
                   username={post.user?.username || "username"}
@@ -74,27 +69,9 @@ export function InstagramDialog({ children, post }: {
                   avatar={post.user?.avatarUrl}
                 />
               )}
-
-              {/* You would map through actual comments here */}
-              {/* For now using placeholders */}
               <div className="h-[1px] w-full bg-border my-2"></div>
-              <CommentItem
-                username="user1"
-                comment="This is a great post!"
-                timeAgo="2d"
-                likes={5}
-                avatar="/placeholder.svg"
-              />
-              <CommentItem
-                username="user2"
-                comment="Nice picture!"
-                timeAgo="1d"
-                likes={3}
-                avatar="/placeholder.svg"
-              />
             </div>
 
-            {/* Action buttons */}
             <div className="p-3 border-t border-b">
               <div className="flex justify-between">
                 <div className="flex gap-2">
@@ -118,7 +95,6 @@ export function InstagramDialog({ children, post }: {
               </div>
             </div>
 
-            {/* Comment input */}
             <div className="p-3 flex items-center gap-2">
               <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full">
                 <Smile className="h-6 w-6" />
@@ -145,7 +121,40 @@ export function InstagramDialog({ children, post }: {
   );
 }
 
-// Helper function to format date as time ago
+function CommentItem({ username, comment, timeAgo, avatar }: { username: string; comment: string; timeAgo: string; avatar?: string }) {
+  return (
+    <div className="flex gap-2 items-start">
+      <Avatar>
+        <AvatarImage src={avatar || "/placeholder.svg"} alt={username} />
+        <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <div>
+        <p className="text-sm"><span className="font-semibold">{username}</span> {comment}</p>
+        <p className="text-xs text-muted-foreground">{timeAgo}</p>
+      </div>
+    </div>
+  );
+}
+
+function LikeButton({ initialLikes }: { initialLikes: number }) {
+  const [likes, setLikes] = useState(initialLikes);
+  const [liked, setLiked] = useState(false);
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-9 w-9 rounded-full"
+      onClick={() => {
+        setLiked(!liked);
+        setLikes(liked ? likes - 1 : likes + 1);
+      }}
+    >
+      <Heart className={`h-6 w-6 ${liked ? "text-red-500" : "text-gray-500"}`} />
+    </Button>
+  );
+}
+
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
