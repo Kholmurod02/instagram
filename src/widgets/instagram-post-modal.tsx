@@ -58,8 +58,8 @@ type Filter =
 type TabType = 'filters' | 'adjustments'
 
 export default function InstagramPostModal({
-	setOpen,
 	open,
+	setOpen,
  }: {
 	open: boolean
 	setOpen: (open: boolean) => void
