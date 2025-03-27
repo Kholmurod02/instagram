@@ -939,23 +939,31 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	return ( 
-<Dialog open={open} onOpenChange={(val) => setOpen(val)}>
-		 <DialogContent
-			aria-describedby={undefined}
-			className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none"
-		 >
-			<DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
-			  {step !== "upload" && (
-				 <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
-					<ChevronLeft className="h-5 w-5" />
-				 </Button>
-			  )}
-			  <DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
-			  {getActionButton()}
-			</DialogHeader>
-			{renderStepContent()}
-		 </DialogContent>
-	  </Dialog>
-	)
+	return (
+		<Dialog 
+		  open={open} 
+		  onOpenChange={(val) => {
+			 if (!val) {
+				resetModal();
+			 }
+			 setOpen(val);
+		  }}
+		>
+		  <DialogContent
+			 aria-describedby={undefined}
+			 className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
+		  >
+			 <DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
+				{step !== "upload" && (
+				  <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
+					 <ChevronLeft className="h-5 w-5" />
+				  </Button>
+				)}
+				<DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
+				{getActionButton()}
+			 </DialogHeader>
+			 {renderStepContent()}
+		  </DialogContent>
+		</Dialog>
+	 )
  }
