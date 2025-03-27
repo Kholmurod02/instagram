@@ -4,6 +4,7 @@ import { reelsApi } from '@/entities/reels/reels'
 import { configureStore } from '@reduxjs/toolkit'
 import { ProfileApi } from './profileSlice/profileSlice'
 import { historyApi } from '@/entities/story-homepage/story-homepage'
+import { usersHomepageApi } from '@/entities/users-homepage/users-homepage'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [chatApi.reducerPath]: chatApi.reducer,
     [ProfileApi.reducerPath]: ProfileApi.reducer, 
     [historyApi.reducerPath]: historyApi.reducer,
+    [usersHomepageApi.reducerPath]: usersHomepageApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -19,7 +21,8 @@ export const store = configureStore({
       reelsApi.middleware,
       chatApi.middleware,
       ProfileApi.middleware,
-      historyApi.middleware
+      historyApi.middleware,
+      usersHomepageApi.middleware,
     ),
 })
 

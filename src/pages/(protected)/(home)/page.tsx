@@ -33,13 +33,9 @@ export default function HomePage() {
 							<h2 className='text-gray-300'>Recomendate for you</h2>
 							<p className='hover:text-gray-400 cursor-pointer'>All</p>
 						</div>
-						<RecomendedUserHomepage>
-							<RecomendedUsers />
-							<RecomendedUsers />
-							<RecomendedUsers />
-							<RecomendedUsers />
-							<RecomendedUsers />
-						</RecomendedUserHomepage>
+
+						<RecomendedUserHomepage />
+						
 						<div className='w-[75%] py-3'>
 							<ul className='flex flex-wrap text-[12px] text-gray-500'>
 								<li className='hover:underline'>&nbsp;Информация •</li>
