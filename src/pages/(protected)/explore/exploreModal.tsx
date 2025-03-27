@@ -178,6 +178,7 @@ function CommentItem({
 				<AvatarImage src={avatar || '/placeholder.svg'} alt={username} />
 				<AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
+			
 			<div>
 				<p className='text-sm'>
 					<span className='font-semibold'>{username}</span> {comment}
@@ -206,7 +207,7 @@ function LikeButton({ initialLikes }: { initialLikes: number }) {
 				className={`h-6 w-6 ${liked ? 'text-red-500' : 'text-gray-500'}`}
 			/>
 		</Button>
-		
+
 	)
 }
 
