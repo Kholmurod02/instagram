@@ -7,7 +7,7 @@ export const reelsApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("access_token");
       console.log("🔑Токен:", token);
-      if (token) {
+      if (token) {  
         headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;

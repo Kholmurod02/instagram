@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useEffect, useState, useRef } from 'react'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel'
+import { Skeleton } from "@/shared/ui/skeleton"
 import {
   Bookmark,
   Ellipsis,
@@ -21,7 +22,7 @@ export default function ReelsPage() {
   const { data: reels, error, isLoading } = useGetReelsQuery('')
   const [followUser] = useFollowingMutation()
   const [pausedVideo, setPausedVideo] = useState<number | null>(null)
-  const [liked, setLiked] = useState<{ [key: string]: boolean }>({}) 
+  const [liked, setLiked] = useState<{ [key: string]: boolean }>({})
   const [messangeDialog, setMessangeDialog] = useState<boolean>(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [openedCommentDialog, setOpenedCommentDialog] = useState<number | null>(null)
@@ -37,18 +38,11 @@ export default function ReelsPage() {
 
       if (e.key === 'ArrowDown') {
         setCurrentIndex((prev) => Math.min(reels.data.length - 1, prev + 1))
-        videoRefs.current.forEach((vid, i) => {
-          if (vid && i !== currentIndex) vid.pause()
-        })
       }
       if (e.key === 'ArrowUp') {
         setCurrentIndex((prev) => Math.max(prev - 1, 0))
-        videoRefs.current.forEach((vid, i) => {
-          if (vid && i !== currentIndex) vid.play()
-        })
       }
     }
-
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -57,6 +51,13 @@ export default function ReelsPage() {
   useEffect(() => {
     if (!reels?.data || currentIndex === null) return
     const video = videoRefs.current[currentIndex]
+
+    videoRefs.current.forEach((vid, i) => {
+      if (vid && i !== currentIndex) {
+        vid.pause()
+      }
+    })
+
     if (video) {
       video.scrollIntoView({ behavior: 'smooth', block: 'center' })
       video.play()
@@ -65,7 +66,16 @@ export default function ReelsPage() {
     }
   }, [currentIndex, reels?.data])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return<div className="flex ml-[300px] mt-[10px] flex-col m-auto items-center justify-center space-y-3">
+  <Skeleton className=" w-[400px] h-[80vh] rounded-xl" />
+  <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+</div>
 
   const handlePlayPause = (index: number) => {
     const video = videoRefs.current[index]
