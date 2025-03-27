@@ -5,9 +5,9 @@ export const ProfileApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: 'https://instagram-api.softclub.tj',
 		prepareHeaders: headers => {
-			const token = localStorage.getItem("token")
-			if (token) {
-				headers.set('Authorization', `Bearer ${token}`)
+			const access_token = localStorage.getItem("access_token")
+			if (access_token) {
+				headers.set('Authorization', `Bearer ${access_token}`)
 			}
 			return headers
 		},

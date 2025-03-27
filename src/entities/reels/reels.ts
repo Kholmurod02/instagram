@@ -7,9 +7,9 @@ export const reelsApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: 'https://instagram-api.softclub.tj/Post/',
 		prepareHeaders: headers => {
-			const token = localStorage.getItem('token')
-			console.log(token)  
-			headers.set('Authorization', `Bearer ${token}`)
+			const access_token = localStorage.getItem('access_token')
+			console.log(access_token)  
+			headers.set('Authorization', `Bearer ${access_token}`)
 
 			return headers
 		},
