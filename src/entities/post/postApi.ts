@@ -28,9 +28,15 @@ export const postApi = createApi({
       query: () => '/Post/get-posts',
       providesTags: ['Posts'],
     }),
-
+    likePost: builder.mutation({
+      query: (postId) => ({
+        url: `/Post/like-post?postId=${postId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Posts'],
+    }),
   }),
 });
 
-export const { useAddPostMutation,useGetPostsQuery
+export const { useAddPostMutation,useGetPostsQuery,useLikePostMutation
 } = postApi;
