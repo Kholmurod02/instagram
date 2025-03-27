@@ -14,7 +14,6 @@ import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
 import { useGetMyPostsQuery } from '@/app/store/profileSlice/profileSlice'
 import { useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
-import StoriesCircle from '@/widgets/storiesCircle'
 import { useState } from 'react'
 import { StoryModal } from '@/widgets/StoriesModal'
 
@@ -41,11 +40,11 @@ export default function ProfileByNamePage() {
 		isLoading: StoryLoading,
 	} = useGetMyStoriesQuery(undefined)
 
-	if (profileError) return <p className=''>Error</p>
-	if (profileLoading) return <p className=''>Loading...</p>
-	if (postsError) return <p className=''>Error</p>
-	if (postsLoading) return <p className=''>Loading...</p>
-	if (StoryError) return <p className=''>Error</p>
+	if (profileError) return <p className=''>Profile Error</p>
+	if (profileLoading) return <p className=''>Profile Loading...</p>
+	if (postsError) return <p className=''>Error Posts</p>
+	if (postsLoading) return <p className=''>Posts Loading...</p>
+	if (StoryError) return <p className=''>Story Error</p>
 	if (StoryLoading) return <p className=''>Loading...</p>
 
 	console.log('====================================')
@@ -79,7 +78,7 @@ export default function ProfileByNamePage() {
 				<StoryModal
 					open={openModal}
 					setOpen={setOpenModal}
-					storyData={StoryData} 
+					storyData={StoryData}
 				/>
 				<HeaderSectionProfile
 					userName={profileData.data?.userName}
@@ -100,9 +99,6 @@ export default function ProfileByNamePage() {
 				<StorySection>
 					<StoryCircle />
 				</StorySection>
-				<div className='flex gap-[20px] items-center'>
-					<StoriesCircle />
-				</div>
 			</div>
 			<div className='lg:hidden block'>
 				<InfoFollowers
