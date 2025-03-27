@@ -20,7 +20,7 @@ const HistoryHomepage = () => {
       ))}
     </div>
 	)
-	if (error) return <div>Error loading stories</div>;
+	if (error) return <div className='w-full text-center'>Error loading stories</div>;
 	if (!stories || stories.length === 0) return <div>No stories available</div>;
 
   return (
