@@ -12,14 +12,23 @@ import {
 	User,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useLocation, useParams } from 'react-router'
 import InstagramPostModal from './instagram-post-modal'
 
 export default function AppSidebar() {
 	const [expanded, setExpanded] = useState(true)
 	const [isMobile, setIsMobile] = useState(false)
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
+	const [isCreateOpen, setIsCreateOpen] = useState(false)
+	const { pathname } = useLocation()
 
+	useEffect(() => {
+		if (pathname === "/chats" || pathname.startsWith("/chats/")) {
+		  setExpanded(false);
+		} else {
+		  setExpanded(true);
+		}
+	  }, [pathname]);
+	  
 
 	useEffect(() => {
 		const checkScreenSize = () => {
@@ -71,7 +80,7 @@ export default function AppSidebar() {
 						<PlusSquare className='w-6 h-6' />{' '}
 						{/* Кнопка создания */}
 					</button>
-          <InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
+					<InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
 					<Link
 						to='/reels'
 						className='flex flex-col items-center justify-center p-2'
@@ -92,9 +101,8 @@ export default function AppSidebar() {
 	// Desktop sidebar (остается без изменений)
 	return (
 		<nav
-			className={`flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${
-				expanded ? 'w-[300px]' : 'w-[72px]'
-			}`}
+			className={`flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[300px]' : 'w-[72px]'
+				}`}
 		>
 			{/* Logo */}
 			<div className='p-4 mb-6'>
@@ -118,9 +126,8 @@ export default function AppSidebar() {
 					expanded={expanded}
 				/>
 				<button
-					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${
-						expanded ? 'justify-start space-x-4' : 'justify-center'
-					}`}
+					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
+						}`}
 					onClick={() => {
 						console.log('Create clicked')
 					}}
@@ -155,13 +162,12 @@ export default function AppSidebar() {
 
 				{/* Кнопка создания */}
 				<button
-					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${
-						expanded ? 'justify-start space-x-4' : 'justify-center'
-					}`}
+					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
+						}`}
 					onClick={() => setIsCreateOpen(true)}
 				>
 					<PlusSquare className='w-6 h-6' />
-          <InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
+					<InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
 
 					{expanded && <span>Создать</span>}
 				</button>
@@ -176,9 +182,8 @@ export default function AppSidebar() {
 
 			{/* More button */}
 			<button
-				className={`flex items-center p-3 rounded-md hover:bg-[#b3adad4b] transition-colors mt-auto mb-1 mx-2 ${
-					expanded ? 'justify-start space-x-4' : 'justify-center'
-				}`}
+				className={`flex items-center p-3 rounded-md hover:bg-[#b3adad4b] transition-colors mt-auto mb-1 mx-2 ${expanded ? 'justify-start space-x-4' : 'justify-center'
+					}`}
 			>
 				<Menu className='w-6 h-6' />
 				{expanded && <span>Ещё</span>}
@@ -210,9 +215,8 @@ function NavLink({
 	return (
 		<Link
 			to={href}
-			className={`flex items-center rounded-md hover:bg-[#b3adad4b] transition-colors p-3 ${
-				expanded ? 'justify-start space-x-4' : 'justify-center'
-			}`}
+			className={`flex items-center rounded-md hover:bg-[#b3adad4b] transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
+				}`}
 		>
 			<span>{icon}</span>
 			{expanded && <span>{label}</span>}
