@@ -5,11 +5,12 @@ export const postApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://instagram-api.softclub.tj',
     prepareHeaders: (headers) => {
-      
+
       const access_token = localStorage.getItem('access_token'); 
       if (access_token) {
         headers.set('Authorization', `Bearer ${access_token}`);
       }
+
       return headers;
     },
   }),
@@ -23,7 +24,13 @@ export const postApi = createApi({
       }),
       invalidatesTags: ['Posts'],
     }),
+    getPosts: builder.query({
+      query: () => '/Post/get-posts',
+      providesTags: ['Posts'],
+    }),
+
   }),
 });
 
-export const { useAddPostMutation } = postApi;
+export const { useAddPostMutation,useGetPostsQuery
+} = postApi;
