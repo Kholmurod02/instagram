@@ -34,7 +34,7 @@ export function InstagramDialog({
 	post: Post & { comments?: { username: string; text: string }[] }
 }) {
 	const [comment, setComment] = useState('')
-	console.log(post, 'ak')
+	console.log(post)
 
 	return (
 		<Dialog>
@@ -206,6 +206,7 @@ function LikeButton({ initialLikes }: { initialLikes: number }) {
 				className={`h-6 w-6 ${liked ? 'text-red-500' : 'text-gray-500'}`}
 			/>
 		</Button>
+		
 	)
 }
 
