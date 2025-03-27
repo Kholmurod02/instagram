@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import {
 	Heart,
@@ -33,9 +31,10 @@ export function InstagramDialog({
 	post,
 }: {
 	children: React.ReactNode
-	post: Post
+	post: Post & { comments?: { username: string; text: string }[] }
 }) {
 	const [comment, setComment] = useState('')
+	console.log(post, 'ak')
 
 	return (
 		<Dialog>
@@ -43,8 +42,10 @@ export function InstagramDialog({
 			<DialogContent className='max-w-5xl p-0 gap-0 overflow-hidden'>
 				<div className='grid grid-cols-1 md:grid-cols-2 h-[80vh]'>
 					<div className='bg-black flex items-center justify-center'>
+						<br />
+
 						<img
-							src='https://instagram-api.softclub.tj/images/${post.images[0]}'
+							src={`${post.url}`}
 							alt='Instagram post'
 							className='h-full w-full object-contain'
 						/>
@@ -55,16 +56,16 @@ export function InstagramDialog({
 							<div className='flex items-center gap-3'>
 								<Avatar>
 									<AvatarImage
-										src={post.user?.avatarUrl || '/placeholder.svg'}
-										alt={post.user?.username}
+										src={`https://instagram-api.softclub.tj/images/${post.user.avatarUrl}`}
+										alt={post.user.username}
 									/>
 									<AvatarFallback>
-										{post.user?.username?.slice(0, 2).toUpperCase() || 'PO'}
+										{post.user.username?.slice(0, 2).toUpperCase()}
 									</AvatarFallback>
 								</Avatar>
 								<div>
 									<div className='font-semibold text-sm'>
-										{post.user?.username || 'username'}
+										{post.user.username}
 									</div>
 								</div>
 							</div>
@@ -73,22 +74,29 @@ export function InstagramDialog({
 							</Button>
 						</div>
 
-						<div className='flex-1 overflow-y-auto p-3 space-y-1'>
-							{post.caption && (
-								<CommentItem
-									username={post.user?.username || 'username'}
-									comment={post.caption}
-									timeAgo={formatTimeAgo(post.createdAt)}
-									avatar={post.user?.avatarUrl}
-								/>
+						<div className='flex-1 overflow-y-auto p-3 space-y-3'>	
+						<div className='h-[1px] w-full bg-border my-2'></div>
+
+							{post.comments && post.comments.length > 0 ? (
+								post.comments.map((c, index) => (
+									<CommentItem
+										key={index}
+										username={c.userName}
+										comment={c.comment}
+										timeAgo='just now'
+									/>
+								))
+							) : (
+								<p className='text-sm text-muted-foreground'>
+									No comments yet.
+								</p>
 							)}
-							<div className='h-[1px] w-full bg-border my-2'></div>
 						</div>
 
 						<div className='p-3 border-t border-b'>
 							<div className='flex justify-between'>
 								<div className='flex gap-2'>
-									<LikeButton initialLikes={post.likesCount} />
+									<LikeButton initialLikes={post.postLikeCount} />
 									<Button
 										variant='ghost'
 										size='icon'
@@ -113,10 +121,10 @@ export function InstagramDialog({
 								</Button>
 							</div>
 							<div className='mt-2'>
-								<p className='text-sm font-semibold'>{post.likesCount} likes</p>
-								<p className='text-xs text-muted-foreground'>
-									{new Date(post.createdAt).toLocaleDateString()}
+								<p className='text-sm font-semibold'>
+									{post.postLikeCount} likes
 								</p>
+								<p className='text-xs text-muted-foreground'></p>
 							</div>
 						</div>
 
@@ -201,16 +209,3 @@ function LikeButton({ initialLikes }: { initialLikes: number }) {
 	)
 }
 
-function formatTimeAgo(dateString: string): string {
-	const date = new Date(dateString)
-	const now = new Date()
-	const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-	if (diffInSeconds < 60) return `${diffInSeconds}s`
-	if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`
-	if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`
-	if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d`
-	if (diffInSeconds < 31536000)
-		return `${Math.floor(diffInSeconds / 2592000)}mo`
-	return `${Math.floor(diffInSeconds / 31536000)}y`
-}

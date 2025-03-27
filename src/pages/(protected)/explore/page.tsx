@@ -16,6 +16,7 @@ export default function ExplorePage() {
   const [hasMore, setHasMore] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
 
+
   useEffect(() => {
     if (posts?.data) {
       setImages((prev) => [
@@ -24,12 +25,13 @@ export default function ExplorePage() {
           id: post.postId,
           url: `https://instagram-api.softclub.tj/images/${post.images[0]}`,
           likes: post.postLikeCount || 0,
-          comments: post.commentCount || 0,
-          caption: post.caption,
-          createdAt: post.createdAt,
+          commentCount: post.commentCount || 0,
+          comments: post.comments,
+          caption: post.caption||"salom",
+          createdAt: post.datePublished,
           user: {
-            username: post.username,
-            avatarUrl: post.userAvatar,
+            username: post.userName,
+            avatarUrl: post.userImage,
           },
         })),
       ]);
@@ -95,7 +97,6 @@ export default function ExplorePage() {
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageCircle className="w-4 h-4" />
-                      <span>{image.comments}</span>
                     </div>
                   </div>
                 </div>
