@@ -20,9 +20,6 @@ const InfoFollowers = ({
 	const {data} = useGetSubscriptionQuery(decodeToken.sid)
 	if(error) return <p>error</p>
 	if(isLoading) return <p>Loading...</p>
-	console.log('====================================');
-	console.log(data);
-	console.log('====================================');
 	
 	return (
 		<div>
