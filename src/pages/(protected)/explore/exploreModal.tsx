@@ -28,7 +28,7 @@ interface Post {
     username: string
     avatarUrl?: string
   }
-  comments?: { username: string; text: string }[] // comments added to the post
+  comments?: { username: string; text: string }[] 
 }
 
 export function InstagramDialog({
