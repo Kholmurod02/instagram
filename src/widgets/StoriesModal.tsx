@@ -31,8 +31,8 @@ interface StoryVideo {
 }
 
 export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
-	const videoRefs = useRef<(HTMLVideoElement | null)[]>([]) // Массив для хранения ссылок на видео
-	const [currentIndex, setCurrentIndex] = useState(0) // Состояние для текущего индекса видео
+	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+	const [currentIndex, setCurrentIndex] = useState(0)
 	const [isPlaying, setIsPlaying] = useState<boolean[]>(
 		storyData.data?.stories.map(() => false)
 	)
@@ -40,21 +40,18 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 		storyData.data?.stories.map(() => false)
 	)
 
-	// Функция для переключения на следующее видео
 	const nextStory = () => {
 		if (currentIndex < storyData.data?.stories.length - 1) {
 			setCurrentIndex(currentIndex + 1)
 		}
 	}
 
-	// Функция для переключения на предыдущее видео
 	const prevStory = () => {
 		if (currentIndex > 0) {
 			setCurrentIndex(currentIndex - 1)
 		}
 	}
 
-	// Функция для проигрывания/паузы видео
 	const togglePlay = (index: number) => {
 		const video = videoRefs.current[index]
 		if (video) {
@@ -70,7 +67,6 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 		}
 	}
 
-	// Функция для включения/выключения звука
 	const toggleMute = (index: number) => {
 		const video = videoRefs.current[index]
 		if (video) {
