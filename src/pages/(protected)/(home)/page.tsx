@@ -1,14 +1,14 @@
 import PostUsersHomepage from '@/features/posts-users-homepage/post-users-homepage'
-import RecomendedUsers from '@/features/recomended-user-homepage/recomended-users'
 import AboutMe from '@/widgets/about-me-homepage'
 import HistoryHomepage from '@/widgets/history-homepage'
 import PostsHomepage from '@/widgets/posts-homepage'
 import RecomendedUserHomepage from '@/widgets/recomended-user-homepage'
+import UserclickModalHomepage from '@/widgets/userclick-modal-homepage'
 
 export default function HomePage() {
 	return (
 		<>
-			<main className="transition-all duration-300 ease-in-out">
+			<main className='transition-all duration-300 ease-in-out'>
 				<div className='md:w-[90%] w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
 					<div className='md:w-[50%] w-[95%] m-auto'>
 						<div
@@ -29,13 +29,8 @@ export default function HomePage() {
 					</div>
 					<div className='md:block hidden md:w-[45%] overflow-x-hidden lg:w-[35%] h-[600px]'>
 						<AboutMe />
-						<div className='flex justify-between'>
-							<h2 className='text-gray-300'>Recomendate for you</h2>
-							<p className='hover:text-gray-400 cursor-pointer'>All</p>
-						</div>
-
+						<UserclickModalHomepage />
 						<RecomendedUserHomepage />
-						
 						<div className='w-[75%] py-3'>
 							<ul className='flex flex-wrap text-[12px] text-gray-500'>
 								<li className='hover:underline'>&nbsp;Информация •</li>
@@ -111,7 +106,7 @@ export default function HomePage() {
 
 						<span className='text-xs sm:text-sm'>
 							© 2025 Instagram from Softclub
-						</span>	
+						</span>
 					</div>
 				</div>
 			</footer>

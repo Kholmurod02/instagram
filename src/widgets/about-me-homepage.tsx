@@ -14,7 +14,7 @@ const AboutMe = () => {
 				</div>
 			</div>
 		)
-	if (error)return <div>Error loading</div>
+	if (error)return <div className='py-5 text-center'>Error loading</div>
 
 	const profile = data?.data
 	if (!profile) {

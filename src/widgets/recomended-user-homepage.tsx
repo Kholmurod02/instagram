@@ -27,7 +27,7 @@ const RecomendedUserHomepage = () => {
 		</div>
 	 );
 	 
-	if (error) return <div>Error loading users</div>
+	if (error) return <div className='py-5 text-center'>Error loading users</div>
 	if (!data || data.length === 0) return <div className='text-center'>No users found</div>
 
 	return (
