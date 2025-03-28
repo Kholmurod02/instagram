@@ -1,12 +1,16 @@
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button-from-homepage'
 import { Card, CardContent } from '@/shared/ui/card-from-homepage'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState } from 'react'
+import { ProfileSettingsModal } from '@/widgets/profile-settings-modal'
+import { ChevronLeft, ChevronRight, Volume2Icon, VolumeXIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
-const PostUsersHomepage = () => {
+const PostUsersHomepage = ({data}) => {
 	const [currentIndex, setCurrentIndex] = useState(0)
-	const totalSlides = 3
+	const [open, setOpen] = useState(false)
+	const [isMuted, setIsMuted] = useState(true)
+	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+	const totalSlides = data.images.length
 
 	const nextSlide = () => {
 		setCurrentIndex(prev => (prev === totalSlides - 1 ? 0 : prev + 1))
@@ -16,24 +20,59 @@ const PostUsersHomepage = () => {
 		setCurrentIndex(prev => (prev === 0 ? totalSlides - 1 : prev - 1))
 	}
 
+	const toggleMute = () => {
+		setIsMuted(prev => !prev)
+	 }
+
+	 const togglePlayPause = (index) => {
+		const video = videoRefs.current[index]
+		if (video) {
+			if (video.paused) {
+				video.play()
+			} else {
+				video.pause()
+			}
+		}
+	}
+
+	 useEffect(() => {
+		videoRefs.current = new Array(totalSlides).fill(null)
+	 }, [totalSlides])
+	 
+  
+	 useEffect(() => {
+		const currentVideo = videoRefs.current[currentIndex]
+		if (currentVideo) {
+		  currentVideo.muted = isMuted
+		}
+	 }, [isMuted, currentIndex])
+	 
+  
+	 if (!data) return null
+
 	return (
 		<div>
 			<div className='flex items-center justify-between'>
 				<div className='flex gap-3 items-center'>
 					<div className='w-10 h-10 rounded-full p-[1px] border-2 border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
 						<div className='w-full h-full rounded-full bg-white p-[2px]'>
-							{/*Место для фото профилей*/}
+						<img
+								src={`https://instagram-api.softclub.tj/images/${data.userImage}`}
+								alt='Profile'
+								className='w-full h-full object-cover rounded-full'
+							/>
 						</div>
 					</div>
 					<div>
 						<h5 className='text-sm font-bold'>
-							test_profile{' '}
-							<span className='font-normal text-gray-400'>• 1 day</span>
+							{data.userName}{' '}
+							<span className='font-normal text-gray-400'>• {data.datePublished}</span>
 						</h5>
-						<p className='text-gray-300 text-[13px]'>Test profile</p>
+						<p className='text-gray-300 text-[13px]'>{data.content}</p>
 					</div>
 				</div>
-				<div>
+				<ProfileSettingsModal open={open} setOpen={setOpen} />
+				<div onClick={() => setOpen(true)}>
 					<svg
 						aria-label='Дополнительно'
 						className='x1lliihq x1n2onr6 x5n08af cursor-pointer'
@@ -49,18 +88,36 @@ const PostUsersHomepage = () => {
 						<circle cx='18' cy='12' r='1.5'></circle>
 					</svg>
 				</div>
-			</div>
+			</div> 
 
 			<div className='flex items-center justify-center'>
 				<Card className='relative w-full my-3 overflow-hidden rounded-lg border-0 text-white'>
 					<CardContent className='p-0'>
-						<div className='relative aspect-[3/4] w-full'>
-							{/* Image placeholder - you'll replace this with your actual images */}
-							<div className='absolute inset-0 flex items-center justify-center bg-zinc-900'>
-								<p className='text-zinc-500'>Image placeholder</p>
-							</div>
+						<div className='relative w-full'>
+							{
+								data.images.map((img, index)=> {
+									return (
+									img.slice(-3).toLowerCase().includes('mp4') ? (
+										<div className='relative'>
+											<video onClick={() => togglePlayPause(index)} ref={el => videoRefs.current[index] = el} autoPlay  muted={isMuted} loop className='w-full h-full object-cover'>
+												<source src={`https://instagram-api.softclub.tj/images/${img}`} />
+											</video>
 
-							{/* Navigation arrows */}
+											<div onClick={toggleMute} className='absolute bottom-3 right-4 bg-gray-600 rounded-full p-2 hover:bg-gray-600/70 transition'>
+											{isMuted ? (
+                            <VolumeXIcon className='h-4 w-4' />
+                          ) : (
+                            <Volume2Icon className='h-4 w-4' />
+                          )}
+											</div>
+										</div>
+									) : (
+										<img className='w-full h-full object-cover' src={`https://instagram-api.softclub.tj/images/${img}`} />
+									)
+								)
+								})
+							}
+
 							<Button
 								variant='ghost'
 								size='icon'
@@ -185,12 +242,12 @@ const PostUsersHomepage = () => {
 				</svg>
 			</div>
 			<div className='py-2 border-b mb-3 flex flex-col gap-1 border-b-gray-800'>
-				<h5 className='text-[13px]'>Нравится <span className='font-bold'>softclub.tj</span> и <span className='font-bold'>другим</span></h5>
+				<h5 className='text-[16px]'>{data.postLikeCount} <span className='font-bold text-[13px]'>отметок Нравится</span></h5>
 
-				<p className='text-[14px]'><span className='font-bold'>test_user </span>Sempre espere o inesperado</p>
+				<p className='text-[14px]'><span className='font-bold'>{data.userName} </span>{data.content}</p>
 
 				<p className='text-[12px] font-bold'>Показать перевод</p>
-				<p className='text-[13px] text-gray-400'>Посмотреть все публикации <span>(4)</span></p>
+				<p className='text-[13px] text-gray-400 cursor-pointer'>Посмотреть все публикации <span>({data.commentCount})</span></p>
 			</div>
 		</div>
 	)
