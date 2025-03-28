@@ -14,7 +14,7 @@ const RecomendedUsers = ({data}) => {
 				 </div>
 			</div>
 			<div>
-			  <button className='text-blue-500 text-sm hover:text-white cursor-pointer'>Subscribe</button>
+			  <button className='text-blue-500 text-sm hover:text-white cursor-pointer'>Follow</button>
 			</div>
 		 </div>
 	 </div>

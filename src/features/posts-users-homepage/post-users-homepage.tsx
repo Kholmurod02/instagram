@@ -1,11 +1,13 @@
 import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button-from-homepage'
 import { Card, CardContent } from '@/shared/ui/card-from-homepage'
+import { ProfileSettingsModal } from '@/widgets/profile-settings-modal'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 
 const PostUsersHomepage = () => {
 	const [currentIndex, setCurrentIndex] = useState(0)
+	const [open, setOpen] = useState(false)
 	const totalSlides = 3
 
 	const nextSlide = () => {
@@ -33,7 +35,8 @@ const PostUsersHomepage = () => {
 						<p className='text-gray-300 text-[13px]'>Test profile</p>
 					</div>
 				</div>
-				<div>
+				<ProfileSettingsModal open={open} setOpen={setOpen} />
+				<div onClick={() => setOpen(true)}>
 					<svg
 						aria-label='Дополнительно'
 						className='x1lliihq x1n2onr6 x5n08af cursor-pointer'
@@ -49,7 +52,7 @@ const PostUsersHomepage = () => {
 						<circle cx='18' cy='12' r='1.5'></circle>
 					</svg>
 				</div>
-			</div>
+			</div> 
 
 			<div className='flex items-center justify-center'>
 				<Card className='relative w-full my-3 overflow-hidden rounded-lg border-0 text-white'>
