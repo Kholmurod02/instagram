@@ -37,35 +37,39 @@ export function InstagramDialog({
 	console.log(post)
 
 	return (
-		<Dialog>
+		<Dialog >
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className='max-w-5xl p-0 gap-0 overflow-hidden'>
-				<div className='grid grid-cols-1 md:grid-cols-2 h-[80vh]'>
+			<DialogContent className='p-0 w-[75vw] gap-0 overflow-hidden'>
+				<div className='grid grid-cols-1  md:grid-cols-2 h-[80vh] '>
 					<div className='bg-black flex items-center justify-center'>
 						<br />
 
 						<img
-							src={`${post.url}`}
+							src={(post as unknown as { url: string }).url}
+
 							alt='Instagram post'
 							className='h-full w-full object-contain'
 						/>
 					</div>
 
-					<div className='flex flex-col h-full'>
+					<div className='flex overflow-y-auto flex-col h-full'>
 						<div className='flex items-center justify-between p-3 border-b'>
 							<div className='flex items-center gap-3'>
 								<Avatar>
 									<AvatarImage
-										src={`https://instagram-api.softclub.tj/images/${post.user.avatarUrl}`}
-										alt={post.user.username}
+										src={`https://instagram-api.softclub.tj/images/${(post.user as { avatarUrl: string }).avatarUrl}`}
+
+										alt={(post.user as { username: string }).username}
+
 									/>
 									<AvatarFallback>
-										{post.user.username?.slice(0, 2).toUpperCase()}
+									{post.user ? post.user.username.slice(0, 2).toUpperCase() : "??"}
+
 									</AvatarFallback>
 								</Avatar>
 								<div>
 									<div className='font-semibold text-sm'>
-										{post.user.username}
+									{post.user ? post.user.username : " "}
 									</div>
 								</div>
 							</div>
@@ -178,7 +182,7 @@ function CommentItem({
 				<AvatarImage src={avatar || '/placeholder.svg'} alt={username} />
 				<AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
-			
+
 			<div>
 				<p className='text-sm'>
 					<span className='font-semibold'>{username}</span> {comment}
