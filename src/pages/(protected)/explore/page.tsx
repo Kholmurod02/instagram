@@ -5,6 +5,8 @@ import { Heart, MessageCircle } from "lucide-react";
 import { useGetPostsQuery } from "../../../entities/post/postApi";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { InstagramDialog } from "./exploreModal";
+import { useAddCommentMutation, useSavePostMutation } from "../../../entities/post/postApi";
+
 
 export default function ExplorePage() {
   const [page, setPage] = useState(1);
@@ -14,8 +16,33 @@ export default function ExplorePage() {
   >([]);
   const observerRef = useRef<HTMLDivElement>(null);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [_selectedPost, setSelectedPost] = useState(null);
+  const [commentText, setCommentText] = useState("");
+const [savePost] = useSavePostMutation();
+const [addComment] = useAddCommentMutation();
 
+
+
+const handleAddComment = async (postId: string) => {
+  if (commentText.trim()) {
+    try {
+      await addComment({ postId, comment: commentText });
+      setCommentText(""); // Clear the input field after submission
+    } catch (err) {
+      console.error("Error adding comment:", err);
+    }
+  }
+};
+const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setCommentText(e.target.value);
+};
+const handleSavePost = async (postId: string) => {
+  try {
+    await savePost(postId);
+  } catch (err) {
+    console.error("Error saving post:", err);
+  }
+};
 
   useEffect(() => {
     if (posts?.data) {
@@ -27,7 +54,7 @@ export default function ExplorePage() {
           likes: post.postLikeCount || 0,
           commentCount: post.commentCount || 0,
           comments: post.comments,
-          caption: post.caption||"salom",
+          caption: post.caption || "salom",
           createdAt: post.datePublished,
           user: {
             username: post.userName,
@@ -64,7 +91,7 @@ export default function ExplorePage() {
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen text-red-500">
-        Error loading posts: {"message" in error ? error.message : "Unknown error"}
+        Error loading posts: {error.message || "Unknown error"}
       </div>
     );
   }
@@ -97,7 +124,7 @@ export default function ExplorePage() {
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageCircle className="w-4 h-4" />
-                      <span>{image.commentCount} </span>
+                      <span>{image.commentCount}</span>
                     </div>
                   </div>
                 </div>
