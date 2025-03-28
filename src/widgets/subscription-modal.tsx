@@ -103,7 +103,7 @@ export default function SubscriptionModal({
 										<Skeleton className='h-9 w-24 rounded-md' />
 									</div>
 								))
-						: subscribesFilter.map(subscriber => {
+						: subscribesFilter?.map(subscriber => {
 								return (
 									<div
 										key={subscriber.userShortInfo.id}

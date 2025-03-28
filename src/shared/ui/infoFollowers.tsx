@@ -40,8 +40,8 @@ const InfoFollowers = ({
 					<span className='text-[#fff]'>{following} </span>following
 				</p>
 			</div>
-			<SubscribersModal open={openSC} subscribers={subscribersData.data} setOpen={setOpenSC} />
-			<SubscriptionModal open={open} setOpen={setOpen} subscribers={data.data}/>
+			<SubscribersModal open={openSC} subscribers={subscribersData?.data} setOpen={setOpenSC} />
+			<SubscriptionModal open={open} setOpen={setOpen} subscribers={data?.data}/>
 		</div>
 	)
 }
