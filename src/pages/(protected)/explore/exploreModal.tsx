@@ -10,9 +10,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { Input } from '@/shared/ui/input'
-import { cn } from '../../../shared/lib/utils'
+
 import Like from '@/features/component/Like'
+import Comment from '@/features/component/comment'
 
 interface Post {
 	id: string
@@ -36,14 +36,14 @@ export function InstagramDialog({
 	children: React.ReactNode
 	post: Post & { comments?: { username: string; text: string }[] }
 }) {
-	const [comment, setComment] = useState('')
+	const [_comment, _setComment] = useState('')
 	console.log(post)
 
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className='p-0 w-[75vw] gap-0 overflow-hidden'>
-				<div className='grid grid-cols-1  md:grid-cols-2 h-[80vh] '>
+			<DialogContent className='p-0 w-[75vw] max-w-[1200px] !max-w-[1200px] gap-0 overflow-hidden'>
+				<div className='grid grid-cols-1  md:grid-cols-2 h-[90vh] '>
 					<div className='bg-black flex items-center justify-center'>
 						<br />
 
@@ -146,23 +146,10 @@ export function InstagramDialog({
 							>
 								<Smile className='h-6 w-6' />
 							</Button>
-							<Input
-								placeholder='Add a comment...'
-								className='flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-0'
-								value={comment}
-								onChange={e => setComment(e.target.value)}
-							/>
-							<Button
-								variant='ghost'
-								size='sm'
-								className={cn(
-									'font-semibold',
-									comment.length > 0 ? 'text-primary' : 'text-primary/50'
-								)}
-								disabled={comment.length === 0}
-							>
-								Post
-							</Button>
+						
+
+							<Comment  postId ={post.id} initialComments={post.postCommentId}/>
+						
 						</div>
 					</div>
 				</div>

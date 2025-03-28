@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAddCommentMutation } from '../../entities/post/postApi'
 
+
 interface CommentProps {
 	postId: string
 	initialComments: string[]
@@ -46,7 +47,7 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 				</div>
 
 				<div className='space-y-2 mt-4'>
-					{initialComments.map((comment, index) => (
+					{initialComments?.map((comment, index) => (
 						<div key={index} className='text-sm text-gray-700'>
 							{comment}
 						</div>

@@ -89,39 +89,50 @@ const handleSavePost = async (postId: string) => {
   return (
     <div className="flex flex-col items-center justify-center mt-10 lg:px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
-        {images.map((image, index) => {
-          const isTall = index % 5 === 2;
+      {images.map((image, index) => {
+  const isVideo = index % 5 === 2; // Every 3rd item is a video
 
-          return (
-            <InstagramDialog key={image.id} post={image}>
-              <div
-                className={`relative w-full cursor-pointer ${isTall ? "sm:row-span-2" : ""}`}
-                onClick={() => setSelectedPost(image)}
-              >
-                <img
-                  src={image.url}
-                  alt={`Explore ${image.id}`}
-                  className={`w-full object-cover transition-transform duration-300 hover:scale-105 ${
-                    isTall ? "h-[500px] sm:h-[800px]" : "h-[300px] sm:h-[400px]"
-                  }`}
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="flex gap-4 text-white text-sm font-medium">
-                    <div className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      <span>{image.likes}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="w-4 h-4" />
-                      <span>{image.commentCount}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </InstagramDialog>
-          );
-        })}
+  return (
+    <InstagramDialog key={image.id} post={image}>
+      <div
+        className={`relative w-full cursor-pointer ${isVideo ? "row-span-2" : ""}`}
+        onClick={() => setSelectedPost(image)}
+      >
+        {isVideo ? (
+          <video
+            src={image.url}
+            autoPlay
+            muted
+            playsInline
+            loop
+            className="w-full h-[900px] object-cover transition-transform duration-300 hover:scale-105"
+          />
+        ) : (
+          <img
+            src={image.url}
+            alt={`Explore ${image.id}`}
+            className="w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105"
+            loading="lazy"
+          />
+        )}
+        {/* Overlay with likes and comments count */}
+        <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div className="flex gap-4 text-white text-sm font-medium">
+            <div className="flex items-center gap-1">
+              <Heart className="w-4 h-4" />
+              <span>{image.likes}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MessageCircle className="w-4 h-4" />
+              <span>{image.commentCount}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </InstagramDialog>
+  );
+})}
+
 
         {(isLoading || isFetching) &&
           Array.from({ length: 6 }).map((_, index) => {
