@@ -27,6 +27,7 @@ export default function ProfileByNamePage() {
 	const [OpenPosts, setOpenPosts] = useState<boolean>(true)
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
+
 	function clickOpenModal() {
 		setIsViewed(true)
 		setOpenModal(true)
@@ -66,7 +67,8 @@ export default function ProfileByNamePage() {
 		error: FavoriteError,
 		isLoading: FavoriteLoading,
 	} = useGetFavoritePostsQuery(undefined)
-
+  
+	console.log(postsData)
 	if (profileError) return <p className=''>Profile Error</p>
 	if (profileLoading)
 		return (
