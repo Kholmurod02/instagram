@@ -10,7 +10,7 @@ const ReelsDiv: React.FC<ReelsDivProps> = ({ img, likes, comments }) => {
 	return (
 		<div className='relative group cursor-pointer overflow-hidden'>
 			<aside className='lg:w-[300px] relative h-[150px] lg:h-[500px]'>
-				{img.slice(-3).includes('mp4') ? (
+				{img.slice(-3).toLowerCase().includes('mp4') ? (
 					<div className='relative'>
 						<div className='absolute font-bold top-2 z-50 right-2'>
 					<ReelsIcon/>

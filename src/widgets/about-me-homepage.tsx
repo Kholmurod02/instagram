@@ -1,8 +1,14 @@
 import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { useNavigate } from 'react-router'
 
 const AboutMe = () => {
 	const { data, error, isLoading } = useGetMyProfileQuery(undefined)
+	const navigate = useNavigate()
+
+	const handleClick = () => {
+		navigate('/profile')
+	}
 
 	if (isLoading)
 		return (
@@ -25,7 +31,7 @@ const AboutMe = () => {
 		<div className='py-3 text-white'>
 			<div className='flex justify-between items-center'>
 				<div className='flex gap-3 items-center'>
-					<div className='w-12 h-12 rounded-full p-[1px] border-2 cursor-pointer border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
+					<div onClick={handleClick} className='w-12 h-12 rounded-full p-[1px] border-2 cursor-pointer border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
 						<div className='w-full h-full rounded-full bg-white p-[2px]'>
 							<img
 								src={`https://instagram-api.softclub.tj/images/${profile.image}`}

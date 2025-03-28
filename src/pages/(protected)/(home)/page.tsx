@@ -1,4 +1,3 @@
-import PostUsersHomepage from '@/features/posts-users-homepage/post-users-homepage'
 import AboutMe from '@/widgets/about-me-homepage'
 import HistoryHomepage from '@/widgets/history-homepage'
 import PostsHomepage from '@/widgets/posts-homepage'
@@ -9,8 +8,8 @@ export default function HomePage() {
 	return (
 		<>
 			<main className='transition-all duration-300 ease-in-out'>
-				<div className='md:w-[90%] w-full flex flex-col md:flex-row gap-5  md:justify-center justify-start md:gap-10'>
-					<div className='md:w-[50%] w-[95%] m-auto'>
+				<div className='md:w-[90%] w-full flex flex-col md:flex-row'>
+					<div className='md:w-[50%] w-[90%] m-auto'>
 						<div
 							className='w-full max-w-[100vw] flex-nowrap flex py-4 overflow-x-auto overflow-y-hidden'
 							style={{
@@ -20,12 +19,7 @@ export default function HomePage() {
 						>
 							<HistoryHomepage />
 						</div>
-
-						<PostsHomepage>
-							<PostUsersHomepage />
-							<PostUsersHomepage />
-							<PostUsersHomepage />
-						</PostsHomepage>
+						<PostsHomepage />
 					</div>
 					<div className='md:block hidden md:w-[45%] overflow-x-hidden lg:w-[35%] h-[600px]'>
 						<AboutMe />

@@ -1,4 +1,4 @@
-import { useGetUsersHomepageQuery } from '@/entities/users-homepage/users-homepage'
+import { useGetPostsHomepageQuery } from '@/entities/posts-homepage/post-homepage'
 import {
 	Dialog,
 	DialogContent,
@@ -9,15 +9,13 @@ import { useState } from 'react'
 
 const UserclickModalHomepage = () => {
 	const [open, setOpen] = useState(false)
-	const { data, error, isLoading } = useGetUsersHomepageQuery(undefined)
+	const { data, error, isLoading } = useGetPostsHomepageQuery(undefined)
 
 	if (error)
 		return (
-			<div className='flex justify-center items-center h-full text-white font-semibold'>
-				Error loading users
-			</div>
+			<div></div>
 		)
-	if (!data || data.length === 0) return <div>No users found</div>
+	if (!data || data.length === 0) return <div></div>
 	if (isLoading)
 		return (
 			<div className='flex justify-center items-center h-full text-white font-semibold'>
