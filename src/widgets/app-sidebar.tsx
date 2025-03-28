@@ -12,7 +12,7 @@ import {
 	User,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router'
+import { Link, useLocation, } from 'react-router'
 import InstagramPostModal from './instagram-post-modal'
 
 export default function AppSidebar() {
@@ -23,12 +23,12 @@ export default function AppSidebar() {
 
 	useEffect(() => {
 		if (pathname === "/chats" || pathname.startsWith("/chats/")) {
-		  setExpanded(false);
+			setExpanded(false)
 		} else {
-		  setExpanded(true);
+			setExpanded(true)
 		}
-	  }, [pathname]);
-	  
+	}, [pathname])
+
 
 	useEffect(() => {
 		const checkScreenSize = () => {
@@ -178,6 +178,7 @@ export default function AppSidebar() {
 					label='Профиль'
 					expanded={expanded}
 				/>
+				
 			</div>
 
 			{/* More button */}

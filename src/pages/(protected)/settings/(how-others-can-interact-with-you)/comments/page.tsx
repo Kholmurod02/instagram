@@ -1,5 +1,27 @@
-export default function Comment(){
+import * as React from 'react';
+import Switch from '@mui/material/Switch';
+
+
+export default function Comment() {
+    const [checked, setChecked] = React.useState(true);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setChecked(event.target.checked);
+    };
     return <>
-        <h1>Page comment</h1>
+        <div className='flex flex-col ml-[140px]'>
+            <div>
+                <h1 className='text-[45px]'>Комментарии</h1>
+            </div>
+            <div className="flex">
+                <p className='mt-[4px] mr-[40px] mb-[10px]'>Разрешить комментировать c GIF</p>
+                <Switch
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                />
+            </div>
+            <p className='text-[15px] text-[gray]'>Люди смогут добавлять GIF в комментариях к вашим публикациям и видео Reels.</p>
+        </div>
     </>
 }
