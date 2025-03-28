@@ -6,31 +6,29 @@ type ReelsDivProps = {
 	likes: number
 	comments: number | string
 }
-const ReelsDiv: React.FC<ReelsDivProps> = ({ img, likes, comments }) => {
+
+const ReelsDiv2: React.FC<ReelsDivProps> = ({ img, likes, comments }) => {
+	// Проверяем, является ли файл видео
+	const isVideo = /\.(mp4|webm|ogg)$/i.test(img)
+
+	if (!isVideo) return null
+
 	return (
 		<div className='relative group cursor-pointer overflow-hidden'>
 			<aside className='lg:w-[300px] relative h-[150px] lg:h-[500px]'>
-				{img.slice(-3).includes('mp4') ? (
-					<div className='relative'>
-						<div className='absolute font-bold top-2 z-50 right-2'>
-					<ReelsIcon/>
-						</div>
+				<div className='relative'>
+					<div className='absolute font-bold top-2 z-50 right-2'>
+						<ReelsIcon />
+					</div>
 					<video
-						src=''
 						autoPlay
 						muted
+						loop
 						className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-105'
 					>
-						<source src={img} />
+						<source src={img} type='video/mp4' />
 					</video>
-					</div>
-				) : (
-					<img
-						src={img}
-						className='object-cover w-full h-full transition-transform duration-300 group-hover:scale-105'
-						alt=''
-					/>
-				)}
+				</div>
 			</aside>
 
 			<div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center'>
@@ -49,4 +47,4 @@ const ReelsDiv: React.FC<ReelsDivProps> = ({ img, likes, comments }) => {
 	)
 }
 
-export default ReelsDiv
+export default ReelsDiv2
