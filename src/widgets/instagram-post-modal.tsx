@@ -71,10 +71,8 @@ export default function InstagramPostModal({
 	open: boolean
 	setOpen: (open: boolean) => void
  }) {
-	// API mutation for adding posts
 	const [AddPost, { isLoading }] = useAddPostMutation()
 	
-	// State for selected media files (images/videos)
 	const [selectedImages, setSelectedImages] = useState<
 	  Array<{
 		 originalFile: File
@@ -89,10 +87,8 @@ export default function InstagramPostModal({
 	  }>
 	>([])
 	
-	// Current image index for multi-image posts
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
 	
-	// Filter and adjustment states
 	const [filter, setFilter] = useState<Filter>("Original")
 	const [filterStrength, setFilterStrength] = useState(100)
 	const [activeTab, setActiveTab] = useState<TabType>("filters")
@@ -105,7 +101,6 @@ export default function InstagramPostModal({
 	  vignette: 0,
 	})
 	
-	// Post details states
 	const [caption, setCaption] = useState("")
 	const [location, setLocation] = useState("")
 	const [showLocationInput, setShowLocationInput] = useState(false)
@@ -113,18 +108,15 @@ export default function InstagramPostModal({
 	const [showCollaboratorInput, setShowCollaboratorInput] = useState(false)
 	const [collaboratorInput, setCollaboratorInput] = useState("")
 	
-	// UI states
 	const [balloonImageLoaded, setBalloonImageLoaded] = useState(false)
 	const [step, setStep] = useState<Step>("upload")
 	
-	// Refs and crop-related states
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const [crop, setCrop] = useState<Point>({ x: 0, y: 0 })
 	const [zoom, setZoom] = useState(1)
 	const [rotation, setRotation] = useState(0)
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
  
-	// Convert file to base64 string for preview
 	const fileToBase64 = (file: File): Promise<string> => {
 	  return new Promise((resolve, reject) => {
 		 const reader = new FileReader()
@@ -133,26 +125,20 @@ export default function InstagramPostModal({
 		 reader.onerror = (error) => reject(error)
 	  })
 	}
- 
-	// Called when crop area changes
-	const onCropComplete = (_croppedArea: Area, croppedAreaPixels: Area) => {
+ 	const onCropComplete = (_croppedArea: Area, croppedAreaPixels: Area) => {
 	  setCroppedAreaPixels(croppedAreaPixels)
 	}
  
-	// Generate and show the cropped image
 	const showCroppedImage = async () => {
 	  try {
-		 // Skip if no crop area or no selected image
 		 if (!croppedAreaPixels || !selectedImages[currentImageIndex]) return
 		 
-		 // Get the cropped image using helper function
 		 const croppedImage = await getCroppedImg(
 			selectedImages[currentImageIndex].previewUrl,
 			croppedAreaPixels,
 			rotation
 		 )
 		 
-		 // Update the selected images with cropped version
 		 const updatedImages = [...selectedImages]
 		 updatedImages[currentImageIndex] = {
 			...updatedImages[currentImageIndex],
@@ -171,7 +157,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Apply filters and adjustments to an image
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const applyFiltersToImage = async (imageUrl: string, filter: Filter, adjustments: any): Promise<File> => {
 	  return new Promise((resolve, reject) => {
@@ -193,7 +178,6 @@ export default function InstagramPostModal({
  
 			let filterString = ""
  
-			// Apply all adjustments as CSS filters
 			filterString += `brightness(${1 + adjustments.brightness / 100}) `
 			filterString += `contrast(${1 + adjustments.contrast / 100}) `
 			filterString += `opacity(${1 - adjustments.fade / 100}) `
@@ -204,9 +188,7 @@ export default function InstagramPostModal({
 			} else {
 			  filterString += `hue-rotate(${adjustments.temperature}deg) `
 			}
- 
-			// Add the selected filter if not Original
-			if (filter !== "Original") {
+ 			if (filter !== "Original") {
 			  filterString += getFilterStyle(filter)
 			}
  
@@ -214,9 +196,7 @@ export default function InstagramPostModal({
 			ctx.globalCompositeOperation = "source-in"
  
 			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
- 
-			// Apply vignette effect if enabled
-			if (adjustments.vignette > 0) {
+ 			if (adjustments.vignette > 0) {
 			  const gradient = ctx.createRadialGradient(
 				 canvas.width / 2,
 				 canvas.height / 2,
@@ -234,9 +214,7 @@ export default function InstagramPostModal({
 			  ctx.globalCompositeOperation = "source-over"
 			  ctx.fillRect(0, 0, canvas.width, canvas.height)
 			}
- 
-			// Convert canvas to blob and create File object
-			canvas.toBlob(
+ 			canvas.toBlob(
 			  (blob) => {
 				 if (!blob) {
 					reject(new Error("Could not create blob from canvas"))
@@ -260,12 +238,10 @@ export default function InstagramPostModal({
 	  })
 	}
  
-	// Handle file selection via input
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 	  const files = e.target.files;
 	  if (files && files.length > 0) {
 		 const fileArray = Array.from(files);
-		 // Convert files to base64 previews and detect their type
 		 const base64Urls = await Promise.all(
 			fileArray.map(async (file) => ({
 			  originalFile: file,
@@ -279,12 +255,10 @@ export default function InstagramPostModal({
 	  }
 	};
 	
-	// Handle file drop
 	const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault();
 	  const files = e.dataTransfer.files;
 	  if (files && files.length > 0) {
-		 // Filter only image and video files
 		 const mediaFiles = Array.from(files).filter(
 			(file) => file.type.startsWith("image/") || file.type.startsWith("video/")
 		 );
@@ -303,29 +277,23 @@ export default function InstagramPostModal({
 	  }
 	};
  
-	// Required for drag and drop to work
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault()
 	}
  
-	// Handle post submission
 	const handlePost = async () => {
 	  const formData = new FormData()
 	  try {
-		 // Process each selected media file
 		 for (const media of selectedImages) {
 			if (media.type === "image") {
-			  // Apply filters to images
 			  const imageUrl = media.croppedUrl || media.previewUrl
 			  const filteredFile = await applyFiltersToImage(imageUrl, filter, adjustments)
 			  formData.append("Images", filteredFile)
 			} else {
-			  // Add videos as-is
 			  formData.append("Images", media.originalFile)
 			}
 		 }
  
-		 // Add caption and submit
 		 formData.append("Content", caption)
 		 await AddPost(formData)
 		 resetModal()
@@ -334,15 +302,13 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Handle next button click
 	const handleNext = () => {
 	  if (step === "crop") {
-		 // Skip cropping for videos
 		 if (selectedImages[currentImageIndex].type === "video") {
 			const updatedImages = [...selectedImages];
 			updatedImages[currentImageIndex] = {
 			  ...updatedImages[currentImageIndex],
-			  croppedUrl: updatedImages[currentImageIndex].previewUrl // Use original for videos
+			  croppedUrl: updatedImages[currentImageIndex].previewUrl 
 			};
 			setSelectedImages(updatedImages);
 			setStep("edit");
@@ -354,7 +320,6 @@ export default function InstagramPostModal({
 	  }
 	};
  
-	// Handle back button click
 	const handleBack = () => {
 	  if (step === "crop") {
 		 setStep("upload")
@@ -363,7 +328,6 @@ export default function InstagramPostModal({
 	  else if (step === "details") setStep("edit")
 	}
  
-	// Reset modal to initial state
 	const resetModal = () => {
 	  setOpen(false)
 	  setStep("upload")
@@ -383,14 +347,12 @@ export default function InstagramPostModal({
 	  setCaption("")
 	  setLocation("")
 	  setCollaborators([])
-	  // Reset crop state
 	  setCrop({ x: 0, y: 0 })
 	  setZoom(1)
 	  setRotation(0)
 	  setCroppedAreaPixels(null)
 	}
  
-	// Handle adjustment changes
 	const handleAdjustmentChange = (type: keyof typeof adjustments, value: number) => {
 	  setAdjustments((prev) => ({
 		 ...prev,
@@ -398,11 +360,9 @@ export default function InstagramPostModal({
 	  }))
 	}
  
-	// Navigate to next image
 	const nextImage = () => {
 	  if (currentImageIndex < selectedImages.length - 1) {
 		 setCurrentImageIndex((prev) => prev + 1)
-		 // Reset crop settings for new image
 		 setCrop({ x: 0, y: 0 })
 		 setZoom(1)
 		 setRotation(0)
@@ -410,11 +370,9 @@ export default function InstagramPostModal({
 	  }
 	}
 	
-	// Navigate to previous image
 	const prevImage = () => {
 	  if (currentImageIndex > 0) {
 		 setCurrentImageIndex((prev) => prev - 1)
-		 // Reset crop settings for new image
 		 setCrop({ x: 0, y: 0 })
 		 setZoom(1)
 		 setRotation(0)
@@ -422,7 +380,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Add a collaborator
 	const addCollaborator = () => {
 	  if (collaboratorInput.trim() && !collaborators.includes(collaboratorInput.trim())) {
 		 setCollaborators((prev) => [...prev, collaboratorInput.trim()])
@@ -431,12 +388,10 @@ export default function InstagramPostModal({
 	  setShowCollaboratorInput(false)
 	}
  
-	// Remove a collaborator
 	const removeCollaborator = (collaborator: string) => {
 	  setCollaborators((prev) => prev.filter((c) => c !== collaborator))
 	}
  
-	// Map of filter names to their preview images
 	const filterPreviews: Record<Filter, string> = {
 	  Original: Normal,
 	  Clarendon: Clarendon,
@@ -451,15 +406,12 @@ export default function InstagramPostModal({
 	  Reyes: Reyes,
 	  Slumber: Slumber,
 	}
- 
-	// Load balloon image for filter previews
-	useEffect(() => {
+ 	useEffect(() => {
 	  const img = new Image()
 	  img.src = Normal
 	  img.onload = () => setBalloonImageLoaded(true)
 	}, [])
  
-	// Get CSS filter style for a given filter name
 	const getFilterStyle = (filterName: Filter) => {
 	  switch (filterName) {
 		 case "Clarendon":
@@ -489,7 +441,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Get CSS style for current adjustments
 	const getAdjustmentStyle = () => {
 	  return {
 		 filter: `
@@ -510,7 +461,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Render content based on current step
 	const renderStepContent = () => {
 	  switch (step) {
 		 case "upload":
@@ -523,7 +473,6 @@ export default function InstagramPostModal({
 				 onDrop={handleDrop}
 				 onDragOver={handleDragOver}
 			  >
-				 {/* Upload icon SVG */}
 				 <svg
 					aria-label="Icon for media like images or videos"
 					className="x1lliihq x1n2onr6 x5n08af"
@@ -577,13 +526,12 @@ export default function InstagramPostModal({
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && selectedImages[currentImageIndex].type === "image" ? (
 					  <div className="relative w-full h-full">
-						 {/* Image cropper component */}
 						 <Cropper
 							image={selectedImages[currentImageIndex].previewUrl}
 							crop={crop}
 							zoom={zoom}
 							rotation={rotation}
-							aspect={1} // Force square aspect ratio
+							aspect={1} 
 							onCropChange={setCrop}
 							onCropComplete={onCropComplete}
 							onZoomChange={setZoom}
@@ -596,11 +544,8 @@ export default function InstagramPostModal({
 								 maxWidth: "100%",
 							  },
 							}}
-						 />
-						 
-						 {/* Crop controls toolbar */}
+						 />				 
 						 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
-							{/* Zoom Out button */}
 							<TooltipProvider>
 							  <Tooltip>
 								 <TooltipTrigger asChild>
@@ -608,7 +553,7 @@ export default function InstagramPostModal({
 									  variant="ghost"
 									  size="icon"
 									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.max(1, zoom - 0.1))} // Decrease zoom by 0.1, minimum 1
+									  onClick={() => setZoom(Math.max(1, zoom - 0.1))} 
 									>
 									  <ZoomOut className="h-5 w-5" />
 									</Button>
@@ -619,7 +564,6 @@ export default function InstagramPostModal({
 							  </Tooltip>
 							</TooltipProvider>
 							
-							{/* Rotate button */}
 							<TooltipProvider>
 							  <Tooltip>
 								 <TooltipTrigger asChild>
@@ -627,7 +571,7 @@ export default function InstagramPostModal({
 									  variant="ghost"
 									  size="icon"
 									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setRotation((rotation + 90) % 360)} // Rotate 90 degrees
+									  onClick={() => setRotation((rotation + 90) % 360)}
 									>
 									  <RotateCw className="h-5 w-5" />
 									</Button>
@@ -638,7 +582,6 @@ export default function InstagramPostModal({
 							  </Tooltip>
 							</TooltipProvider>
 							
-							{/* Zoom In button */}
 							<TooltipProvider>
 							  <Tooltip>
 								 <TooltipTrigger asChild>
@@ -646,7 +589,7 @@ export default function InstagramPostModal({
 									  variant="ghost"
 									  size="icon"
 									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.min(3, zoom + 0.1))} // Increase zoom by 0.1, maximum 3
+									  onClick={() => setZoom(Math.min(3, zoom + 0.1))} 
 									>
 									  <ZoomIn className="h-5 w-5" />
 									</Button>
@@ -659,7 +602,6 @@ export default function InstagramPostModal({
 						 </div>
 					  </div>
 					) : (
-					  // Video preview (no cropping)
 					  <div className="relative w-full h-full">
 						 {selectedImages[currentImageIndex].type === "video" ? (
 							<video
@@ -680,7 +622,6 @@ export default function InstagramPostModal({
 					  </div>
 					)}
  
-					{/* Navigation arrows for multiple images */}
 					{selectedImages.length > 1 && (
 					  <>
 						 <Button
@@ -705,7 +646,6 @@ export default function InstagramPostModal({
 					)}
 				 </div>
  
-				 {/* Thumbnail strip for multiple images */}
 				 {selectedImages.length > 1 && (
 					<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
 					  {selectedImages.map((img, index) => (
@@ -742,7 +682,6 @@ export default function InstagramPostModal({
 				 exit={{ opacity: 0 }}
 				 className="flex h-auto"
 			  >
-				 {/* Main preview area */}
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && (
 					  <div className="relative w-full h-full">
@@ -771,7 +710,6 @@ export default function InstagramPostModal({
 							/>
 						 )}
  
-						 {/* Navigation arrows for multiple images */}
 						 {selectedImages.length > 1 && (
 							<>
 							  <Button
@@ -798,10 +736,8 @@ export default function InstagramPostModal({
 					)}
 				 </div>
 				 
-				 {/* Edit controls panel */}
 				 <div className="w-[250px] bg-[#262626] p-4">
 					<div className="flex gap-2 mb-4">
-					  {/* Filters tab */}
 					  <button
 						 onClick={() => setActiveTab("filters")}
 						 className={cn(
@@ -811,7 +747,6 @@ export default function InstagramPostModal({
 					  >
 						 Filters
 					  </button>
-					  {/* Adjustments tab */}
 					  <button
 						 onClick={() => setActiveTab("adjustments")}
 						 className={cn(
@@ -823,7 +758,7 @@ export default function InstagramPostModal({
 					  </button>
 					</div>
  
-					{/* Filters panel */}
+					{/* filter */}
 					{activeTab === "filters" && (
 					  <div className="grid grid-cols-3 gap-2">
 						 {[
@@ -870,7 +805,6 @@ export default function InstagramPostModal({
 					  </div>
 					)}
  
-					{/* Adjustments panel */}
 					{activeTab === "adjustments" && (
 					  <div className="space-y-6">
 						 {Object.entries(adjustments).map(([key, value]) => (
@@ -912,7 +846,6 @@ export default function InstagramPostModal({
 					  </div>
 					)}
  
-					{/* Filter strength slider (when filter is not Original) */}
 					{filter !== "Original" && activeTab === "filters" && (
 					  <div className="mt-4">
 						 <div className="flex justify-between mb-1">
@@ -941,7 +874,6 @@ export default function InstagramPostModal({
 				 exit={{ opacity: 0 }}
 				 className="flex h-[500px]"
 			  >
-				 {/* Preview area */}
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && (
 					  <div className="relative w-full h-full">
@@ -970,7 +902,6 @@ export default function InstagramPostModal({
 							/>
 						 )}
  
-						 {/* Navigation arrows for multiple images */}
 						 {selectedImages.length > 1 && (
 							<>
 							  <Button
@@ -997,9 +928,7 @@ export default function InstagramPostModal({
 					)}
 				 </div>
 				 
-				 {/* Post details panel */}
 				 <div className="w-[250px] bg-[#222121] p-4 space-y-4 overflow-y-auto">
-					{/* User profile */}
 					<div className="flex items-center gap-2">
 					  <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden">
 						 <img
@@ -1013,7 +942,6 @@ export default function InstagramPostModal({
 					  <span className="text-sm text-white">User</span>
 					</div>
  
-					{/* Caption input */}
 					<div className="relative">
 					  <textarea
 						 className="w-full h-20 bg-transparent text-white text-sm resize-none border-none focus:outline-none focus:ring-0 p-0"
@@ -1025,7 +953,6 @@ export default function InstagramPostModal({
 					  <div className="absolute bottom-1 right-1 text-xs text-gray-400">{caption.length}/2,200</div>
 					</div>
  
-					{/* Location input */}
 					<div className="flex items-center justify-between py-1">
 					  {showLocationInput ? (
 						 <div className="flex items-center w-full">
@@ -1058,8 +985,6 @@ export default function InstagramPostModal({
 						 </>
 					  )}
 					</div>
- 
-					{/* Collaborators section */}
 					<div className="flex flex-col py-1">
 					  <div className="flex items-center justify-between">
 						 <span className="text-sm text-white">Add collaborators</span>
@@ -1109,7 +1034,6 @@ export default function InstagramPostModal({
 					  )}
 					</div>
  
-					{/* Accessibility tooltip */}
 					<TooltipProvider>
 					  <div className="flex items-center justify-between py-1">
 						 <span className="text-sm text-white">Accessibility</span>
@@ -1126,7 +1050,6 @@ export default function InstagramPostModal({
 					  </div>
 					</TooltipProvider>
  
-					{/* Advanced settings tooltip */}
 					<TooltipProvider>
 					  <div className="flex items-center justify-between py-1">
 						 <span className="text-sm text-white">Advanced settings</span>
@@ -1151,7 +1074,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Get appropriate dialog title based on current step
 	const getDialogTitle = () => {
 	  switch (step) {
 		 case "upload":
@@ -1167,7 +1089,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Get appropriate action button based on current step
 	const getActionButton = () => {
 	  switch (step) {
 		 case "crop":
@@ -1217,7 +1138,7 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Main modal component
+	// modal
 	return (
 	  <Dialog 
 		 open={open} 
