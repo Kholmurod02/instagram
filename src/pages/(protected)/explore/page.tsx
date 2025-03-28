@@ -23,16 +23,6 @@ const [addComment] = useAddCommentMutation();
 
 
 
-const handleAddComment = async (postId: string) => {
-  if (commentText.trim()) {
-    try {
-      await addComment({ postId, comment: commentText });
-      setCommentText(""); // Clear the input field after submission
-    } catch (err) {
-      console.error("Error adding comment:", err);
-    }
-  }
-};
 const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setCommentText(e.target.value);
 };
