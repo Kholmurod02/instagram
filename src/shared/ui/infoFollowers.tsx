@@ -20,9 +20,6 @@ const InfoFollowers = ({
 	const {data} = useGetSubscriptionQuery(decodeToken.sid)
 	if(error) return <p>error</p>
 	if(isLoading) return <p>Loading...</p>
-	console.log('====================================');
-	console.log(data);
-	console.log('====================================');
 	
 	return (
 		<div>
@@ -40,8 +37,8 @@ const InfoFollowers = ({
 					<span className='text-[#fff]'>{following} </span>following
 				</p>
 			</div>
-			<SubscribersModal open={openSC} subscribers={subscribersData.data} setOpen={setOpenSC} />
-			<SubscriptionModal open={open} setOpen={setOpen} subscribers={data.data}/>
+			<SubscribersModal open={openSC} subscribers={subscribersData?.data} setOpen={setOpenSC} />
+			<SubscriptionModal open={open} setOpen={setOpen} subscribers={data?.data}/>
 		</div>
 	)
 }
