@@ -27,7 +27,25 @@ export const reelsApi = createApi({
         },
       }),
     }),
-
+    commentPost: builder.mutation({
+      query: ({ postId, comment }) => ({
+        url: "/Post/add-comment",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({comment,postId})
+      }),
+    }),
+    view:builder.mutation({
+      query: (viewId) => ({
+        url: `Post/like-post?postId=${viewId}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
     likeReel: builder.mutation({
       query: (reelId) => ({
         url: `Post/like-post?postId=${reelId}`,
@@ -40,4 +58,4 @@ export const reelsApi = createApi({
   }),
 });
 
-export const { useGetReelsQuery, useLikeReelMutation, useFollowingMutation } = reelsApi;
+export const { useGetReelsQuery, useLikeReelMutation, useFollowingMutation, useCommentPostMutation, useViewMutation } = reelsApi;
