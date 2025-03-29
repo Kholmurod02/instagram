@@ -553,8 +553,8 @@ export default function InstagramPostModal({
 								  containerClassName: "!overflow-visible",
 								  cropAreaClassName: "!overflow-hidden",
 								}}
-								restrictPosition={false} // Allow dragging beyond image bounds
-								minZoom={0.5} // Set minimum zoom level
+								restrictPosition={false}
+								minZoom={0.5} 
 							 />
 							 
 							 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
@@ -1164,13 +1164,13 @@ export default function InstagramPostModal({
 >
   <AnimatePresence>
     {open && (
- <motion.div
- initial={{ scale: 0.7, opacity: 0 }}
- animate={{ scale: 1.3, opacity: 1 }}
- exit={{ scale: 0.7, opacity: 0 }}
- transition={{ duration: 0.3, ease: "easeOut" }}
- className="flex justify-center items-center"
->
+      <motion.div
+      initial={{ scale: 0.7, opacity: 0 }}
+      animate={{ scale: 1.3, opacity: 1 }}
+      exit={{ scale: 0.7, opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="flex justify-center items-center"
+     >
         <DialogContent
           aria-describedby={undefined}
           className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
