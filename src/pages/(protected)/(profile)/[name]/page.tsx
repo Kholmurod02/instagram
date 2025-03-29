@@ -1,3 +1,9 @@
+import {
+	useGetFavoritePostsQuery,
+	useGetMyPostsQuery,
+	useGetMyProfileQuery,
+	useGetMyStoriesQuery,
+} from '@/app/store/profileSlice/profileSlice'
 import PostIcon from '@/shared/icons/post-icon'
 import ReelsIcon from '@/shared/icons/Reels-icon'
 import SavedIcon from '@/shared/icons/saved-icon'
@@ -5,21 +11,15 @@ import TaggedIcon from '@/shared/icons/tagged-icon'
 import InfoFollowers from '@/shared/ui/infoFollowers'
 import InfoProfile from '@/shared/ui/infoProfile'
 import ReelsDiv from '@/shared/ui/reels-div'
+import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
 import StoryCircle from '@/shared/ui/story-circle'
 import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
-import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
-import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
-import {
-	useGetFavoritePostsQuery,
-	useGetMyProfileQuery,
-} from '@/app/store/profileSlice/profileSlice'
-import { useGetMyPostsQuery } from '@/app/store/profileSlice/profileSlice'
-import { useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
-import { useState } from 'react'
 import { StoryModal } from '@/widgets/StoriesModal'
-import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { useState } from 'react'
 
 export default function ProfileByNamePage() {
 	const [isViewed, setIsViewed] = useState<boolean>(false)
@@ -215,11 +215,11 @@ export default function ProfileByNamePage() {
 							comments: object
 							id: number | string
 						}) => (
+							
 							<ReelsDiv
 								img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
 								likes={post.postLikeCount}
 								comments={post.commentCount}
-								key={post.id}
 							/>
 						)
 					)}

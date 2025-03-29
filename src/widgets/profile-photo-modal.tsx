@@ -6,8 +6,12 @@ import {
 } from '@/shared/ui/dialog'
 import { Button } from '@/shared/ui/button'
 import { Upload, Trash2 } from 'lucide-react'
-import { useDeleteImageProfileMutation, useEditProfileImageMutation } from '@/app/store/profileSlice/profileSlice'
-import { useRef, useState } from 'react'
+import {
+	useDeleteImageProfileMutation,
+	useEditProfileImageMutation,
+	useGetMyProfileQuery,
+} from '@/app/store/profileSlice/profileSlice'
+import { useRef } from 'react'
 
 export default function ProfilePhotoModal({
 	open,
@@ -16,37 +20,45 @@ export default function ProfilePhotoModal({
 	open: boolean
 	setOpen: (open: boolean) => void
 }) {
+	const { refetch } = useGetMyProfileQuery()
 	const [DeleteImageProfile] = useDeleteImageProfileMutation()
 	const [EditProfileImage] = useEditProfileImageMutation()
-	const FileRef = useRef(null)
+	const FileRef = useRef<HTMLInputElement>(null)
+
 	async function deleteImageProfileF() {
 		try {
 			await DeleteImageProfile().unwrap()
-			console.log('delete Image Profile')
+			console.log('Deleted Image Profile')
+			await refetch()
 			setOpen(false)
 		} catch (error) {
 			console.error(error)
 			setOpen(false)
 		}
 	}
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	async function fileChange(event: { target: { files: any[] } }) {
+
+	async function fileChange(event: { target: { files: File[] } }) {
 		const file = event.target.files[0]
+		if (!file) return
+
 		console.log(file)
 		const formData = new FormData()
-		formData.append("image" , file)
+		formData.append('imageFile', file)
+
 		try {
 			await EditProfileImage(formData).unwrap()
-			console.log("succes added image");
-			refetch() 
+			console.log('Success: Image added')
+			await refetch()
 			setOpen(false)
 		} catch (error) {
-			console.error(error);
+			console.error(error)
 		}
 	}
+
 	function clickOpenFile() {
-		FileRef.current.click()
+		FileRef.current?.click()
 	}
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className='sm:max-w-md bg-[#232323] text-white border-gray-800 p-0 gap-0 rounded-lg'>
@@ -60,10 +72,8 @@ export default function ProfilePhotoModal({
 					<input
 						onChange={fileChange}
 						type='file'
-						name=''
 						className='hidden'
 						ref={FileRef}
-						id=''
 					/>
 					<Button
 						variant='ghost'

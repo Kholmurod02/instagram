@@ -94,7 +94,7 @@ export default function ExplorePage() {
     <div className="flex flex-col items-center justify-center mt-10 lg:px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
         {arrangedMedia.map((item) => (
-          <InstagramDialog key={item.id} post={item}>
+          <InstagramDialog key={item.id}post={item}>
             <div
               className={`relative w-full cursor-pointer ${item.type === "video" ? "row-span-2" : ""}`}
             >
