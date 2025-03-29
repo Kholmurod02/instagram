@@ -20,7 +20,7 @@ const History = ({story}) => {
           open={open} 
           setOpen={setOpen} 
           storyDataHome={story.stories}
-			 userName={story.userName}
+			 userName={story.userName} 
   			 userImage={story.userImage} 
         />
       )}
