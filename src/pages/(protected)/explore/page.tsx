@@ -1,3 +1,4 @@
+"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useGetPostsQuery } from "../../../entities/post/postApi";

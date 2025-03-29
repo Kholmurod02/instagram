@@ -38,18 +38,18 @@ const Save: React.FC<SaveProps> = ({ postId }) => {
     } catch (error) {
       console.error('Ошибка при сохранении поста:', error)
       toast.error('Ошибка сохранения поста!')
-      setSaved(!newSavedState) // Откат в случае ошибки
+      setSaved(!newSavedState) 
     }
   }
 
   return (
-    <button onClick={handleSave} className="flex items-center gap-1" disabled={saving || unsaving}>
+    <div onClick={handleSave} className="flex items-center gap-1 cursor-pointer" disabled={saving || unsaving}>
       {saving || unsaving ? (
         <Loader2 size={20} className="animate-spin text-gray-500" />
       ) : (
         <Bookmark size={20} className={saved ? 'fill-blue-500 text-blue-500' : 'text-gray-100'} />
       )}
-    </button>
+    </div>
   )
 }
 

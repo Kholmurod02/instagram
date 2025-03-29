@@ -44,21 +44,23 @@ export const postApi = createApi({
       invalidatesTags: (_result, _error, { postId }) => [{ type: 'Posts', id: postId }],
     }),
     
-
     savePost: builder.mutation({
       query: (postId) => ({
-        url: `/Post/save-post?postId=${postId}`,
+        url: `/Post/add-post-favorite`,
         method: 'POST',
+        body: { postId }, 
       }),
       invalidatesTags: [{ type: 'Posts', id: 'Saved' }],
     }),
     unsavePost: builder.mutation({
       query: (postId) => ({
-        url: `/Post/unsave-post?postId=${postId}`,
+        url: `/Post/remove-post-favorite`,
         method: 'POST',
+        body: { postId },
       }),
       invalidatesTags: [{ type: 'Posts', id: 'Saved' }],
     }),
+    
     
   }),
 });
