@@ -67,7 +67,7 @@ export default function ProfileByNamePage() {
 		error: FavoriteError,
 		isLoading: FavoriteLoading,
 	} = useGetFavoritePostsQuery(undefined)
-  
+
 	console.log(postsData)
 	if (profileError) return <p className=''>Profile Error</p>
 	if (profileLoading)
@@ -99,29 +99,33 @@ export default function ProfileByNamePage() {
 		)
 	return (
 		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] m-auto w-full py-[50px]'>
-			<section className='flex w-[90%] m-auto gap-[0px] lg:gap-[100px] items-center'>
+			<section className='flex w-[100%] m-auto gap-[0px] lg:gap-[70px] items-center'>
 				<div
-					className={`rounded-full lg:w-[200px] lg:h-[202px] w-[100px] h-[100px] cursor-pointer p-[2px] ${
+					className={`rounded-full overflow-hidden flex items-center justify-center lg:w-[200px] lg:h-[200px] w-[100px] h-[100px] cursor-pointer p-[2px] ${
 						isViewed
 							? 'bg-gray-500'
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
 					}`}
 				>
-					<Avatar onClick={clickOpenModal}>
+					<Avatar
+						className='w-full h-full rounded-full'
+						onClick={clickOpenModal}
+					>
 						<AvatarImage
 							src={`https://instagram-api.softclub.tj/images/${profileData.data.image}`}
-							className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+							className='w-full h-full rounded-full object-cover'
 							alt='Profile Image'
 						/>
 						<AvatarFallback>
 							<AvatarImage
 								src='https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
-								className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+								className='w-full h-full rounded-full object-cover'
 								alt='Profile Image'
 							/>
 						</AvatarFallback>
 					</Avatar>
 				</div>
+
 				<StoryModal
 					open={openModal}
 					setOpen={setOpenModal}

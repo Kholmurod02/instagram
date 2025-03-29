@@ -4,6 +4,7 @@ import InfoProfile from '@/shared/ui/infoProfile'
 import { SettingsIcon } from 'lucide-react'
 import { useState } from 'react'
 import { ProfileSettingsModal } from './profile-settings-modal'
+import ProfileEditModal from './profile-edit-modal'
 // import ProfileEditModal from './profile-edit-modal'
 const HeaderSectionProfile = ({
 	userName,
@@ -21,14 +22,14 @@ const HeaderSectionProfile = ({
 	about: string
 }) => {
 	const [openS, setOpenS] = useState<boolean>(false)
-	// const [openE,setOpenE] = useState<boolean>(false)
+	const [openE,setOpenE] = useState<boolean>(false)
 	return (
 		<div>
 			<aside className='flex flex-col gap-[20px]'>
 				<div className='flex gap-[10px] items-start lg:items-center flex-col lg:flex-row'>
 					<p className='text-[#fff]  text-[25px]'>{userName}</p>
 					<div className='flex gap-[10px] items-center'>
-						<Button className='px-[20px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
+						<Button onClick={() => setOpenE(true)} className='px-[20px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
 							Edit Profile
 						</Button>
 						<Button className='px-[20px] py-[5px] bg-[#3b3b3b] text-[#fff] rounded-md cursor-pointer'>
@@ -53,7 +54,7 @@ const HeaderSectionProfile = ({
 				</div>
 			</aside>
 			<ProfileSettingsModal open={openS} setOpen={setOpenS} />
-			{/* <ProfileEditModal openE={openE} setOpenE={setOpenE}/> */}
+			<ProfileEditModal openE={openE} setOpenE={setOpenE}/>
 		</div>
 	)
 }
