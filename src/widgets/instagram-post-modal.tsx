@@ -515,164 +515,176 @@ export default function InstagramPostModal({
 			  </motion.div>
 			)
  
-		 case "crop":
-			return (
-			  <motion.div 
-				 initial={{ opacity: 0 }}
-				 animate={{ opacity: 1 }}
-				 exit={{ opacity: 0 }}
-				 className="flex flex-col bg-[#4d4c4c] h-[500px] border-none"
-			  >
-				 <div className="flex-1 relative overflow-hidden">
-					{selectedImages.length > 0 && selectedImages[currentImageIndex].type === "image" ? (
-					  <div className="relative w-full h-full">
-						 <Cropper
-							image={selectedImages[currentImageIndex].previewUrl}
-							crop={crop}
-							zoom={zoom}
-							rotation={rotation}
-							aspect={1} 
-							onCropChange={setCrop}
-							onCropComplete={onCropComplete}
-							onZoomChange={setZoom}
-							onRotationChange={setRotation}
-							cropShape="rect"
-							showGrid={false}
-							style={{
-							  mediaStyle: {
-								 maxHeight: "100%",
-								 maxWidth: "100%",
-							  },
-							}}
-						 />				 
-						 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.max(1, zoom - 0.1))} 
-									>
-									  <ZoomOut className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Zoom Out</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-							
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setRotation((rotation + 90) % 360)}
-									>
-									  <RotateCw className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Rotate</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-							
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.min(3, zoom + 0.1))} 
-									>
-									  <ZoomIn className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Zoom In</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-						 </div>
-					  </div>
-					) : (
-					  <div className="relative w-full h-full">
-						 {selectedImages[currentImageIndex].type === "video" ? (
-							<video
-							  src={selectedImages[currentImageIndex].previewUrl}
-							  className="object-contain w-full h-full"
-							  controls
-							  autoPlay
-							  muted
-							  loop
-							/>
-						 ) : (
-							<img
-							  src={selectedImages[currentImageIndex].previewUrl || "/placeholder.svg"}
-							  alt="Selected image"
-							  className="object-contain w-full h-full"
-							/>
-						 )}
-					  </div>
-					)}
- 
-					{selectedImages.length > 1 && (
-					  <>
-						 <Button
-							variant="ghost"
-							size="icon"
-							className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
-							onClick={prevImage}
-							disabled={currentImageIndex === 0}
-						 >
-							<ChevronLeft className="h-5 w-5" />
-						 </Button>
-						 <Button
-							variant="ghost"
-							size="icon"
-							className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
-							onClick={nextImage}
-							disabled={currentImageIndex === selectedImages.length - 1}
-						 >
-							<ChevronRight className="h-5 w-5" />
-						 </Button>
-					  </>
-					)}
-				 </div>
- 
-				 {selectedImages.length > 1 && (
-					<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
-					  {selectedImages.map((img, index) => (
-						 <div
-							key={index}
-							className={cn(
-							  "w-10 h-10 relative rounded overflow-hidden cursor-pointer border-2",
-							  index === currentImageIndex ? "border-blue-500" : "border-transparent",
-							)}
-							onClick={() => setCurrentImageIndex(index)}
-						 >
-							{img.type === "video" && (
-							  <div className="absolute top-0 right-0 bg-black/50 p-0.5 rounded-bl">
-								 <Play className="h-2 w-2 text-white" />
-							  </div>
-							)}
-							<img
-							  src={img.previewUrl || "/placeholder.svg"}
-							  alt={`Thumbnail ${index + 1}`}
-							  className="object-cover w-full h-full"
-							/>
-						 </div>
-					  ))}
-					</div>
-				 )}
-			  </motion.div>
-			)
+			case "crop":
+				return (
+				  <motion.div 
+					 initial={{ opacity: 0 }}
+					 animate={{ opacity: 1 }}
+					 exit={{ opacity: 0 }}
+					 className="flex flex-col bg-[#4d4c4c] h-[500px] border-none"
+				  >
+					 <div className="flex-1 relative overflow-hidden">
+						{selectedImages.length > 0 && selectedImages[currentImageIndex].type === "image" ? (
+						  <div className="relative w-full h-full">
+							 <Cropper
+								image={selectedImages[currentImageIndex].previewUrl}
+								crop={crop}
+								zoom={zoom}
+								rotation={rotation}
+								aspect={1}
+								onCropChange={setCrop}
+								onCropComplete={onCropComplete}
+								onZoomChange={setZoom}
+								onRotationChange={setRotation}
+								cropShape="rect"
+								showGrid={false}
+								style={{
+								  containerStyle: {
+									 backgroundColor: "#4d4c4c",
+								  },
+								  mediaStyle: {
+									 transform: `scale(${zoom}) rotate(${rotation}deg)`,
+								  },
+								  cropAreaStyle: {
+									 border: "2px solid rgba(255, 255, 255, 0.7)",
+								  },
+								}}
+								classes={{
+								  containerClassName: "!overflow-visible",
+								  cropAreaClassName: "!overflow-hidden",
+								}}
+								restrictPosition={false} // Allow dragging beyond image bounds
+								minZoom={0.5} // Set minimum zoom level
+							 />
+							 
+							 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
+										>
+										  <ZoomOut className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Zoom Out</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+								
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setRotation((rotation + 90) % 360)}
+										>
+										  <RotateCw className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Rotate</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+								
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setZoom(Math.min(3, zoom + 0.1))}
+										>
+										  <ZoomIn className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Zoom In</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+							 </div>
+						  </div>
+						) : (
+						  <div className="relative w-full h-full">
+							 {selectedImages[currentImageIndex].type === "video" ? (
+								<video
+								  src={selectedImages[currentImageIndex].previewUrl}
+								  className="object-contain w-full h-full"
+								  controls
+								  autoPlay
+								  muted
+								  loop
+								/>
+							 ) : (
+								<img
+								  src={selectedImages[currentImageIndex].previewUrl || "/placeholder.svg"}
+								  alt="Selected image"
+								  className="object-contain w-full h-full"
+								/>
+							 )}
+						  </div>
+						)}
+			 
+						{selectedImages.length > 1 && (
+						  <>
+							 <Button
+								variant="ghost"
+								size="icon"
+								className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
+								onClick={prevImage}
+								disabled={currentImageIndex === 0}
+							 >
+								<ChevronLeft className="h-5 w-5" />
+							 </Button>
+							 <Button
+								variant="ghost"
+								size="icon"
+								className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
+								onClick={nextImage}
+								disabled={currentImageIndex === selectedImages.length - 1}
+							 >
+								<ChevronRight className="h-5 w-5" />
+							 </Button>
+						  </>
+						)}
+					 </div>
+			 
+					 {selectedImages.length > 1 && (
+						<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
+						  {selectedImages.map((img, index) => (
+							 <div
+								key={index}
+								className={cn(
+								  "w-10 h-10 relative rounded overflow-hidden cursor-pointer border-2",
+								  index === currentImageIndex ? "border-blue-500" : "border-transparent",
+								)}
+								onClick={() => setCurrentImageIndex(index)}
+							 >
+								{img.type === "video" && (
+								  <div className="absolute top-0 right-0 bg-black/50 p-0.5 rounded-bl">
+									 <Play className="h-2 w-2 text-white" />
+								  </div>
+								)}
+								<img
+								  src={img.previewUrl || "/placeholder.svg"}
+								  alt={`Thumbnail ${index + 1}`}
+								  className="object-cover w-full h-full"
+								/>
+							 </div>
+						  ))}
+						</div>
+					 )}
+				  </motion.div>
+				)
  
 		 case "edit":
 			return (
@@ -1140,32 +1152,43 @@ export default function InstagramPostModal({
  
 	// modal
 	return (
-	  <Dialog 
-		 open={open} 
-		 onOpenChange={(val) => {
-			if (!val) {
-			  resetModal();
-			}
-			setOpen(val);
-		 }}
-	  >
-		 <DialogContent
-			aria-describedby={undefined}
-			className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
-		 >
-			<DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
-			  {step !== "upload" && (
-				 <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
-					<ChevronLeft className="h-5 w-5" />
-				 </Button>
-			  )}
-			  <DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
-			  {getActionButton()}
-			</DialogHeader>
-			<AnimatePresence mode="wait">
-			  {renderStepContent()}
-			</AnimatePresence>
-		 </DialogContent>
-	  </Dialog>
+	
+<Dialog
+  open={open}
+  onOpenChange={(val) => {
+    if (!val) {
+      resetModal();
+    }
+    setOpen(val);
+  }}
+>
+  <AnimatePresence>
+    {open && (
+ <motion.div
+ initial={{ scale: 0.7, opacity: 0 }}
+ animate={{ scale: 1.3, opacity: 1 }}
+ exit={{ scale: 0.7, opacity: 0 }}
+ transition={{ duration: 0.3, ease: "easeOut" }}
+ className="flex justify-center items-center"
+>
+        <DialogContent
+          aria-describedby={undefined}
+          className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
+        >
+          <DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
+            {step !== "upload" && (
+              <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+            )}
+            <DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
+            {getActionButton()}
+          </DialogHeader>
+          {renderStepContent()}
+        </DialogContent>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</Dialog>
 	)
  }
