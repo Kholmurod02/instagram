@@ -152,7 +152,7 @@ const handleSavePost = async (postId: string) => {
           })}
       </div>
 
-      <div ref={observerRef} className="h-10" />
+      <div ref={observerRef} className="h-10" /> 
 
       {!hasMore && !isFetching && (
         <div className="py-8 text-center text-gray-500">No more posts to load</div>

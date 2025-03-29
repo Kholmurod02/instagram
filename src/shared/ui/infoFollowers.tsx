@@ -1,17 +1,44 @@
-const InfoFollowers = ({posts , followers , following} : {posts:string , followers : string , following: string}) => {
+import { useGetSibscribesQuery, useGetSubscriptionQuery } from '@/app/store/profileSlice/profileSlice'
+import SubscribersModal from '@/widgets/Subscrbers-modal'
+import SubscriptionModal from '@/widgets/subscription-modal'
+import { useState } from 'react'
+
+const InfoFollowers = ({
+	posts,
+	followers,
+	following,
+}: {
+	posts: string
+	followers: string
+	following: string
+}) => {
+	const [openSC, setOpenSC] = useState<boolean>(false)
+	const [open,setOpen] = useState<boolean>(false)
+	const token = localStorage.getItem('decodeToken')
+	const decodeToken = token ? JSON.parse(token) : {}
+	const {data : subscribersData,error,isLoading} = useGetSibscribesQuery(decodeToken.sid)
+	const {data} = useGetSubscriptionQuery(decodeToken.sid)
+	if(error) return <p>error</p>
+	if(isLoading) return <p>Loading...</p>
+	
 	return (
 		<div>
 			<div className='flex lg:gap-[70px] w-full mb-[10px] justify-around m-auto  items-center '>
 				<p className='text-[gray] flex lg:gap-[10px] lg:flex-row  flex-col items-center text-[18px]'>
 					<span className='text-[#fff]'>{posts} </span>posts
 				</p>
-				<p className='text-[gray] flex lg:gap-[10px] lg:flex-row  flex-col items-center text-[18px]'>
+				<p
+					onClick={() => setOpenSC(true)}
+					className='text-[gray] cursor-pointer flex lg:gap-[10px] lg:flex-row  flex-col items-center text-[18px]'
+				>
 					<span className='text-[#fff]'>{followers} </span>followers
 				</p>
-				<p className='text-[gray] flex lg:gap-[10px] lg:flex-row  flex-col items-center text-[18px]'>
+				<p onClick={() => setOpen(true)} className='text-[gray] cursor-pointer flex lg:gap-[10px] lg:flex-row  flex-col items-center text-[18px]'>
 					<span className='text-[#fff]'>{following} </span>following
 				</p>
 			</div>
+			<SubscribersModal open={openSC} subscribers={subscribersData?.data} setOpen={setOpenSC} />
+			<SubscriptionModal open={open} setOpen={setOpen} subscribers={data?.data}/>
 		</div>
 	)
 }
