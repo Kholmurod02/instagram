@@ -52,8 +52,16 @@ export const postApi = createApi({
       }),
       invalidatesTags: [{ type: 'Posts', id: 'Saved' }],
     }),
+    unsavePost: builder.mutation({
+      query: (postId) => ({
+        url: `/Post/unsave-post?postId=${postId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: [{ type: 'Posts', id: 'Saved' }],
+    }),
+    
   }),
 });
 
-export const { useAddPostMutation,useGetPostsQuery,useLikePostMutation,  useSavePostMutation,  useAddCommentMutation
+export const { useAddPostMutation,useGetPostsQuery,useLikePostMutation,  useSavePostMutation,  useAddCommentMutation, useUnsavePostMutation,
 } = postApi;

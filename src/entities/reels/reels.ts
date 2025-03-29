@@ -1,10 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4d3646b67f445dd6eb6e9ad7b6814defd62314a0
 export const reelsApi = createApi({
   reducerPath: "reelsApi",
   baseQuery: fetchBaseQuery({
