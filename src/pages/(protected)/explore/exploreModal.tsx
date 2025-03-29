@@ -44,15 +44,13 @@ export function InstagramDialog({
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className='p-0 w-[75vw] max-w-[1200px] !max-w-[1200px] gap-0 overflow-hidden'>
 				<div className='grid grid-cols-1  md:grid-cols-2 h-[90vh] '>
-					<div className='bg-black flex items-center justify-center'>
-						<br />
-
-						<img
-							src={(post as unknown as { url: string }).url}
-							alt='Instagram post'
-							className='h-full w-full object-contain'
-						/>
-					</div>
+				<div className="bg-black flex items-center justify-center">
+    {post.mediaType === 'video' ? (
+      <video src={post.url} controls className="h-full w-full object-contain" />
+    ) : (
+      <img src={post.url} alt="Post" className="h-full w-full object-contain" />
+    )}
+  </div>
 
 					<div className='flex overflow-y-auto flex-col h-full'>
 						<div className='flex items-center justify-between p-3 border-b'>
