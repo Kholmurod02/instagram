@@ -13,14 +13,14 @@ import {
 	VolumeOff,
 	X,
 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface StoryModalProps {
 	open: boolean
 	storyData: any
 	setOpen: (open: boolean) => void
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 interface StoryVideo {
 	id: number | string
 	fileName: string
@@ -33,22 +33,136 @@ interface StoryVideo {
 export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 	const [currentIndex, setCurrentIndex] = useState(0)
-	const [isPlaying, setIsPlaying] = useState<boolean[]>(
-		storyData.data?.stories.map(() => false)
-	)
-	const [isMuted, setIsMuted] = useState<boolean[]>(
-		storyData.data?.stories.map(() => false)
-	)
+	const [watchedStories, setWatchedStories] = useState<number[]>([])
+	const [isPlaying, setIsPlaying] = useState<boolean[]>([])
+	const [isMuted, setIsMuted] = useState<boolean[]>([])
+	const [videoDurations, setVideoDurations] = useState<number[]>([])
+	const [progress, setProgress] = useState(0)
+	const progressInterval = useRef<NodeJS.Timeout>()
+	const isInitialMount = useRef(true)
+
+	// Инициализация состояний
+	useEffect(() => {
+		if (storyData.data?.stories) {
+			setIsPlaying(storyData.data.stories.map(() => true))
+			setIsMuted(storyData.data.stories.map(() => false))
+			setVideoDurations(storyData.data.stories.map(() => 5)) // Дефолтная длительность 5 сек
+		}
+	}, [storyData.data?.stories])
+
+	// Загрузка метаданных видео для получения длительности
+	useEffect(() => {
+		if (!open || !storyData.data?.stories) return
+
+		const loadDurations = async () => {
+			const durations = await Promise.all(
+				storyData.data.stories.map(async (_, index) => {
+					const video = videoRefs.current[index]
+					if (video) {
+						return new Promise<number>(resolve => {
+							const onLoadedMetadata = () => {
+								video.removeEventListener('loadedmetadata', onLoadedMetadata)
+								resolve(video.duration)
+							}
+							video.addEventListener('loadedmetadata', onLoadedMetadata)
+							video.load()
+						})
+					}
+					return 5 // Дефолтная длительность, если не удалось загрузить
+				})
+			)
+			setVideoDurations(durations)
+		}
+
+		loadDurations()
+	}, [open, storyData.data?.stories])
+
+	// Автоматическое воспроизведение и прогресс-бар
+	useEffect(() => {
+		if (!open || videoDurations.length === 0) return
+
+		const startProgress = () => {
+			clearInterval(progressInterval.current)
+			setProgress(0)
+
+			if (isPlaying[currentIndex]) {
+				const durationMs = videoDurations[currentIndex] * 1000
+				const startTime = Date.now()
+
+				progressInterval.current = setInterval(() => {
+					const elapsed = Date.now() - startTime
+					const newProgress = (elapsed / durationMs) * 100
+
+					if (newProgress >= 100) {
+						clearInterval(progressInterval.current)
+						nextStory()
+					} else {
+						setProgress(newProgress)
+					}
+				}, 16) // ~60fps
+			}
+		}
+
+		// Управление воспроизведением видео
+		const video = videoRefs.current[currentIndex]
+		if (video) {
+			if (isPlaying[currentIndex]) {
+				video.currentTime = 0
+				video.play().catch(e => console.error('Video play error:', e))
+				startProgress()
+			} else {
+				video.pause()
+				clearInterval(progressInterval.current)
+			}
+		}
+
+		return () => {
+			clearInterval(progressInterval.current)
+		}
+	}, [currentIndex, isPlaying, open, videoDurations])
+
+	// Сброс при открытии/закрытии модалки
+	useEffect(() => {
+		if (!open) {
+			setCurrentIndex(0)
+			setWatchedStories([])
+			setProgress(0)
+			clearInterval(progressInterval.current)
+		} else if (isInitialMount.current) {
+			isInitialMount.current = false
+		}
+	}, [open])
 
 	const nextStory = () => {
 		if (currentIndex < storyData.data?.stories.length - 1) {
-			setCurrentIndex(currentIndex + 1)
+			// Останавливаем текущее видео
+			const currentVideo = videoRefs.current[currentIndex]
+			if (currentVideo) {
+				currentVideo.pause()
+			}
+
+			// Добавляем в просмотренные
+			if (!watchedStories.includes(currentIndex)) {
+				setWatchedStories([...watchedStories, currentIndex])
+			}
+
+			setCurrentIndex(prev => prev + 1)
+			setProgress(0)
+		} else {
+			setOpen(false)
 		}
 	}
 
 	const prevStory = () => {
 		if (currentIndex > 0) {
-			setCurrentIndex(currentIndex - 1)
+			// Останавливаем текущее видео
+			const currentVideo = videoRefs.current[currentIndex]
+			if (currentVideo) {
+				currentVideo.pause()
+			}
+
+			setCurrentIndex(prev => prev - 1)
+			setProgress(0)
 		}
 	}
 
@@ -60,7 +174,7 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 			setIsPlaying(newIsPlaying)
 
 			if (newIsPlaying[index]) {
-				video.play()
+				video.play().catch(e => console.error('Video play error:', e))
 			} else {
 				video.pause()
 			}
@@ -75,6 +189,10 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 			setIsMuted(newIsMuted)
 			video.muted = newIsMuted[index]
 		}
+	}
+
+	const handleVideoEnd = () => {
+		nextStory()
 	}
 
 	return (
@@ -116,9 +234,28 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 					<div className='relative w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] h-[70vh] sm:h-[80vh] mx-auto'>
 						{/* Progress bar */}
 						<div className='absolute top-0 left-0 right-0 flex gap-1 p-2 z-20'>
-							<div className='h-0.5 bg-gray-500 flex-1 overflow-hidden'>
-								<div className='h-full bg-white w-[60%]' />
-							</div>
+							{storyData.data?.stories.map((_, index) => {
+								const segmentProgress =
+									index < currentIndex
+										? 100
+										: index === currentIndex
+										? progress
+										: 0
+
+								return (
+									<div
+										key={index}
+										className='h-0.5 bg-gray-500/50 flex-1 overflow-hidden rounded-full'
+									>
+										<div
+											className={`h-full transition-all duration-100 ${
+												segmentProgress > 0 ? 'bg-white' : 'bg-transparent'
+											}`}
+											style={{ width: `${segmentProgress}%` }}
+										/>
+									</div>
+								)
+							})}
 						</div>
 
 						{/* Story header */}
@@ -144,7 +281,6 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 							</div>
 
 							<div className='flex items-center gap-3 sm:gap-4'>
-								{/* Volume control */}
 								<button
 									onClick={() => toggleMute(currentIndex)}
 									className='text-white'
@@ -155,7 +291,6 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 										<Volume2 className='h-4 w-4 sm:h-5 sm:w-5' />
 									)}
 								</button>
-								{/* Play/Pause toggle */}
 								<button
 									onClick={() => togglePlay(currentIndex)}
 									className='text-white'
@@ -180,6 +315,32 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 										videoRefs.current[currentIndex] = el
 									}}
 									autoPlay
+									muted={isMuted[currentIndex]}
+									onEnded={handleVideoEnd}
+									onPlay={() => {
+										setIsPlaying(prev => {
+											const newState = [...prev]
+											newState[currentIndex] = true
+											return newState
+										})
+									}}
+									onPause={() => {
+										setIsPlaying(prev => {
+											const newState = [...prev]
+											newState[currentIndex] = false
+											return newState
+										})
+									}}
+									onLoadedMetadata={() => {
+										setVideoDurations(prev => {
+											const newDurations = [...prev]
+											const video = videoRefs.current[currentIndex]
+											if (video) {
+												newDurations[currentIndex] = video.duration
+											}
+											return newDurations
+										})
+									}}
 									key={storyData.data?.stories[currentIndex].id}
 									className='w-full h-full object-contain'
 								>
