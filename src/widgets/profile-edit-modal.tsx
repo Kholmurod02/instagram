@@ -35,9 +35,9 @@ export default function ProfileEditModal({
 	const [bio, setBio] = useState<string>('')
 	// const [select, setSelect] = useState<string>('')
 	const [open, setOpen] = useState<boolean>(false)
-	console.log(data.data?.image)
+	console.log(data?.data?.image)
 	useEffect(() => {
-		setBio(data.data?.about)
+		setBio(data?.data?.about)
 	}, [data])
 	if (error) return <p>Error</p>
 	if (isLoading) return <p>Loading...</p>
@@ -123,7 +123,7 @@ export default function ProfileEditModal({
 									maxLength={maxBioLength}
 								/>
 								<p className='text-xs text-gray-400 text-right'>
-									{bio.length} / {maxBioLength}
+									{bio?.length} / {maxBioLength}
 								</p>
 							</div>
 

@@ -69,6 +69,31 @@ export const ProfileApi = createApi({
 				invalidatesTags: ['Profile'],
 			}),
 		}),
+		getProfileById: build.query({
+			query: id => `/UserProfile/get-user-profile-by-id?id=${id}`,
+			providesTags: ['Profile'],
+		}),
+		getPostsById: build.query({
+			query: id => `/Post/get-posts?UserId=${id}`,
+			providesTags: ['Profile'],
+		}),
+		getStoryByid: build.query({
+			query: id => `/Story/get-user-stories/${id}`,
+			providesTags: ['Profile'],
+		}),
+		FollowByUserId: build.mutation({
+			query: id => ({
+				url: `/FollowingRelationShip/add-following-relation-ship?followingUserId=${id}`,
+				method: 'POST',
+				headers: {
+					Accept: '*/*',
+					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					'Content-Type': 'application/json'
+				},
+				body: "",
+			}),
+			invalidatesTags: ['Profile'],
+		}),
 	}),
 	keepUnusedDataFor: 30,
 })
@@ -83,4 +108,8 @@ export const {
 	useDeleteImageProfileMutation,
 	useEditProfileImageMutation,
 	useEditProfileMutation,
+	useGetProfileByIdQuery,
+	useGetPostsByIdQuery,
+	useGetStoryByidQuery,
+	useFollowByUserIdMutation,
 } = ProfileApi
