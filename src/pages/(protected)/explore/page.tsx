@@ -72,10 +72,10 @@ export default function ExplorePage() {
     );
   }
 
-  const videos = media.filter((item) => item.type === "video");
-  const images = media.filter((item) => item.type === "image");
+  const videos = media.filter((post) => post.type === "video");
+  const images = media.filter((post) => post.type === "image");
 
-  // Arrange items: Every 5th position should be a video (if available)
+ 
   const arrangedMedia = [];
   let videoIndex = 0;
   let imageIndex = 0;
@@ -93,14 +93,14 @@ export default function ExplorePage() {
   return (
     <div className="flex flex-col items-center justify-center mt-10 lg:px-4">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2">
-        {arrangedMedia.map((item) => (
-          <InstagramDialog key={item.id} post={item}>
+        {arrangedMedia.map((post) => (
+          <InstagramDialog key={post.id} post={post}>
             <div
-              className={`relative w-full cursor-pointer ${item.type === "video" ? "row-span-2" : ""}`}
+              className={`relative w-full cursor-pointer ${post.type === "video" ? "row-span-2" : ""}`}
             >
-              {item.type === "video" ? (
+              {post.type === "video" ? (
                 <video
-                  src={item.url}
+                  src={post.url}
                   autoPlay
                   muted
                   playsInline
@@ -109,24 +109,22 @@ export default function ExplorePage() {
                 />
               ) : (
                 <img
-                  src={item.url}
-                  alt={`Explore ${item.id}`}
+                  src={post.url}
+                  alt={`Explore ${post.id}`}
                   className="w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105"
                   loading="lazy"
                 />
               )}
 
-
-              {/* Overlay with likes and comments on hover */}
               <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div className="flex gap-4 text-white text-sm font-medium">
                   <div className="flex items-center gap-1">
                     <Heart className="w-4 h-4" />
-                    <span>{item.likes}</span>
+                    <span>{post.likes}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageCircle className="w-4 h-4" />
-                    <span>{item.comments}</span>
+                    <span>{post.comments}</span>
                   </div>
                 </div>
               </div>
@@ -136,9 +134,7 @@ export default function ExplorePage() {
 
         {(isLoading || isFetching) &&
           Array.from({ length: 6 }).map((_, index) => (
-            <div key={`skeleton-${index}`} className="relative w-full">
-              <Skeleton className="w-full h-[300px] sm:h-[400px]" />
-            </div>
+            <Skeleton key={`skeleton-${index}`} className="w-full h-[300px] sm:h-[200px]" />
           ))}
       </div>
 

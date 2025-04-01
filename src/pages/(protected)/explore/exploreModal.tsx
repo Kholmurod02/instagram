@@ -3,7 +3,7 @@ import {
   Heart,
   MessageCircle,
   Send,
-  Bookmark,
+  
   MoreHorizontal,
   Smile,
 } from 'lucide-react'
@@ -31,6 +31,7 @@ interface Post {
   comments?: { username: string; text: string }[]
   saved?: boolean
 }
+console.log("helllo");
 
 export function InstagramDialog({
   children,
@@ -48,8 +49,6 @@ export function InstagramDialog({
 
       {post && (
         <DialogContent className='p-0 w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'>
-          <DialogTitle>Просмотр поста</DialogTitle>
-
           <div className='grid grid-cols-1 md:grid-cols-2 h-[90vh]'>
             <div className='bg-black flex items-center justify-center'>
               {post.mediaType === 'video' ? (
