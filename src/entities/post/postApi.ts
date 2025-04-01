@@ -26,7 +26,7 @@ export const postApi = createApi({
     }),
     getPosts: builder.query({
       query: () => '/Post/get-posts',
-      providesTags: ['Posts'],
+      providesTags: ['Posts'],  
     }),
     likePost: builder.mutation({
       query: (postId) => ({

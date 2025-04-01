@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { MessageCircle, Send, MoreHorizontal, Smile } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { Button } from '@/shared/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
 import Like from '@/features/component/Like'
 import Comment from '@/features/component/comment'
 import Save from '@/features/component/saved'
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
+import { Button } from '@/shared/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
+import { MessageCircle, MoreHorizontal, Send, Smile } from 'lucide-react'
+import { useState } from 'react'
 
 interface Post {
 	id: string
@@ -27,12 +27,12 @@ export function InstagramDialog({
 	post,
 }: {
 	children: React.ReactNode
-	post: Post & { comments?: { username: string; text: string }[] }
-}) {
+	post: any }
+) {
 	const [_comment, _setComment] = useState('')
 	console.log('Post data:', post)
-	console.log('post comments', post.comments)
-
+	console.log('Post children:', children)
+	
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -89,15 +89,15 @@ export function InstagramDialog({
 
 							<div className='flex-1 overflow-y-auto p-3 space-y-3'>
 								<div className='h-[1px] w-full bg-border my-2'></div>
-
-								{post.comments && post.comments.length > 0 ? (
-									post.comments.map((c, index) => (
+								{post?.comments && post?.comments?.length > 0 ? (
+									post?.comments.map(c => (
 										<CommentItem
-											key={index}
-											username={c.username}
-											comment={c?.comments}
-											timeAgo='just now'
-										/>
+										key={c?.postCommentId}
+										username={c?.userName}
+										comment={c?.comment}
+										timeAgo={new Date(c?.dateCommented).toLocaleString()} // Форматируем дату
+										avatar={`https://instagram-api.softclub.tj/images/${c?.userImage}`}
+								  />
 									))
 								) : (
 									<p className='text-sm text-muted-foreground'>
@@ -151,7 +151,7 @@ export function InstagramDialog({
 									<Smile className='h-6 w-6' />
 								</Button>
 
-								<Comment postId={post.id} initialComments={post.comments} />
+								<Comment postId={post.id} initialComments={post.comment} />
 							</div>
 						</div>
 					</div>
@@ -162,10 +162,10 @@ export function InstagramDialog({
 }
 
 function CommentItem({
-	username,
-	comment,
-	timeAgo,
-	avatar,
+	username = '',
+	comment = '',
+	timeAgo = '',
+	avatar = '',
 }: {
 	username: string
 	comment: string
@@ -176,7 +176,8 @@ function CommentItem({
 		<div className='flex gap-2 items-start'>
 			<Avatar>
 				<AvatarImage src={avatar || '/placeholder.svg'} alt={username} />
-				<AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+				{/* <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback> */}
+				<AvatarFallback>cdgsgctf</AvatarFallback>
 			</Avatar>
 
 			<div>
