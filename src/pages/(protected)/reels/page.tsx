@@ -5,6 +5,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui/carousel'
 import { Skeleton } from '@/shared/ui/skeleton'
 import {
 	Bookmark,
+	Delete,
 	Ellipsis,
 	Heart,
 	MessageCircle,
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react'
 import {
 	useCommentPostMutation,
+	useDeleteCommentMutation,
 	useFollowingMutation,
 	useGetReelsQuery,
 	useLikeReelMutation,
@@ -25,12 +27,13 @@ import { Input } from '@/shared/ui/input'
 import { format } from 'date-fns'
 import {
 	AlertDialog,
-	AlertDialogAction,
+
 	AlertDialogCancel,
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog'
+import Like from '@/features/component/Like'
 
 export default function ReelsPage() {
 	const [activeVideo, setActiveVideo] = useState<number | null>(null)
@@ -46,10 +49,50 @@ export default function ReelsPage() {
 	const [openedCommentDialog, setOpenedCommentDialog] = useState<number | null>(
 		null
 	)
+	const [save,setSave] = useState<null | string | number | boolean>()
+	const [deletComment] = useDeleteCommentMutation()
 	const [viewReels] = useViewMutation()
+	const [favorite] = useFollowingMutation()
 	const [likeReel] = useLikeReelMutation()
 	const [commentAddReel] = useCommentPostMutation()
-
+	const [cnt, setCnt] = useState<number>(0)
+	const [style, setStyle] = useState(false)
+	const [activeId, setActiveId] = useState<boolean | number | string | null>(
+		null
+	)
+	const [search,setSearch] = useState<string>("")
+	const [sendGet, setSendGet] = useState([
+		{
+			id: 1,
+			name: 'Hasan',
+			img: 'data:image/jpeg;base64,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',
+		},
+		{
+			id: 2,
+			name: 'Ismoil',
+			img: '',
+		},
+		{
+			id: 3,
+			name: 'Murod',
+			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpq7QSVppatZIZiJibypczsTu1FDCDw0oSSA&s',
+		},
+		{
+			id: 4,
+			name: 'Umar',
+			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSA1JDcahNtIChAZ-Ymf-ejJ_aAjatHUcdGw&s',
+		},
+		{
+			id: 5,
+			name: 'Abubakr',
+			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp66Ec7PdpT_U8EEtNmgd2ufCdTjcSdsGchg&s',
+		},
+		{
+			id: 6,
+			name: 'Wuayb',
+			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwjGbch-tmbYGlBdUmxsqOF_ybn1-TIPZ9iw&s',
+		},
+	])
 	useEffect(() => {
 		if (isLoading || error) {
 			return
@@ -101,14 +144,20 @@ export default function ReelsPage() {
 					</div>
 				</div>
 				<div className='mt-[150px] ml-[20px]'>
-					<Skeleton className='h-12 w-12 rounded-full mb-[20px]' />
-					<Skeleton className='h-12 w-12 rounded-full mb-[20px]' />
-					<Skeleton className='h-12 w-12 rounded-full mb-[20px]' />
-					<Skeleton className='h-12 w-12 rounded-full mb-[20px]' />
-					<Skeleton className='h-12 w-12 rounded-full mb-[20px]' />
+					<Skeleton className='h-12 w-12 rounded-full mb-[15px]' />
+					<Skeleton className='h-3 w-12  mb-[20px]' />
+					<Skeleton className='h-12 w-12 rounded-full mb-[15px]' />
+					<Skeleton className='h-3 w-12  mb-[20px]' />
+					<Skeleton className='h-12 w-12 rounded-full mb-[15px]' />
+					<Skeleton className='h-3 w-12  mb-[20px]' />
+					<Skeleton className='h-12 w-12 rounded-full mb-[15px]' />
+					<Skeleton className='h-3 w-12  mb-[40px]' />
+					<Skeleton className='h-12 w-12 rounded-full mt-[60px]' />
 				</div>
 			</div>
 		)
+
+console.log(favorite);
 
 	const handlePlayPause = (index: number) => {
 		const video = videoRefs.current[index]
@@ -129,7 +178,7 @@ export default function ReelsPage() {
 			setActiveVideo(null)
 		}
 	}
-
+	
 	const handleLikeClick = (reelId: string) => {
 		setLiked(prev => ({ ...prev, [reelId]: !prev[reelId] }))
 		likeReel(reelId)
@@ -198,7 +247,7 @@ export default function ReelsPage() {
 															Your browser does not support the video tag.
 														</video>
 														{pausedVideo === index && (
-															<div className='absolute inset-0 flex items-center justify-center z-20 opacity-100 transition-opacity duration-100 ease-in-out'>
+															<div className='absolute inset-0 flex  items-center justify-center z-20 opacity-100 transition-opacity duration-100 ease-in-out'>
 																<button
 																	onClick={() => handlePlayPause(index)}
 																	className='rounded-full transition-transform duration-300 scale-95 hover:scale-105'
@@ -220,7 +269,7 @@ export default function ReelsPage() {
 																</button>
 															</div>
 														)}
-														<div className='flex items-center space-x-3 text-white absolute bottom-[-30px] left-[70px] z-30'>
+														<div className='flex items-center space-x-3 text-white absolute bottom-[-50px] left-[70px] z-30'>
 															<img
 																src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
 																className='rounded-full w-12 h-12 border-2 border-white'
@@ -228,12 +277,14 @@ export default function ReelsPage() {
 															/>
 															<div>
 																<h1 className='text-lg font-semibold ml-[10px] pr-[20px]'>
-																	{reel.userName}
+																	{reel.userName.length > 10
+																		? reel.userName.slice('0,8') + '...'
+																		: reel.userName}
 																</h1>
 																<h1 className='text-lg font-semibold ml-[10px] pr-[40px]'>
 																	{format(
 																		new Date(reel.datePublished),
-																		'dd MMM yyyy'
+																		'dd MMM yyyy'	
 																	)}
 																</h1>
 															</div>
@@ -271,10 +322,69 @@ export default function ReelsPage() {
 													<h1>{reel.commentCount}</h1>
 												</div>
 												<div className='flex flex-col items-center'>
-													<Send className='w-76h-76' />
+													<AlertDialog>
+														<AlertDialogTrigger asChild>
+															<Button
+																variant='outline'
+																className='border-none bg-transparent'
+															>
+																<Send />
+															</Button>
+														</AlertDialogTrigger>
+														<AlertDialogContent>
+															<div className='flex justify-between text-center items-center'>
+																<h1 className='text-center'>Поделиться</h1>
+																<AlertDialogCancel className='border-none'>
+																	<X />
+																</AlertDialogCancel>
+															</div>
+															<div>
+																<Input placeholder='Search' onChange={(el)=>setSearch(el.target.value)} />
+																<div
+																	className='flex gap-[40px] flex-wrap mt-[30px]  overflow-y-scroll overflow-x-hidden'
+																	style={{
+																		scrollbarWidth: 'none',
+																		msOverflowStyle: 'none',
+																	}}
+																>
+																	{sendGet?.filter((el)=>el.name.toLocaleLowerCase().trim().includes(search.toLocaleLowerCase().trim())).map(el => {
+																		return (
+																			<div key={el.id} className=''>
+																				<div
+																					className={`w-[60px] text-center `}
+																					onClick={() => {
+																						setStyle(prev => !prev),
+																							setActiveId(el.id)
+																					}}
+																				>
+																					<img
+																						className={`w-15 h-15 flex flex-col items-center justify-center rounded-full ${
+																							el.id == activeId && style
+																								? 'border-3 border-blue-500 rounded-full '
+																								: 'border-none'
+																						}`}
+																						src={el.img}
+																						alt=''
+																					/>
+																					<h1>{el.name}</h1>
+																				</div>
+																			</div>
+																		)
+																	})}
+																</div>
+															</div>
+															{style ? (
+																<AlertDialogCancel className='bg-blue-500'>
+																	Отправить
+																</AlertDialogCancel>
+															) : (
+																''
+															)}
+														</AlertDialogContent>
+													</AlertDialog>
 												</div>
 												<div className='flex flex-col items-center'>
-													<Bookmark className='w-76h-76' />
+													<Bookmark className={`w-76h-76 ${save ? "text-white fill-amber-50" : "" }`} onClick={()=>{setSave((prev)=>!prev); favorite(reel.postId)}} />
 												</div>
 												<div className='flex flex-col items-center'>
 													<Ellipsis className='w-76h-76' />
@@ -330,28 +440,39 @@ export default function ReelsPage() {
 												<span className='font-semibold'>
 													{comment.userName || 'user123'}
 												</span>{' '}
-												{comment.comment || 'Какой классный пост! 😊'}
+												{comment.comment || 'Какой классный пост! '}
 											</p>
 											<div className='text-xs text-gray-400 flex items-center space-x-2'>
 												<span>
-													{comment.dateCommented.split('T')[0].split('Z')}
+													{format(
+														new Date(comment.dateCommented),
+														'dd MMM yyy'
+													)}
 												</span>
 												<button className='text-blue-400'>Ответить</button>
 												<AlertDialog>
 													<AlertDialogTrigger asChild>
-														<Button variant='outline'>...</Button>
+														<Button variant='ghost'>...</Button>
 													</AlertDialogTrigger>
-													<AlertDialogContent>
-														<AlertDialogFooter>
-														<AlertDialogCancel
-															className='text-red-500 w-full block border-red-500 border-[1px] bg-transparent'
-														>
-															Удалит
-														</AlertDialogCancel>
-															<AlertDialogCancel>Отменит</AlertDialogCancel>
-														</AlertDialogFooter>
+													<AlertDialogContent className=''>
+														<div className='flex flex-wrap '>
+															<AlertDialogFooter>
+																<AlertDialogCancel
+																	className='text-red-500 w-[200px] flex items-center border-red-500 border-[1px] bg-transparent'
+																	onClick={() =>
+																		deletComment(comment.postCommentId)
+																	}
+																>
+																	Удалит <Delete className='mt-[5px]' />
+																</AlertDialogCancel>
+																<AlertDialogCancel className='w-[200px] ml-[35px]'>
+																	Отменит
+																</AlertDialogCancel>
+															</AlertDialogFooter>
+														</div>
 													</AlertDialogContent>
 												</AlertDialog>
+												<Like />
 											</div>
 										</div>
 									</div>
