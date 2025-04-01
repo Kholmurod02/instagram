@@ -13,6 +13,8 @@ export const store = configureStore({
     [chatApi.reducerPath]: chatApi.reducer,
     [ProfileApi.reducerPath]: ProfileApi.reducer, 
     [historyApi.reducerPath]: historyApi.reducer,
+    [usersHomepageApi.reducerPath]: usersHomepageApi.reducer,
+    [postsHomepageApi.reducerPath]: postsHomepageApi.reducer,
     [searchApi.reducerPath]: searchApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -22,6 +24,8 @@ export const store = configureStore({
       chatApi.middleware,
       ProfileApi.middleware,
       historyApi.middleware,
+      usersHomepageApi.middleware,
+      postsHomepageApi.middleware,
       searchApi.middleware
     ),
 })
