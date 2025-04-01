@@ -4,6 +4,8 @@ import { reelsApi } from '@/entities/reels/reels'
 import { configureStore } from '@reduxjs/toolkit'
 import { ProfileApi } from './profileSlice/profileSlice'
 import { historyApi } from '@/entities/story-homepage/story-homepage'
+import { usersHomepageApi } from '@/entities/users-homepage/users-homepage'
+import { postsHomepageApi } from '@/entities/posts-homepage/post-homepage'
 import { searchApi } from '@/entities/search/search'
 
 export const store = configureStore({
