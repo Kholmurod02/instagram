@@ -24,7 +24,8 @@ export default function Router() {
 						<Route index element={<DefaulChatPage />} />
 						<Route path=':id' element={<ChatByIdPage />} />
 					</Route>
-					<Route path=':name' element={<ProfileByNamePage />} />
+					<Route path='profile' element={<ProfileByNamePage />} />
+					<Route path='profile/:id' element={<ProfileByNamePage />} />
 					<Route />
 				</Route>
 			</Routes>

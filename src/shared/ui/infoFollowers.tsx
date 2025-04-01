@@ -7,17 +7,19 @@ const InfoFollowers = ({
 	posts,
 	followers,
 	following,
+	routId
 }: {
 	posts: string
 	followers: string
 	following: string
+	routId : string | undefined
 }) => {
 	const [openSC, setOpenSC] = useState<boolean>(false)
 	const [open,setOpen] = useState<boolean>(false)
 	const token = localStorage.getItem('decodeToken')
 	const decodeToken = token ? JSON.parse(token) : {}
-	const {data : subscribersData,error,isLoading} = useGetSibscribesQuery(decodeToken.sid)
-	const {data} = useGetSubscriptionQuery(decodeToken.sid)
+	const {data : subscribersData,error,isLoading} = useGetSibscribesQuery(routId ? routId : decodeToken.sid)
+	const {data} = useGetSubscriptionQuery(routId ? routId : decodeToken.sid)
 	if(error) return <p>error</p>
 	if(isLoading) return <p>Loading...</p>
 	
