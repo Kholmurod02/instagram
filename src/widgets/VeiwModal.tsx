@@ -56,7 +56,7 @@ export default function InstagramModal({
 												ref={(el) => (videoRefs.current[index] = el)}
 												className='max-h-full max-w-full object-contain'
 											>
-												<source
+												<source 
 													src={`https://instagram-api.softclub.tj/images/${img}`}
 													type='video/mp4'
 												/>

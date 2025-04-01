@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Volume2Icon, VolumeXIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 
 const PostUsersHomepage = ({ data }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -77,11 +78,13 @@ const PostUsersHomepage = ({ data }) => {
             </div>
           </div>
           <div>
-            <h5 className="text-sm font-bold">
-              {data.userName}{' '}
-              <span className="font-normal text-gray-400">• {timeAgo}</span>
-            </h5>
-            <p className="text-gray-300 text-[13px]">{data.content}</p>
+            <Link to={`/profile/${data.userId}`}>
+              <h5 className="text-sm font-bold">
+                {data.userName}{' '}
+                <span className="font-normal text-gray-400">• {timeAgo}</span>
+              </h5>
+              <p className="text-gray-300 text-[13px]">{data.content}</p>
+            </Link>
           </div>
         </div>
         <ProfileSettingsModal open={open} setOpen={setOpen} />

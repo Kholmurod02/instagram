@@ -6,6 +6,7 @@ import {
 	DialogTitle,
 } from '@/shared/ui/dialog'
 import { useState } from 'react'
+import { Link } from 'react-router'
 
 const UserclickModalHomepage = () => {
 	const [open, setOpen] = useState(false)
@@ -53,20 +54,22 @@ const UserclickModalHomepage = () => {
 									<li key={user.id} className='py-3'>
 										<div className='flex items-center justify-between gap-2'>
 											<div className='flex items-center gap-2'>
-												<div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
+												<div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500 cursor-pointer'>
 													<div className='w-full h-full rounded-full bg-white p-[2px]'>
 														<img
 															className='rounded-full w-full h-full object-cover'
-															src={`https://instagram-api.softclub.tj/images/${user.avatar}`}
+															src={`https://instagram-api.softclub.tj/images/${user.userImage}`}
 															alt=''
 														/>
 													</div>
 												</div>
 												<div>
-													<h3>{user.userName}</h3>
-													<p className='text-[13px] text-gray-300'>
-														{user.fullName}
-													</p>
+													<Link to={`/profile/${user.userId}`}>
+														<h3>{user.userName}</h3>
+														<p className='text-[13px] text-gray-300'>
+															{user.fullName}
+														</p>
+													</Link>
 												</div>
 											</div>
 											<button className='text-blue-500 font-semibold text-sm hover:text-white cursor-pointer'>
