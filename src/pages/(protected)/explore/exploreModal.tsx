@@ -90,15 +90,21 @@ export function InstagramDialog({
 							<div className='flex-1 overflow-y-auto p-3 space-y-3'>
 								<div className='h-[1px] w-full bg-border my-2'></div>
 								{post?.comments && post?.comments?.length > 0 ? (
-									post?.comments.map(c => (
-										<CommentItem
-										key={c?.postCommentId}
-										username={c?.userName}
-										comment={c?.comment}
-										timeAgo={new Date(c?.dateCommented).toLocaleString()} // Форматируем дату
-										avatar={`https://instagram-api.softclub.tj/images/${c?.userImage}`}
-								  />
-									))
+								post?.comments?.map((c: { 
+									postCommentId: string
+									userName: string
+									comment: string
+									dateCommented: string
+									userImage?: string 
+								 }) => (
+									<CommentItem
+									  key={c.postCommentId}
+									  username={c.userName}
+									  comment={c.comment}
+									  timeAgo={new Date(c.dateCommented).toLocaleString()}
+									  avatar={`https://instagram-api.softclub.tj/images/${c.userImage || ''}`}
+									/>
+								 ))
 								) : (
 									<p className='text-sm text-muted-foreground'>
 										No comments yet.
