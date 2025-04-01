@@ -4,7 +4,8 @@ import { useSavePostMutation, useUnsavePostMutation } from '@/entities/post/post
 import { toast } from 'react-toastify'
 
 interface SaveProps {
-  postId: string
+  postId: string,
+  saved: boolean 
 }
 
 const Save: React.FC<SaveProps> = ({ postId }) => {
