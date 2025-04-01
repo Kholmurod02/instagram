@@ -58,13 +58,13 @@ const UserclickModalHomepage = () => {
 													<div className='w-full h-full rounded-full bg-white p-[2px]'>
 														<img
 															className='rounded-full w-full h-full object-cover'
-															src={`https://instagram-api.softclub.tj/images/${user.avatar}`}
+															src={`https://instagram-api.softclub.tj/images/${user.userImage}`}
 															alt=''
 														/>
 													</div>
 												</div>
 												<div>
-													<Link to={`/profile/${user.id}`}>
+													<Link to={`/profile/${user.userId}`}>
 														<h3>{user.userName}</h3>
 														<p className='text-[13px] text-gray-300'>
 															{user.fullName}
