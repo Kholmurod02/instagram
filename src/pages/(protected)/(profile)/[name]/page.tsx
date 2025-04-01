@@ -1,3 +1,12 @@
+import {
+	useGetFavoritePostsQuery,
+	useGetMyPostsQuery,
+	useGetMyProfileQuery,
+	useGetMyStoriesQuery,
+	useGetPostsByIdQuery,
+	useGetProfileByIdQuery,
+	useGetStoryByidQuery,
+} from '@/app/store/profileSlice/profileSlice'
 import PostIcon from '@/shared/icons/post-icon'
 import ReelsIcon from '@/shared/icons/Reels-icon'
 import SavedIcon from '@/shared/icons/saved-icon'
@@ -5,21 +14,19 @@ import TaggedIcon from '@/shared/icons/tagged-icon'
 import InfoFollowers from '@/shared/ui/infoFollowers'
 import InfoProfile from '@/shared/ui/infoProfile'
 import ReelsDiv from '@/shared/ui/reels-div'
+import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
 import StoryCircle from '@/shared/ui/story-circle'
 import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
-import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
-import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
-import {
-	useGetFavoritePostsQuery,
-	useGetMyProfileQuery,
-} from '@/app/store/profileSlice/profileSlice'
-import { useGetMyPostsQuery } from '@/app/store/profileSlice/profileSlice'
-import { useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
-import { useState } from 'react'
 import { StoryModal } from '@/widgets/StoriesModal'
-import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
+import InstagramModalView from '@/widgets/VeiwModal'
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { skipToken } from '@reduxjs/toolkit/query'
+import { Camera } from 'lucide-react'
+import { useState } from 'react'
+import { useParams } from 'react-router'
 
 export default function ProfileByNamePage() {
 	const [isViewed, setIsViewed] = useState<boolean>(false)
@@ -27,7 +34,10 @@ export default function ProfileByNamePage() {
 	const [OpenPosts, setOpenPosts] = useState<boolean>(true)
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
-
+	const [view, setView] = useState<boolean>(false)
+	const [selectPost, setSelectPost] = useState({})
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { id } = useParams()
 	function clickOpenModal() {
 		setIsViewed(true)
 		setOpenModal(true)
@@ -51,26 +61,43 @@ export default function ProfileByNamePage() {
 		data: profileData,
 		error: profileError,
 		isLoading: profileLoading,
-	} = useGetMyProfileQuery(undefined)
+	} = useGetMyProfileQuery(id ? skipToken : undefined)
 	const {
 		data: postsData,
 		error: postsError,
 		isLoading: postsLoading,
-	} = useGetMyPostsQuery(undefined)
+	} = useGetMyPostsQuery(id ? skipToken : undefined)
 	const {
 		data: StoryData,
 		error: StoryError,
 		isLoading: StoryLoading,
-	} = useGetMyStoriesQuery(undefined)
+	} = useGetMyStoriesQuery(id ? skipToken : undefined)
 	const {
 		data: FavoriteData,
 		error: FavoriteError,
 		isLoading: FavoriteLoading,
 	} = useGetFavoritePostsQuery(undefined)
-  
+	const {
+		data: profileIdData,
+		// error: ErrorPrifileId,
+		isLoading: LoadingProfileId,
+	} = useGetProfileByIdQuery(id ? id : skipToken)
+	const { data: PostsById, isLoading: LoadingPostsById } = useGetPostsByIdQuery(
+		id ? id : skipToken
+	)
+	const { data: storyByIdData, isLoading: storyByIdLoading } =
+		useGetStoryByidQuery(id ? id : skipToken)
+
 	console.log(postsData)
 	if (profileError) return <p className=''>Profile Error</p>
 	if (profileLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
+	// if (ErrorPrifileId) return <p className=''>ProfileID Error</p>
+	if (LoadingProfileId)
 		return (
 			<div className='loading-bar-container'>
 				<div className='loading-bar'></div>
@@ -83,8 +110,20 @@ export default function ProfileByNamePage() {
 				<div className='loading-bar'></div>
 			</div>
 		)
+	if (LoadingPostsById)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
 	if (StoryError) return <p className=''>Story Error</p>
 	if (StoryLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
+	if (storyByIdLoading)
 		return (
 			<div className='loading-bar-container'>
 				<div className='loading-bar'></div>
@@ -97,61 +136,94 @@ export default function ProfileByNamePage() {
 				<div className='loading-bar'></div>
 			</div>
 		)
+	console.log('====================================')
+	console.log(storyByIdData)
+	console.log('====================================')
 	return (
 		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] m-auto w-full py-[50px]'>
-			<section className='flex w-[90%] m-auto gap-[0px] lg:gap-[100px] items-center'>
+			<section className='flex pb-[20px] w-[90%] lg:w-[100%] m-auto gap-[20px] lg:gap-[70px] items-center'>
 				<div
-					className={`rounded-full lg:w-[200px] lg:h-[202px] w-[100px] h-[100px] cursor-pointer p-[2px] ${
+					className={`rounded-full overflow-hidden flex items-center justify-center lg:w-[200px] lg:h-[200px] w-[100px] h-[100px] cursor-pointer p-[2px] ${
 						isViewed
 							? 'bg-gray-500'
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
 					}`}
 				>
-					<Avatar onClick={clickOpenModal}>
+					<Avatar
+						className='w-full h-full rounded-full'
+						onClick={clickOpenModal}
+					>
 						<AvatarImage
-							src={`https://instagram-api.softclub.tj/images/${profileData.data.image}`}
-							className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+							src={`https://instagram-api.softclub.tj/images/${
+								profileData?.data?.image ||
+								profileIdData?.data?.image ||
+								'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnTQT4yxZTOXn7cMGVwW6yv4DCqN5Snmd7bA&s'
+							}`}
+							className='w-full h-full rounded-full object-cover'
 							alt='Profile Image'
 						/>
 						<AvatarFallback>
 							<AvatarImage
 								src='https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
-								className='lg:w-[200px] p-[3px] w-[100px] h-[100px] lg:h-[200px] rounded-full'
+								className='w-full h-full rounded-full object-cover'
 								alt='Profile Image'
 							/>
 						</AvatarFallback>
 					</Avatar>
 				</div>
+
 				<StoryModal
 					open={openModal}
 					setOpen={setOpenModal}
-					storyData={StoryData}
+					storyData={StoryData || storyByIdData}
 				/>
 				<HeaderSectionProfile
-					userName={profileData.data?.userName}
-					posts={profileData.data?.postCount}
-					followers={profileData.data?.subscribersCount}
-					following={profileData.data?.subscriptionsCount}
-					firstName={profileData.data?.firstName}
-					about={profileData.data?.about}
+					userName={
+						profileData?.data?.userName || profileIdData?.data?.userName
+					}
+					posts={profileData?.data?.postCount || profileIdData?.data?.postCount}
+					followers={
+						profileData?.data?.subscribersCount ||
+						profileIdData?.data?.subscribersCount
+					}
+					following={
+						profileData?.data?.subscriptionsCount ||
+						profileIdData?.data?.subscriptionsCount
+					}
+					firstName={
+						profileData?.data?.firstName || profileIdData?.data?.firstName
+					}
+					about={profileData?.data?.about || profileIdData?.data?.about}
+					routId={id}
 				/>
 			</section>
 			<div className='lg:hidden w-[90%] m-auto block'>
 				<InfoProfile
-					firstName={profileData.data?.firstName}
-					about={profileData.data?.about}
+					firstName={
+						profileData?.data?.firstName || profileIdData?.data?.firstName
+					}
+					about={profileData?.data?.about || profileIdData?.data?.about}
 				/>
 			</div>
-			<div className='hidden lg:flex gap-[20px] items-center'>
-				<StorySection>
-					<StoryCircle />
-				</StorySection>
-			</div>
+			{!id && (
+				<div className='hidden lg:flex gap-[20px] items-center'>
+					<StorySection>
+						<StoryCircle />
+					</StorySection>
+				</div>
+			)}
 			<div className='lg:hidden block'>
 				<InfoFollowers
-					posts={profileData.data?.postCount}
-					followers={profileData.data?.subscribersCount}
-					following={profileData.data?.subscriptionsCount}
+					posts={profileData?.data?.postCount || profileIdData?.data?.postCount}
+					followers={
+						profileData?.data?.subscribersCount ||
+						profileIdData?.data?.subscribersCount
+					}
+					following={
+						profileData?.data?.subscriptionsCount ||
+						profileIdData?.data?.subscriptionsCount
+					}
+					routId={id}
 				/>
 			</div>
 			<Tabs className='border-t-[1px] relative border-[gray] py-[10px]'>
@@ -168,30 +240,36 @@ export default function ProfileByNamePage() {
 						<PostIcon />
 						<p className='text-[#fff] lg:block hidden'>Posts</p>
 					</TabsTrigger>
-					<TabsTrigger
-						value='Tabs1'
-						onClick={clickOpenReels}
-						className={`flex cursor-pointer gap-[10px] items-center ${
-							OpenReels
-								? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
-								: 'text-[#fff]'
-						}`}
-					>
-						<ReelsIcon />
-						<p className='text-[#fff] lg:block hidden'>Reels</p>
-					</TabsTrigger>
-					<TabsTrigger
-						value='Tabs1'
-						onClick={clickOpenSaved}
-						className={`flex cursor-pointer gap-[10px] items-center ${
-							OpenSave
-								? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
-								: 'text-[#fff]'
-						}`}
-					>
-						<SavedIcon />
-						<p className='text-[#fff] lg:block hidden'>Saved</p>
-					</TabsTrigger>
+					{!id && (
+						<>
+							<TabsTrigger
+								value='Tabs1'
+								onClick={clickOpenReels}
+								className={`flex cursor-pointer gap-[10px] items-center ${
+									OpenReels
+										? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
+										: 'text-[#fff]'
+								}`}
+							>
+								<ReelsIcon />
+								<p className='text-[#fff] lg:block hidden'>Reels</p>
+							</TabsTrigger>
+
+							<TabsTrigger
+								value='Tabs1'
+								onClick={clickOpenSaved}
+								className={`flex cursor-pointer gap-[10px] items-center ${
+									OpenSave
+										? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
+										: 'text-[#fff]'
+								}`}
+							>
+								<SavedIcon />
+								<p className='text-[#fff] lg:block hidden'>Saved</p>
+							</TabsTrigger>
+						</>
+					)}
+
 					<TabsTrigger
 						value='Tabs1'
 						className='flex cursor-pointer gap-[10px] items-center'
@@ -203,21 +281,39 @@ export default function ProfileByNamePage() {
 			</Tabs>
 			{OpenPosts && (
 				<ReelsContainer>
-					{postsData.map(
-						(post: {
-							commentCount: string | number
-							images: unknown[]
-							postLikeCount: number
-							comments: object
-							id: number | string
-						}) => (
-							<ReelsDiv
-								img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
-								likes={post.postLikeCount}
-								comments={post.commentCount}
-								key={post.id}
-							/>
+					{postsData || PostsById.data ? (
+						(postsData || PostsById.data)?.map(
+							(post: {
+								commentCount: string | number
+								images: unknown[]
+								postLikeCount: number
+								comments: object
+								id: number | string
+							}) => (
+								<div
+									className=''
+									onClick={() => {
+										setView(true)
+										setSelectPost(post)
+									}}
+								>
+									<ReelsDiv
+										img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+										likes={post.postLikeCount}
+										comments={post.commentCount}
+									/>
+								</div>
+							)
 						)
+					) : (
+						<div className='w-full h-full flex items-center justify-center'>
+							<div className=''>
+								<Camera className='text-[#fff]' size={70} />
+								<h1 className='text-[70px] text-[#fff] text-center'>
+									There are no publications yet
+								</h1>
+							</div>
+						</div>
 					)}
 				</ReelsContainer>
 			)}
@@ -231,12 +327,20 @@ export default function ProfileByNamePage() {
 							comments: object
 							id: number | string
 						}) => (
-							<ReelsDiv2
-								img={`https://instagram-api.softclub.tj/images/${reels.images[0]}`}
-								likes={reels.postLikeCount}
-								comments={reels.commentCount}
-								key={reels.id}
-							/>
+							<div
+								onClick={() => {
+									setView(true)
+									setSelectPost(reels)
+								}}
+								className=''
+							>
+								<ReelsDiv2
+									img={`https://instagram-api.softclub.tj/images/${reels.images[0]}`}
+									likes={reels.postLikeCount}
+									comments={reels.commentCount}
+									key={reels.id}
+								/>
+							</div>
 						)
 					)}
 				</ReelsContainer>
@@ -249,15 +353,24 @@ export default function ProfileByNamePage() {
 							postLikeCount: number
 							commentCount: number | string
 						}) => (
-							<ReelsDiv
-								img={`https://instagram-api.softclub.tj/images/${favorite.images[0]}`}
-								likes={favorite.postLikeCount}
-								comments={favorite.commentCount}
-							/>
+							<div
+								onClick={() => {
+									setView(true)
+									setSelectPost(favorite)
+								}}
+								className=''
+							>
+								<ReelsDiv
+									img={`https://instagram-api.softclub.tj/images/${favorite.images[0]}`}
+									likes={favorite.postLikeCount}
+									comments={favorite.commentCount}
+								/>
+							</div>
 						)
 					)}
 				</ReelsContainer>
 			)}
+			<InstagramModalView open={view} setOpen={setView} post={selectPost} />
 		</div>
 	)
 }
