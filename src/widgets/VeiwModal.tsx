@@ -1,15 +1,11 @@
-'use client'
-
 import Like from '@/features/component/Like'
 import {
 	X,
-	Heart,
 	MessageCircle,
 	Send,
 	Bookmark,
 	MoreHorizontal,
-	ChevronRight,
-	Volume2,
+	
 	Volume2Icon,
 	VolumeOff,
 } from 'lucide-react'
@@ -140,7 +136,7 @@ export default function InstagramModal({
 							{/* Нижняя панель с кнопками */}
 							<div className='border-t border-gray-800 p-4 flex justify-between'>
 								<div className='flex space-x-4 cursor-pointer'>
-								<Like postId={post.id} initialLiked={post.liked} initialLikes={post.likes} />
+								<Like postId={post.postId} initialLiked={post.liked} initialLikes={post.likes} />
 									<button>
 										<MessageCircle size={24} />
 									</button>
