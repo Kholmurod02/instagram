@@ -136,15 +136,18 @@ export function InstagramDialog({
 											dateCommented: string
 											userImage?: string
 										}) => (
-											<CommentItem
-												key={c.postCommentId}
-												username={c.userName}
-												comment={c.comment}
-												timeAgo={new Date(c.dateCommented).toLocaleString()}
-												avatar={`https://instagram-api.softclub.tj/images/${
-													c.userImage || ''
-												}`}
-											/>
+											<div key={c.postCommentId}>
+												<NavLink to={'/profile'} className='w-[75%]'>
+													<CommentItem
+														username={c.userName}
+														comment={c.comment}
+														timeAgo={new Date(c.dateCommented).toLocaleString()}
+														avatar={`https://instagram-api.softclub.tj/images/${
+															c.userImage || ''
+														}`}
+													/>
+												</NavLink>
+											</div>
 										)
 									)
 								) : (
