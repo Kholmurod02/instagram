@@ -4,9 +4,12 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useGetPostsQuery } from '../../../entities/post/postApi'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { InstagramDialog } from './exploreModal'
-import { Heart, MessageCircle } from 'lucide-react'
+import { Heart, MessageCircle, Search } from 'lucide-react'
+import DrawerSearch from '@/widgets/section-search'
 
 export default function ExplorePage() {
+	const [expanded, setExpanded] = useState(true)
+  const [searchDrawer, setSearchDrawer] = useState<boolean>(false)
 	const [page, setPage] = useState(1)
 	const { data: posts, isLoading, error, isFetching } = useGetPostsQuery(page)
 	const [media, setMedia] = useState<
@@ -100,6 +103,16 @@ export default function ExplorePage() {
 	}
 
 	return (
+		<>
+		  <div className='flex bg-black py-[15px] border-solid border-2 border-gray-800 w-[95%] m-auto rounded-[10px] my-[20px] sm:hidden items-center justify-center' onClick={() => {
+        setSearchDrawer(true);
+        setExpanded(false);
+      }}>
+      <Search className='w-6 h-6' /> 
+    </div>
+
+      <DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} />
+
 		<div className='flex flex-col items-center justify-center mt-10 lg:px-4'>
 			<div className='grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2'>
 				{arrangedMedia.map(post => (    
@@ -160,5 +173,6 @@ export default function ExplorePage() {
 				</div>
 			)}
 		</div>
+		</>
 	)
 }

@@ -6,7 +6,7 @@ export const postsHomepageApi = createApi({
 		baseUrl: 'https://instagram-api.softclub.tj/Post/',
 		prepareHeaders: (headers) => {
 			const access_token = localStorage.getItem('access_token');
-			if (access_token) {
+			if (access_token) {	
 				headers.set('Authorization', `Bearer ${access_token}`)
 			}
 			return headers
