@@ -147,13 +147,14 @@ export default function AppSidebar() {
       onClick={() => {
         setSearchDrawer(true);
         setExpanded(false);
-		  
       }}
     >
-      <Search className='w-6 h-6' />
+		<div className={`  ${ searchDrawer ? 'transition-all duration-200 ease-in-out border-solid border-1 border-white rounded-[10px] p-[10px]' : 'transition-all duration-200 ease-in-out p-[0px] border-0 border-none'} `} >
+      <Search className={` w-6 h-6`} />
+		</div>
       {expanded && <span>Поиск</span>}
        </button>
-					<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} />
+		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} isMobile={isMobile} setIsMobile={setIsMobile} />
 					
 					
 
