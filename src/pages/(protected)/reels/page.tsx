@@ -17,6 +17,7 @@ import {
 import {
 	useCommentPostMutation,
 	useDeleteCommentMutation,
+	useFavoRiteMutation,
 	useFollowingMutation,
 	useGetReelsQuery,
 	useLikeReelMutation,
@@ -27,13 +28,14 @@ import { Input } from '@/shared/ui/input'
 import { format } from 'date-fns'
 import {
 	AlertDialog,
-
 	AlertDialogCancel,
 	AlertDialogContent,
 	AlertDialogFooter,
 	AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog'
 import Like from '@/features/component/Like'
+import { Link } from 'react-router'
+import EmojiList from '@/features/component/emoji'
 
 export default function ReelsPage() {
 	const [activeVideo, setActiveVideo] = useState<number | null>(null)
@@ -49,10 +51,11 @@ export default function ReelsPage() {
 	const [openedCommentDialog, setOpenedCommentDialog] = useState<number | null>(
 		null
 	)
-	const [save,setSave] = useState<null | string | number | boolean>()
+	const [idxComment, setIdxComment] = useState<null>(null)
+	const [save, setSave] = useState<null | string | number | boolean>()
 	const [deletComment] = useDeleteCommentMutation()
 	const [viewReels] = useViewMutation()
-	const [favorite] = useFollowingMutation()
+	const [favorite] = useFavoRiteMutation()
 	const [likeReel] = useLikeReelMutation()
 	const [commentAddReel] = useCommentPostMutation()
 	const [cnt, setCnt] = useState<number>(0)
@@ -60,7 +63,257 @@ export default function ReelsPage() {
 	const [activeId, setActiveId] = useState<boolean | number | string | null>(
 		null
 	)
-	const [search,setSearch] = useState<string>("")
+	const emojis = [
+		'😀',
+		'😂',
+		'😎',
+		'😍',
+		'🤔',
+		'😜',
+		'😇',
+		'😢',
+		'😡',
+		'😏',
+		'😊',
+		'😆',
+		'😅',
+		'😳',
+		'😱',
+		'🥳',
+		'🤩',
+		'😜',
+		'😴',
+		'🤯',
+		'😈',
+		'👻',
+		'💀',
+		'👹',
+		'🧛‍♂️',
+		'🧟‍♂️',
+		'👀',
+		'🦸‍♀️',
+		'💪',
+		'✌️',
+		'🤞',
+		'🙏',
+		'🦾',
+		'🤖',
+		'👽',
+		'🛸',
+		'🚀',
+		'🛶',
+		'⛷️',
+		'🏂',
+		'🏌️‍♂️',
+		'⛸️',
+		'🏇',
+		'🚴‍♀️',
+		'🚶‍♂️',
+		'🤸‍♀️',
+		'🏋️‍♂️',
+		'🏆',
+		'🥇',
+		'🥈',
+		'🥉',
+		'🏅',
+		'⚽',
+		'🏀',
+		'🏈',
+		'⚾',
+		'🎾',
+		'🏐',
+		'🏉',
+		'🎱',
+		'🏓',
+		'🏸',
+		'🥏',
+		'🏒',
+		'🏑',
+		'🥍',
+		'🏹',
+		'🎯',
+		'🎮',
+		'🕹️',
+		'🎲',
+		'🎰',
+		'🎭',
+		'🎤',
+		'🎧',
+		'🎼',
+		'🎷',
+		'🎺',
+		'🎸',
+		'🎻',
+		'🥁',
+		'🎬',
+		'📸',
+		'📷',
+		'📹',
+		'📺',
+		'📞',
+		'📱',
+		'📲',
+		'💻',
+		'🖥️',
+		'🖨️',
+		'⌨️',
+		'🖱️',
+		'🖲️',
+		'💡',
+		'🔦',
+		'🏮',
+		'🎇',
+		'🎆',
+		'🧨',
+		'🎈',
+		'🎉',
+		'🎊',
+		'🎁',
+		'🎗️',
+		'🏷️',
+		'💌',
+		'📨',
+		'📩',
+		'📪',
+		'📫',
+		'📬',
+		'📯',
+		'📜',
+		'📃',
+		'📄',
+		'📰',
+		'🗞️',
+		'📑',
+		'🔖',
+		'🏷️',
+		'📎',
+		'🖇️',
+		'📐',
+		'📏',
+		'📝',
+		'✏️',
+		'🖊️',
+		'🖋️',
+		'🖌️',
+		'🖍️',
+		'🗒️',
+		'📓',
+		'📔',
+		'📕',
+		'📖',
+		'📗',
+		'📘',
+		'📙',
+		'📚',
+		'📒',
+		'📃',
+		'📄',
+		'🗂️',
+		'📑',
+		'🗃️',
+		'🗄️',
+		'📦',
+		'📬',
+		'📥',
+		'📤',
+		'📪',
+		'📫',
+		'📬',
+		'📧',
+		'📨',
+		'💼',
+		'👜',
+		'👝',
+
+		'🍏',
+		'🍎',
+		'🍐',
+		'🍊',
+		'🍋',
+		'🍌',
+		'🍉',
+		'🍇',
+		'🍓',
+		'🍈',
+		'🍒',
+		'🍑',
+		'🍍',
+		'🥥',
+		'🥝',
+		'🍅',
+		'🍆',
+		'🥒',
+		'🌶️',
+		'🥬',
+		'🥦',
+		'🍄',
+		'🌰',
+		'🥜',
+		'🍪',
+		'🍩',
+		'🍫',
+		'🍬',
+		'🍭',
+		'🍮',
+		'🍯',
+		'🥧',
+		'🍰',
+		'🍓',
+		'🍪',
+		'🍿',
+		'🥛',
+		'🍹',
+		'🍸',
+		'🍷',
+		'🥂',
+		'🍺',
+		'🍻',
+		'🥃',
+		'🍽️',
+		'🍴',
+		'🥄',
+		'🥣',
+		'🍚',
+		'🍘',
+		'🍜',
+		'🍲',
+		'🍛',
+		'🍝',
+		'🍠',
+		'🥒',
+		'🥔',
+		'🍠',
+		'🥧',
+		'🍢',
+		'🍙',
+		'🥟',
+		'🍱',
+		'🍛',
+		'🍗',
+		'🍖',
+		'🥩',
+		'🍤',
+		'🥓',
+		'🍕',
+		'🌮',
+		'🌯',
+		'🍔',
+		'🍟',
+		'🍣',
+		'🍤',
+		'🥪',
+		'🥗',
+		'🍛',
+		'🍚',
+		'🍜',
+		'🥠',
+		'🍚',
+		'🍘',
+		'🍡',
+		'🍦',
+	]
+	const [search, setSearch] = useState<string>('')
+	const [emoji,setEmoji] = useState<boolean>(false)
 	const [sendGet, setSendGet] = useState([
 		{
 			id: 1,
@@ -70,7 +323,7 @@ export default function ReelsPage() {
 		{
 			id: 2,
 			name: 'Ismoil',
-			img: '',
+			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRErfPBqQuKfhGayEFkykjCVNdiXcQqIbJClg&s',
 		},
 		{
 			id: 3,
@@ -97,7 +350,6 @@ export default function ReelsPage() {
 		if (isLoading || error) {
 			return
 		}
-
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (!reels?.data) return
 			if (e.key === 'ArrowDown') {
@@ -157,7 +409,7 @@ export default function ReelsPage() {
 			</div>
 		)
 
-console.log(favorite);
+	console.log(favorite)
 
 	const handlePlayPause = (index: number) => {
 		const video = videoRefs.current[index]
@@ -178,7 +430,7 @@ console.log(favorite);
 			setActiveVideo(null)
 		}
 	}
-	
+
 	const handleLikeClick = (reelId: string) => {
 		setLiked(prev => ({ ...prev, [reelId]: !prev[reelId] }))
 		likeReel(reelId)
@@ -205,12 +457,12 @@ console.log(favorite);
 				orientation='vertical'
 				className='ml-[10px] lg:w-[600px] md:w-[400px] m-auto h-[60vh]'
 			>
-				<CarouselContent className='mt-[45px] w-[650px] h-[90vh]'>
+				<CarouselContent className='mt-[45px] md:w-[650px] w-full h-[90vh]'>
 					{reels?.data?.map((reel: any, index: number) => (
 						<CarouselItem key={index} className='md:basis-1/2m mt-'>
 							<button
 								onClick={toggleMute}
-								className='w-10 h-10 relative top-[100px] left-[28rem] z-20 rounded-full bg-black text-white flex items-center justify-center'
+								className='w-10 h-10 relative top-[100px] left-[28rem] z-20 rounded-full bg-gray-700 opacity-[0.6] hover:bg-gray-500 text-white flex items-center justify-center'
 							>
 								{isMuted ? (
 									<VolumeOff className='cursor-pointer' />
@@ -270,21 +522,25 @@ console.log(favorite);
 															</div>
 														)}
 														<div className='flex items-center space-x-3 text-white absolute bottom-[-50px] left-[70px] z-30'>
-															<img
-																src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
-																className='rounded-full w-12 h-12 border-2 border-white'
-																alt='User'
-															/>
+															<Link to={`/profile/${reel.userId}`}>
+																<img
+																	src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
+																	className='rounded-full w-12 h-12 border-2 border-white'
+																	alt='User'
+																/>
+															</Link>
 															<div>
 																<h1 className='text-lg font-semibold ml-[10px] pr-[20px]'>
-																	{reel.userName.length > 10
-																		? reel.userName.slice('0,8') + '...'
-																		: reel.userName}
+																	<Link to={`/profile/${reel.userId}`}>
+																		{reel.userName.length > 10
+																			? reel.userName.slice(0, 10) + '...'
+																			: reel.userName}
+																	</Link>
 																</h1>
 																<h1 className='text-lg font-semibold ml-[10px] pr-[40px]'>
 																	{format(
 																		new Date(reel.datePublished),
-																		'dd MMM yyyy'	
+																		'dd MMM yyyy'
 																	)}
 																</h1>
 															</div>
@@ -303,7 +559,7 @@ console.log(favorite);
 											<div className='absolute bottom-[-40px] z-10 lg:right-5 flex flex-col items-center space-y-4'>
 												<div className='flex flex-col items-center'>
 													<Heart
-														className={`w-6 h-6 ${
+														className={`w-6 hover:text-[#ffffff4f] h-6 ${
 															reel.postLike
 																? 'text-red-500 fill-amber-700'
 																: 'text-white'
@@ -314,9 +570,11 @@ console.log(favorite);
 												</div>
 												<div className='flex flex-col items-center'>
 													<MessageCircle
-														className='w-6 h-6'
+														className='w-6 h-6 hover:text-[#ffffff4f]'
 														onClick={() => {
-															setOpenedCommentDialog(index), setIdx(reel.postId)
+															setOpenedCommentDialog(index),
+																setIdxComment(reel.userId),
+																setIdx(reel.postId)
 														}}
 													/>
 													<h1>{reel.commentCount}</h1>
@@ -324,12 +582,9 @@ console.log(favorite);
 												<div className='flex flex-col items-center'>
 													<AlertDialog>
 														<AlertDialogTrigger asChild>
-															<Button
-																variant='outline'
-																className='border-none bg-transparent'
-															>
-																<Send />
-															</Button>
+															<button>
+																<Send className='hover:text-[#ffffff4f]' />
+															</button>
 														</AlertDialogTrigger>
 														<AlertDialogContent>
 															<div className='flex justify-between text-center items-center'>
@@ -339,7 +594,10 @@ console.log(favorite);
 																</AlertDialogCancel>
 															</div>
 															<div>
-																<Input placeholder='Search' onChange={(el)=>setSearch(el.target.value)} />
+																<Input
+																	placeholder='Search'
+																	onChange={el => setSearch(el.target.value)}
+																/>
 																<div
 																	className='flex gap-[40px] flex-wrap mt-[30px]  overflow-y-scroll overflow-x-hidden'
 																	style={{
@@ -347,30 +605,39 @@ console.log(favorite);
 																		msOverflowStyle: 'none',
 																	}}
 																>
-																	{sendGet?.filter((el)=>el.name.toLocaleLowerCase().trim().includes(search.toLocaleLowerCase().trim())).map(el => {
-																		return (
-																			<div key={el.id} className=''>
-																				<div
-																					className={`w-[60px] text-center `}
-																					onClick={() => {
-																						setStyle(prev => !prev),
-																							setActiveId(el.id)
-																					}}
-																				>
-																					<img
-																						className={`w-15 h-15 flex flex-col items-center justify-center rounded-full ${
-																							el.id == activeId && style
-																								? 'border-3 border-blue-500 rounded-full '
-																								: 'border-none'
-																						}`}
-																						src={el.img}
-																						alt=''
-																					/>
-																					<h1>{el.name}</h1>
-																				</div>
-																			</div>
+																	{sendGet
+																		?.filter(el =>
+																			el.name
+																				.toLocaleLowerCase()
+																				.trim()
+																				.includes(
+																					search.toLocaleLowerCase().trim()
+																				)
 																		)
-																	})}
+																		.map(el => {
+																			return (
+																				<div key={el.id} className=''>
+																					<div
+																						className={`w-[60px] text-center `}
+																						onClick={() => {
+																							setStyle(prev => !prev),
+																								setActiveId(el.id)
+																						}}
+																					>
+																						<img
+																							className={`w-15 h-15 flex flex-col items-center justify-center rounded-full ${
+																								el.id == activeId && style
+																									? 'border-3 border-blue-500 rounded-full '
+																									: 'border-none'
+																							}`}
+																							src={el.img}
+																							alt=''
+																						/>
+																						<h1>{el.name}</h1>
+																					</div>
+																				</div>
+																			)
+																		})}
 																</div>
 															</div>
 															{style ? (
@@ -384,17 +651,27 @@ console.log(favorite);
 													</AlertDialog>
 												</div>
 												<div className='flex flex-col items-center'>
-													<Bookmark className={`w-76h-76 ${save ? "text-white fill-amber-50" : "" }`} onClick={()=>{setSave((prev)=>!prev); favorite(reel.postId)}} />
+													<Bookmark
+														className={` hover:text-[#ffffff4f]  ${
+															save ? 'text-white fill-amber-50' : ''
+														}`}
+														onClick={() => {
+															setSave(prev => !prev)
+															favorite(reel.postId)
+														}}
+													/>
 												</div>
 												<div className='flex flex-col items-center'>
 													<Ellipsis className='w-76h-76' />
 												</div>
 												<div className='bg-violet-600 rounded-full'>
-													<img
-														src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
-														className='rounded-full w-[40px] h-[40px]'
-														alt=''
-													/>
+													<Link to={`/profile/${reel.userId}`}>
+														<img
+															src={`https://instagram-api.softclub.tj/images/${reel.userImage}`}
+															className='rounded-full w-[40px] h-[40px]'
+															alt=''
+														/>
+													</Link>
 												</div>
 											</div>
 										</div>
@@ -405,7 +682,7 @@ console.log(favorite);
 					))}
 				</CarouselContent>
 				{openedCommentDialog === currentIndex && (
-					<div className='absolute bottom-12 right-[-350px] w-[320px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
+					<div className='absolute bottom-12 right-[-420px] w-[400px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
 						<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
 							<h2 className='font-semibold text-lg'>
 								{reels.data[currentIndex]?.comments?.length || 0} Комментариев
@@ -417,6 +694,7 @@ console.log(favorite);
 								<X />
 							</button>
 						</div>
+						
 						<div
 							className='max-h-[300px] overflow-y-scroll overflow-x-hidden space-y-4 mt-2'
 							style={{
@@ -424,6 +702,22 @@ console.log(favorite);
 								msOverflowStyle: 'none',
 							}}
 						>
+						{ emoji &&
+					<div className='p-4 max-w-[200px] h-[250px] ml-[200px] absolute top-[-150px] rounded-md bg-gray-500 overflow-x-auto overflow-y-auto flex-wrap' style={{
+						scrollbarWidth: 'none',
+						msOverflowStyle: 'none',
+					}}>
+					<div className='grid grid-cols-10 gap-10'>
+						{emojis.map((emoji, index) => (
+							<div key={index} className='text-2xl '>
+								<button onClick={()=>setPostNameComment(postNameComment.concat(emoji))}>
+								{emoji}
+								</button>
+							</div>
+						))}
+					</div>
+				</div>
+				}
 							{reels.data[currentIndex]?.comments?.map(
 								(comment: any, commentIndex: number) => (
 									<div
@@ -479,8 +773,24 @@ console.log(favorite);
 								)
 							)}
 						</div>
+						
 						<div className='flex items-center border-t border-gray-600 mt-3 pt-2'>
-							<div className='flex w-full'>
+							<div className='flex w-full rounded-md items-center bg-transparent border-white border-[1px] p-[5px_10px] text-white outline-none'>
+								{
+									(reels?.data
+										?.filter((value: any) => value.userId == idxComment)
+										.map((el: any) => {
+											return (
+												<div key={el.id}>
+													<img
+														src={`https://instagram-api.softclub.tj/images/${el.userImage}`}
+														className='w-15 h-10 rounded-full'
+														alt=''
+													/>
+												</div>
+											)
+										}))[0]
+								}
 								<Input
 									value={postNameComment}
 									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -488,9 +798,13 @@ console.log(favorite);
 									}
 									type='text'
 									placeholder='Добавьте комментарий...'
-									className='w-full bg-transparent border-white border-[1px] text-white outline-none p-2'
+									className='text-white  border-none ml-[10px] w-[200px] overflow-x-auto overflow-y-auto focus-visible:ring-0 focus-visible:outline-none'
 								/>
-								<button className='text-gray-400 pl-[10px] hover:text-white'>
+								<div>
+								
+								</div>
+								
+								<button className='text-gray-400 pl-[10px] hover:text-white' onClick={()=>setEmoji((prev)=>!prev)}>
 									😊
 								</button>
 							</div>
@@ -504,6 +818,7 @@ console.log(favorite);
 						</div>
 					</div>
 				)}
+				
 			</Carousel>
 		</div>
 	)
