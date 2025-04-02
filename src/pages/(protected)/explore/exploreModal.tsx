@@ -9,6 +9,7 @@ import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
 
+// @ts-ignore
 interface Post {
 	id: string
 	url: string
@@ -57,11 +58,10 @@ export function InstagramDialog({
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false)
-
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-
+		
 			{post && (
 				<DialogContent
 					className='p-0 w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'
@@ -99,7 +99,7 @@ export function InstagramDialog({
 								<div className='flex items-center gap-3'>
 									<Avatar>
 										<div className=''>
-											<NavLink to={'/profile'} className='w-[75%]'>
+										 <NavLink to={`/profile/${post.user.id}`}>
 												Profile
 											</NavLink>
 										</div>
@@ -173,7 +173,7 @@ export function InstagramDialog({
 											userImage?: string
 										}) => (
 											<div key={c.postCommentId}>
-												<NavLink to={'/profile'} className='w-[75%]'>
+											 <NavLink to={`/profile/${post.user.id}`}>
 													<CommentItem
 														username={c.userName}
 														comment={c.comment}
@@ -232,6 +232,8 @@ export function InstagramDialog({
 	)
 }
 
+
+
 function CommentItem({
 	username = '',
 	comment = '',
@@ -242,7 +244,10 @@ function CommentItem({
 	comment: string
 	timeAgo: string
 	avatar?: string
-}) {
+})
+
+
+{
 	return (
 		<div className='flex gap-2 items-start'>
 			<Avatar>
