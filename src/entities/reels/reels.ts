@@ -84,4 +84,4 @@ export const reelsApi = createApi({
   }),
 });
 
-export const { useGetReelsQuery, useLikeReelMutation, useFollowingMutation, useCommentPostMutation, useViewMutation, useDeleteCommentMutation, useFavoRiteMutation } = reelsApi;
+export const { useGetReelsQuery, useLikeReelMutation, useFollowingMutation, useCommentPostMutation, useViewMutation, useDeleteCommentMutation, useFavoRiteMutation,  } = reelsApi;

@@ -313,7 +313,7 @@ export default function ReelsPage() {
 		'🍦',
 	]
 	const [search, setSearch] = useState<string>('')
-	const [emoji,setEmoji] = useState<boolean>(false)
+	const [emoji, setEmoji] = useState<boolean>(false)
 	const [sendGet, setSendGet] = useState([
 		{
 			id: 1,
@@ -682,143 +682,152 @@ export default function ReelsPage() {
 					))}
 				</CarouselContent>
 				{openedCommentDialog === currentIndex && (
-					<div className='absolute bottom-12 right-[-420px] w-[400px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
-						<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
-							<h2 className='font-semibold text-lg'>
-								{reels.data[currentIndex]?.comments?.length || 0} Комментариев
-							</h2>
-							<button
-								onClick={() => setOpenedCommentDialog(null)}
-								className='text-gray-400 hover:text-white'
+					<>
+						{emoji && (
+							<div
+								className='p-4 max-w-[200px] h-[250px] ml-[200px] absolute top-[30px] right-[-400px] bg-black/50 z-[100] rounded-md overflow-x-auto overflow-y-auto flex-wrap backdrop-blur-md'
+								style={{
+									scrollbarWidth: 'none',
+									msOverflowStyle: 'none',
+								}}
 							>
-								<X />
-							</button>
-						</div>
-						
-						<div
-							className='max-h-[300px] overflow-y-scroll overflow-x-hidden space-y-4 mt-2'
-							style={{
-								scrollbarWidth: 'none',
-								msOverflowStyle: 'none',
-							}}
-						>
-						{ emoji &&
-					<div className='p-4 max-w-[200px] h-[250px] ml-[200px] absolute top-[-150px] rounded-md bg-gray-500 overflow-x-auto overflow-y-auto flex-wrap' style={{
-						scrollbarWidth: 'none',
-						msOverflowStyle: 'none',
-					}}>
-					<div className='grid grid-cols-10 gap-10'>
-						{emojis.map((emoji, index) => (
-							<div key={index} className='text-2xl '>
-								<button onClick={()=>setPostNameComment(postNameComment.concat(emoji))}>
-								{emoji}
+								<div className='grid grid-cols-10 gap-10'>
+									{emojis.map((emoji, index) => (
+										<div key={index} className='text-2xl '>
+											<button
+												onClick={() =>
+													setPostNameComment(postNameComment.concat(emoji))
+												}
+											>
+												{emoji}
+											</button>
+										</div>
+									))}
+								</div>
+							</div>
+						)}
+						<div className='absolute bottom-12 right-[-420px] w-[400px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
+							<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
+								<h2 className='font-semibold text-lg'>
+									{reels.data[currentIndex]?.comments?.length || 0} Комментариев
+								</h2>
+								<button
+									onClick={() => setOpenedCommentDialog(null)}
+									className='text-gray-400 hover:text-white'
+								>
+									<X />
 								</button>
 							</div>
-						))}
-					</div>
-				</div>
-				}
-							{reels.data[currentIndex]?.comments?.map(
-								(comment: any, commentIndex: number) => (
-									<div
-										key={commentIndex}
-										className='flex items-start  space-x-2'
-									>
-										<img
-											src={`https://instagram-api.softclub.tj/images/${comment.userImage}`}
-											className='w-10 h-10 rounded-full'
-											alt={comment.userName}
-										/>
-										<div>
-											<p className='text-sm'>
-												<span className='font-semibold'>
-													{comment.userName || 'user123'}
-												</span>{' '}
-												{comment.comment || 'Какой классный пост! '}
-											</p>
-											<div className='text-xs text-gray-400 flex items-center space-x-2'>
-												<span>
-													{format(
-														new Date(comment.dateCommented),
-														'dd MMM yyy'
-													)}
-												</span>
-												<button className='text-blue-400'>Ответить</button>
-												<AlertDialog>
-													<AlertDialogTrigger asChild>
-														<Button variant='ghost'>...</Button>
-													</AlertDialogTrigger>
-													<AlertDialogContent className=''>
-														<div className='flex flex-wrap '>
-															<AlertDialogFooter>
-																<AlertDialogCancel
-																	className='text-red-500 w-[200px] flex items-center border-red-500 border-[1px] bg-transparent'
-																	onClick={() =>
-																		deletComment(comment.postCommentId)
-																	}
-																>
-																	Удалит <Delete className='mt-[5px]' />
-																</AlertDialogCancel>
-																<AlertDialogCancel className='w-[200px] ml-[35px]'>
-																	Отменит
-																</AlertDialogCancel>
-															</AlertDialogFooter>
-														</div>
-													</AlertDialogContent>
-												</AlertDialog>
-												<Like />
+
+							<div
+								className='max-h-[300px] overflow-y-scroll overflow-x-hidden space-y-4 mt-2'
+								style={{
+									scrollbarWidth: 'none',
+									msOverflowStyle: 'none',
+								}}
+							>
+								{reels.data[currentIndex]?.comments?.map(
+									(comment: any, commentIndex: number) => (
+										<div
+											key={commentIndex}
+											className='flex items-start  space-x-2'
+										>
+											<img
+												src={`https://instagram-api.softclub.tj/images/${comment.userImage}`}
+												className='w-10 h-10 rounded-full'
+												alt={comment.userName}
+											/>
+											<div>
+												<p className='text-sm'>
+													<span className='font-semibold'>
+														{comment.userName || 'user123'}
+													</span>{' '}
+													{comment.comment || 'Какой классный пост! '}
+												</p>
+												<div className='text-xs text-gray-400 flex items-center space-x-2'>
+													<span>
+														{format(
+															new Date(comment.dateCommented),
+															'dd MMM yyy'
+														)}
+													</span>
+													<button className='text-blue-400'>Ответить</button>
+													<AlertDialog>
+														<AlertDialogTrigger asChild>
+															<Button variant='ghost'>...</Button>
+														</AlertDialogTrigger>
+														<AlertDialogContent className=''>
+															<div className='flex flex-wrap '>
+																<AlertDialogFooter>
+																	<AlertDialogCancel
+																		className='text-red-500 w-[200px] flex items-center border-red-500 border-[1px] bg-transparent'
+																		onClick={() =>
+																			deletComment(comment.postCommentId)
+																		}
+																	>
+																		Удалит <Delete className='mt-[5px]' />
+																	</AlertDialogCancel>
+																	<AlertDialogCancel className='w-[200px] ml-[35px]'>
+																		Отменит
+																	</AlertDialogCancel>
+																</AlertDialogFooter>
+															</div>
+														</AlertDialogContent>
+													</AlertDialog>
+													<Like />
+												</div>
 											</div>
 										</div>
-									</div>
-								)
-							)}
-						</div>
-						
-						<div className='flex items-center border-t border-gray-600 mt-3 pt-2'>
-							<div className='flex w-full rounded-md items-center bg-transparent border-white border-[1px] p-[5px_10px] text-white outline-none'>
-								{
-									(reels?.data
-										?.filter((value: any) => value.userId == idxComment)
-										.map((el: any) => {
-											return (
-												<div key={el.id}>
-													<img
-														src={`https://instagram-api.softclub.tj/images/${el.userImage}`}
-														className='w-15 h-10 rounded-full'
-														alt=''
-													/>
-												</div>
-											)
-										}))[0]
-								}
-								<Input
-									value={postNameComment}
-									onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-										setPostNameComment(e.target.value)
-									}
-									type='text'
-									placeholder='Добавьте комментарий...'
-									className='text-white  border-none ml-[10px] w-[200px] overflow-x-auto overflow-y-auto focus-visible:ring-0 focus-visible:outline-none'
-								/>
-								<div>
-								
-								</div>
-								
-								<button className='text-gray-400 pl-[10px] hover:text-white' onClick={()=>setEmoji((prev)=>!prev)}>
-									😊
-								</button>
+									)
+								)}
 							</div>
-							<Button
-								variant={'secondary'}
-								className='text-blue-500 font-semibold ml-2'
-								onClick={postComment}
-							>
-								Отправить
-							</Button>
+
+							<div className='flex items-center border-t border-gray-600 mt-3 pt-2'>
+								<div className='flex w-full rounded-md items-center bg-transparent border-white border-[1px] p-[5px_10px] text-white outline-none'>
+									{
+										(reels?.data
+											?.filter((value: any) => value.userId == idxComment)
+											.map((el: any) => {
+												return (
+													<div key={el.id}>
+														<img
+															src={`https://instagram-api.softclub.tj/images/${el.userImage}`}
+															className='w-15 h-10 rounded-full'
+															alt=''
+														/>
+													</div>
+												)
+											}))[0]
+									}
+									<Input
+										value={postNameComment}
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+											setPostNameComment(e.target.value)
+										}
+										type='text'
+										placeholder='Добавьте комментарий...'
+										className='text-white  border-none ml-[10px] w-[200px] overflow-x-auto overflow-y-auto focus-visible:ring-0 focus-visible:outline-none'
+									/>
+									<div></div>
+
+									<button
+										className='text-gray-400 pl-[10px] hover:text-white'
+										onClick={() => setEmoji(prev => !prev)}
+									>
+										😊
+									</button>
+								</div>
+								<Button
+									variant={'secondary'}
+									className='text-blue-500 font-semibold ml-2'
+									onClick={postComment}
+								>
+									Отправить
+								</Button>
+							</div>
 						</div>
-					</div>
+					</>
 				)}
-				
 			</Carousel>
 		</div>
 	)
