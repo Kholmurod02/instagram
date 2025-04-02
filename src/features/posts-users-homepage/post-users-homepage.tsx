@@ -4,10 +4,12 @@
   import { ProfileSettingsModal } from '@/widgets/profile-settings-modal'
   import { formatDistanceToNow } from 'date-fns'
   import { ru } from 'date-fns/locale'
-  import { ChevronLeft, ChevronRight, Volume2Icon, VolumeXIcon } from 'lucide-react'
+  import { ChevronLeft, ChevronRight, Send, Volume2Icon, VolumeXIcon } from 'lucide-react'
   import { useEffect, useRef, useState } from 'react'
   import { Link } from 'react-router'
   import Like from '../component/Like'
+import ShareModal from '../component/shere'
+import Save from '../component/saved'
 
   const PostUsersHomepage = ({ data }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -17,6 +19,7 @@
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const totalSlides = data.images.length
     const [likeCount, setLikeCount] = useState(data.postLikeCount)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const updateTimeAgo = () => {
       setTimeAgo(
@@ -220,57 +223,17 @@
               </svg>
             </button>
 
-            <button className="p-1">
-              <svg
-                aria-label="Поделиться"
-                className="x1lliihq x1n2onr6 xyb1xck"
-                fill="currentColor"
-                height="24"
-                role="img"
-                viewBox="0 0 24 24"
-                width="24"
-              >
-                <line
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  x1="22"
-                  x2="9.218"
-                  y1="3"
-                  y2="10.083"
-                ></line>
-                <polygon
-                  fill="none"
-                  points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
-                  stroke="currentColor"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                ></polygon>
-              </svg>
-            </button>
+            <Send
+											className='h-9 w-6'
+											onClick={() => setIsModalOpen(true)}
+										/>
+										<ShareModal
+											isOpen={isModalOpen}
+											onClose={() => setIsModalOpen(false)}
+										/>
           </div>
 
-          <button className="p-1">
-            <svg
-              aria-label="Сохранить"
-              className="x1lliihq x1n2onr6 x5n08af"
-              fill="currentColor"
-              height="24"
-              role="img"
-              viewBox="0 0 24 24"
-              width="24"
-            >
-              <polygon
-                fill="none"
-                points="20 21 12 13.44 4 21 4 3 20 3 20 21"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></polygon>
-            </svg>
-          </button>
+          <Save postId={data.id} initialSaved={data.saved} />
         </div>
 
         <div className="px-2 mt-2">

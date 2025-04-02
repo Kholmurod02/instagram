@@ -63,7 +63,7 @@ const Like: React.FC<LikeProps> = ({
   return (
     <button onClick={handleLike} className="flex items-center cursor-po gap-1">
       <Heart
-        size={35}
+        size={28}
         className={liked ? 'fill-red-500 text-red-500' : 'text-gray-100'}
       />
       <span>{likes}</span>
