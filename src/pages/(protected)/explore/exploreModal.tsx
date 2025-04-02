@@ -1,6 +1,7 @@
 import Like from '@/features/component/Like'
 import Comment from '@/features/component/comment'
 import Save from '@/features/component/saved'
+import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
@@ -54,6 +55,7 @@ export function InstagramDialog({
 		}
 	}, [])
 
+	  const [isModalOpen, setIsModalOpen] = useState(false);
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -121,7 +123,6 @@ export function InstagramDialog({
 								</Button>
 							</div>
 
-							{/* Комментарии */}
 							<div
 								className='flex-1 overflow-y-auto p-3 space-y-3'
 								style={{
@@ -157,23 +158,26 @@ export function InstagramDialog({
 
 						
 							<div className='p-3 border-t border-b'>
-								<div className='flex justify-between'>
-									<div className='flex gap-2'>
+								<div className='flex justify-between '>
+									<div className='flex gap-5'>
 										<Like
 											postId={post.id}
 											initialLiked={false}
 											initialLikes={post.likes}
+										
 										/>
-										<Button variant='ghost' size='icon' className='h-9 w-9 rounded-full'>
-											<MessageCircle className='h-6 w-6' />
-										</Button>
-										<Button variant='ghost' size='icon' className='h-9 w-9 rounded-full'>
-											<Send className='h-6 w-6' />
-										</Button>
+										
+											<MessageCircle className='h-9 w-8' />
+									
+										<Send className='h-9 w-8' onClick={() => setIsModalOpen(true)} />
+<ShareModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+
+										
 									</div>
-									<Button variant='ghost' size='icon' className='h-9 w-9 rounded-full'>
+							
 										<Save postId={post.id} initialSaved={post.saved} />
-									</Button>
+								
 								</div>
 								<div className='mt-2'>
 									<p className='text-sm font-semibold'>{post.likes} likes</p>

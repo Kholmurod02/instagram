@@ -51,9 +51,9 @@ const Save: React.FC<SaveProps> = ({ postId }) => {
 >
 
       {saving || unsaving ? (
-        <Loader2 size={20} className="animate-spin text-gray-500" />
+        <Loader2 size={25} className="animate-spin text-gray-500" />
       ) : (
-        <Bookmark size={20} className={saved ? 'fill-blue-500 text-blue-500' : 'text-gray-100'} />
+        <Bookmark size={35} className={saved ? 'fill-blue-500 text-blue-500' : 'text-gray-100'} />
       )}
     </div>
   )

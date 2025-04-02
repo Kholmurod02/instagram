@@ -6,6 +6,7 @@ interface LikeProps {
   postId: string
   initialLiked?: boolean
   initialLikes?: number
+  size?: number; 
 }
 
 const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes = 0 }) => {
@@ -45,7 +46,7 @@ const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes 
   return (
     <button onClick={handleLike} className="flex items-center gap-1">
       <Heart
-        size={20}
+        size={35}
         className={liked ? 'fill-red-500 text-red-500' : 'text-gray-100'}
       />
       <span>{likes}</span>
