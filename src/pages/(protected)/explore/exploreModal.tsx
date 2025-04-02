@@ -5,7 +5,7 @@ import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { MessageCircle, MoreHorizontal, Send, Smile } from 'lucide-react'
+import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
 
@@ -54,8 +54,11 @@ export function InstagramDialog({
 			document.head.removeChild(style)
 		}
 	}, [])
+	
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -112,9 +115,24 @@ export function InstagramDialog({
 										</div>
 									</div>
 								</div>
-								<Button variant='ghost' size='icon'>
-									<MoreHorizontal className='h-5 w-5' />
-								</Button>
+								<Button variant='ghost' size='icon' onClick={() => setIsMoreOptionsOpen(true)}>
+    <MoreHorizontal className='h-5 w-5' />
+</Button>
+<Dialog open={isMoreOptionsOpen} onOpenChange={setIsMoreOptionsOpen}>
+    <DialogContent className="p-0 w-[480px] h-[340px] bg-[#262626] rounded-xl shadow-xl">
+        <div className="flex flex-col text-white text-[20px] font-sans">
+            <button className="text-red-500 py-3 border-b border-[black]-700 hover:bg-gray-800">Report</button>
+            <button className="py-3 border-b border-[black]-700 hover:bg-[black]-800">Share to...</button>
+            <button className="py-3 border-b border-[black]-700 hover:bg-[black]-800">Copy link</button>
+            <button className="py-3 border-b border-[black]-700 hover:bg-[black]-800">Embed</button>
+            <button className="py-3 border-b border-[black]-700 hover:bg-[black]-800">About this account</button>
+            <button className="py-3 hover:bg-gray-800 rounded-b-xl" onClick={() => setIsMoreOptionsOpen(false)}>Cancel</button>
+        </div>
+    </DialogContent>
+</Dialog>
+
+
+
 							</div>
 
 							<div
