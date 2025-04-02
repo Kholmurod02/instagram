@@ -30,7 +30,7 @@ const HistoryHomepage = () => {
     if (currentIndex < stories.length - 1) {
       setCurrentUserIndex(currentIndex + 1);
     } else {
-      setCurrentUserIndex(null); // Все истории просмотрены
+      setCurrentUserIndex(null);
     }
   }
 
