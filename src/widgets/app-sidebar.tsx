@@ -139,7 +139,8 @@ export default function AppSidebar() {
 					expanded={expanded}
 				/>
 
-<button 
+  
+     <button 
       className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
         expanded ? 'justify-start space-x-4' : 'justify-center'
       }`} 
@@ -148,10 +149,12 @@ export default function AppSidebar() {
         setExpanded(false);
       }}
     >
-      <Search className='w-6 h-6' />
+		<div className={`  ${ searchDrawer ? 'transition-all duration-200 ease-in-out border-solid border-1 border-white rounded-[10px] p-[10px]' : 'transition-all duration-200 ease-in-out p-[0px] border-0 border-none'} `} >
+      <Search className={` w-6 h-6`} />
+		</div>
       {expanded && <span>Поиск</span>}
-    </button>
-					<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer}/>
+       </button>
+		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded}/>
 					
 					
 
