@@ -104,18 +104,13 @@ export default function ExplorePage() {
 
 	return (
 		<>
-		 <button 
-      className={`sm:hidden flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
-        expanded ? 'justify-start space-x-4' : 'justify-center'
-      }`} 
-      onClick={() => {
+		  <div className='flex bg-black py-[15px] border-solid border-2 border-gray-800 w-[95%] m-auto rounded-[10px] my-[20px] sm:hidden items-center justify-center' onClick={() => {
         setSearchDrawer(true);
         setExpanded(false);
-      }}
-    >
-      <Search className='w-6 h-6' />
-      {expanded && <span>Поиск</span>}
-       </button>
+      }}>
+      <Search className='w-6 h-6' /> 
+    </div>
+
       <DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} />
 
 		<div className='flex flex-col items-center justify-center mt-10 lg:px-4'>
