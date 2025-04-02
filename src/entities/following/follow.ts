@@ -6,7 +6,7 @@ export const followingApi = createApi({
     baseUrl: 'https://instagram-api.softclub.tj',
     prepareHeaders: (headers) => {
       const access_token = localStorage.getItem('access_token');
-      console.log("Текущий токен:", access_token); // Логирование для дебага
+      console.log("Текущий токен:", access_token);
       if (access_token) {
         headers.set('Authorization', `Bearer ${access_token}`);
       }
@@ -18,15 +18,15 @@ export const followingApi = createApi({
     addFollow: builder.mutation<void, { followerId: string; followingId: string }>({
       query: ({ followerId, followingId }) => ({
         url: '/FollowingRelationShip/add-following-relation-ship',
-        method: 'POST',  // Для добавления подписки используем POST
+        method: 'POST',
         body: { followerId, followingId },
       }),
     }),
     removeFollow: builder.mutation<void, { followerId: string; followingId: string }>({
       query: ({ followerId, followingId }) => ({
-        url: '/FollowingRelationShip/delete-following-relation-ship',  // URL для удаления
-        method: 'DELETE',  // Используем метод DELETE для удаления подписки
-        body: { followerId, followingId }, // Тело запроса содержит данные для удаления
+        url: '/FollowingRelationShip/delete-following-relation-ship',
+        method: 'DELETE',  
+        body: { followerId, followingId },
       }),
     }),
   }),
