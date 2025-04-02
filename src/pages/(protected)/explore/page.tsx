@@ -8,7 +8,7 @@ import { Heart, MessageCircle, Search } from 'lucide-react'
 import DrawerSearch from '@/widgets/section-search'
 
 export default function ExplorePage() {
-	const [expanded, setExpanded] = useState(true)
+	const [_expanded, setExpanded] = useState(true)
   const [searchDrawer, setSearchDrawer] = useState<boolean>(false)
 	const [page, setPage] = useState(1)
 	const { data: posts, isLoading, error, isFetching } = useGetPostsQuery(page)
