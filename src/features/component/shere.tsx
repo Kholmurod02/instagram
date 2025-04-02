@@ -31,7 +31,7 @@ const ShareModal = ({
 
 		return () => {
 			document.body.style.overflow = 'auto'
-			document.removeEventListener('keydown', handleKeyDown)
+			document.removeEventListener('keydown', handleKeyDown) 
 		}
 	}, [isOpen, onClose])
 
