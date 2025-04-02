@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Smile } from 'lucide-react' // Import the Smile icon from lucide-react
+import { Smile } from 'lucide-react' 
 import { useAddCommentMutation } from '../../entities/post/postApi'
 import { Popover, PopoverTrigger, PopoverContent } from '@/shared/ui/popover'
 
