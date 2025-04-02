@@ -3,7 +3,7 @@ import { useAddCommentMutation } from '../../entities/post/postApi'
 
 interface CommentProps {
   postId: string
-  initialComments: string[] // Ensure it's always an array
+  initialComments: string[] 
 }
 
 const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
@@ -18,14 +18,13 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
     if (commentText.trim()) {
       try {
         await addComment({ postId, comment: commentText })
-        setCommentText('') // Clear input after comment is added
+        setCommentText('') 
       } catch (err) {
         console.error('Error adding comment:', err)
       }
     }
   }
 
-  // Ensure initialComments is an array before calling map
   const comments = Array.isArray(initialComments) ? initialComments : []
 
   return (

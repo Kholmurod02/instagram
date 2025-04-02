@@ -4,7 +4,8 @@ import { useSavePostMutation, useUnsavePostMutation } from '@/entities/post/post
 import { toast } from 'react-toastify'
 
 interface SaveProps {
-  postId: string
+  postId: string,
+  saved: boolean 
 }
 
 const Save: React.FC<SaveProps> = ({ postId }) => {
@@ -43,7 +44,12 @@ const Save: React.FC<SaveProps> = ({ postId }) => {
   }
 
   return (
-    <div onClick={handleSave} className="flex items-center gap-1 cursor-pointer" disabled={saving || unsaving}>
+<div
+  onClick={handleSave}
+  className={`flex items-center gap-1 cursor-pointer ${saving || unsaving ? 'opacity-50 pointer-events-none' : ''}`}
+  aria-disabled={saving || unsaving}
+>
+
       {saving || unsaving ? (
         <Loader2 size={20} className="animate-spin text-gray-500" />
       ) : (

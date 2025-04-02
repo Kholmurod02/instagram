@@ -139,19 +139,21 @@ export default function AppSidebar() {
 					expanded={expanded}
 				/>
 
-<button 
+  
+     <button 
       className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
         expanded ? 'justify-start space-x-4' : 'justify-center'
       }`} 
       onClick={() => {
         setSearchDrawer(true);
         setExpanded(false);
+		  
       }}
     >
       <Search className='w-6 h-6' />
       {expanded && <span>Поиск</span>}
-    </button>
-					<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer}/>
+       </button>
+					<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} />
 					
 					
 
