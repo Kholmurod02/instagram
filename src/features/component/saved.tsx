@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 interface SaveProps {
   postId: string,
-  saved: boolean 
+  initialSaved?: boolean; 
 }
 
 const Save: React.FC<SaveProps> = ({ postId }) => {
