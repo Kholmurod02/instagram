@@ -186,13 +186,7 @@ export function InstagramDialog({
 							</div>
 
 							<div className='p-3 flex items-center gap-2'>
-								<Button
-									variant='ghost'
-									size='icon'
-									className='h-9 w-9 rounded-full'
-								>
-									<Smile className='h-6 w-6' />
-								</Button>
+								
 								<Comment postId={post.id} initialComments={post.comment} />
 							</div>
 						</div>
