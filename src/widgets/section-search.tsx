@@ -91,8 +91,8 @@ export default function DrawerSearch({
       {/* Drawer */}
       <div
         className={cn(
-          "fixed top-0 left-0 rounded-tr-[15px] rounded-br-[15px] bottom-0 z-50 w-[300px] sm:w-[400px] bg-background border-r shadow-lg transition-transform duration-300 ease-in-out",
-          searchDrawer ? "translate-x-18" : "-translate-x-full",
+          "fixed top-0 left-0 rounded-tr-[15px] rounded-br-[15px] bottom-0 z-50 w-full sm:w-[400px] bg-background border-r shadow-lg transition-transform duration-300 ease-in-out",
+          searchDrawer ? " translate-y-0 sm:translate-x-18" : "  sm:-translate-x-full sm:-translate-y-0 -translate-y-full",
         )}
       >
 
@@ -247,7 +247,10 @@ export default function DrawerSearch({
     </>
   }
   
-
+  const mobileVersion=()=>{
+    setSearchDrawer(false)
+    setValue('')
+  }
   return (
    <> 
   
@@ -259,8 +262,8 @@ export default function DrawerSearch({
       {/* Drawer */}
       <div
         className={cn(
-          "fixed top-0 left-0 rounded-tr-[15px] rounded-br-[15px] bottom-0 z-50 w-[300px] sm:w-[400px] bg-background border-r shadow-lg transition-transform duration-300 ease-in-out",
-          searchDrawer ? "translate-x-18" : "-translate-x-full",
+          "fixed top-0 left-0 rounded-tr-[15px] rounded-br-[15px] bottom-0 z-50 w-full sm:w-[400px] bg-background border-r shadow-lg transition-transform duration-300 ease-in-out",
+          searchDrawer ? " translate-y-0 sm:translate-x-18" : "  sm:-translate-x-full sm:-translate-y-0 -translate-y-full",
         )}
       >
 
@@ -269,7 +272,7 @@ export default function DrawerSearch({
           <div>
             <p className='text-[25px] px-[20px] text-white font-semibold  tracking-[1px] '>Поисковый запрос</p>
           </div>
-          <div className="relative w-[90%] ml-[5%]">
+          <div className="relative flex items-center gap-[20px] w-[90%] ml-[5%]">
       <input
         ref={inputRef}
         type="text"
@@ -293,12 +296,13 @@ export default function DrawerSearch({
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-all duration-200 ease-in-out"
+          className="absolute sm:right-2.5 right-[90px] top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-all duration-200 ease-in-out"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Clear search</span>
         </button>
       )}
+      <button onClick={mobileVersion} className='block sm:hidden'>Отмена</button>
     </div>
 
     
@@ -331,17 +335,20 @@ export default function DrawerSearch({
             <div
             onClick={clickOpenModal}
 					className={`w-[45px] h-[45px]  rounded-[50%] cursor-pointer p-[2px] ${
-						isViewed
+            isViewed
 							? 'bg-gray-500'
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
 					}`}
-				><img src={'https://instagram-api.softclub.tj/images/' + user.users.avatar} alt="" className='rounded-full w-[40px] h-[40px]'/></div>
+				><img src={'https://instagram-api.softclub.tj/images/' + user.users.avatar} alt="" className='rounded-full w-[40px] h-[40px]'/>
+        </div>
             
-            <div className='w-[75%]' onClick={()=> setSearchDrawer(false)}>
+            <NavLink to={'/profile'} className='w-[75%]'>
+            <div onClick={()=> setSearchDrawer(false)}>
               <p className='text-[16px] tracking-[1px] font-semibold'>{user.users.userName}</p>
               <p className='text-[12px]'>{user.users.fullName} • Подписчики: {user.users.subscribersCount} млн</p>
             </div>
             
+             </NavLink> 
             <button onClick={()=> deleteUser(user.id)}> <X/> </button>
           </div>
              </Link> 
