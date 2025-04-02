@@ -154,7 +154,7 @@ export default function AppSidebar() {
 		</div>
       {expanded && <span>Поиск</span>}
        </button>
-		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} isMobile={isMobile} setIsMobile={setIsMobile} />
+		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded}/>
 					
 					
 
