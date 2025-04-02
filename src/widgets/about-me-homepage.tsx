@@ -1,8 +1,14 @@
 import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { useNavigate } from 'react-router'
 
 const AboutMe = () => {
 	const { data, error, isLoading } = useGetMyProfileQuery(undefined)
+	const navigate = useNavigate()
+
+	const handleClick = () => {
+		navigate('/profile')
+	}
 
 	if (isLoading)
 		return (
@@ -14,15 +20,7 @@ const AboutMe = () => {
 				</div>
 			</div>
 		)
-	if (error)return (
-		<div className='flex items-center gap-3 py-3'>
-			<Skeleton className='w-12 h-12 rounded-full' />
-			<div>
-				<Skeleton className='w-32 h-5 mb-1' />
-				<Skeleton className='w-24 h-4' />
-			</div>
-		</div>
-	)
+	if (error)return <div className='py-5 text-center'>Error loading</div>
 
 	const profile = data?.data
 	if (!profile) {
@@ -42,7 +40,7 @@ const AboutMe = () => {
 							/>
 						</div>
 					</div>
-					<div>
+					<div onClick={handleClick} className='cursor-pointer'>
 						<h2>{profile.userName || 'Unknown User'}</h2>
 						<p className='text-gray-300 text-sm'>{data.data?.firstName}</p>
 					</div>

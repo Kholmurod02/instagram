@@ -11,18 +11,41 @@ import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
-import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
+import {
+	useGetFavoritePostsQuery,
+	useGetMyProfileQuery,
+} from '@/app/store/profileSlice/profileSlice'
 import { useGetMyPostsQuery } from '@/app/store/profileSlice/profileSlice'
 import { useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
 import { useState } from 'react'
 import { StoryModal } from '@/widgets/StoriesModal'
+import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
 
 export default function ProfileByNamePage() {
-	const [isViewed, setIsViewed] = useState(false)
-	const [openModal, setOpenModal] = useState(false)
+	const [isViewed, setIsViewed] = useState<boolean>(false)
+	const [openModal, setOpenModal] = useState<boolean>(false)
+	const [OpenPosts, setOpenPosts] = useState<boolean>(true)
+	const [OpenSave, setOpenSave] = useState<boolean>(false)
+	const [OpenReels, setOpenReels] = useState<boolean>(false)
+
 	function clickOpenModal() {
 		setIsViewed(true)
 		setOpenModal(true)
+	}
+	function clickOpenPosts() {
+		setOpenPosts(true)
+		setOpenSave(false)
+		setOpenReels(false)
+	}
+	function clickOpenSaved() {
+		setOpenPosts(false)
+		setOpenReels(false)
+		setOpenSave(true)
+	}
+	function clickOpenReels() {
+		setOpenPosts(false)
+		setOpenSave(false)
+		setOpenReels(true)
 	}
 	const {
 		data: profileData,
@@ -39,22 +62,46 @@ export default function ProfileByNamePage() {
 		error: StoryError,
 		isLoading: StoryLoading,
 	} = useGetMyStoriesQuery(undefined)
-
+	const {
+		data: FavoriteData,
+		error: FavoriteError,
+		isLoading: FavoriteLoading,
+	} = useGetFavoritePostsQuery(undefined)
+  
+	console.log(postsData)
 	if (profileError) return <p className=''>Profile Error</p>
-	if (profileLoading) return <p className=''>Profile Loading...</p>
+	if (profileLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
 	if (postsError) return <p className=''>Error Posts</p>
-	if (postsLoading) return <p className=''>Posts Loading...</p>
+	if (postsLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
 	if (StoryError) return <p className=''>Story Error</p>
-	if (StoryLoading) return <p className=''>Loading...</p>
-
-	console.log('====================================')
-	console.log(StoryData.data.stories)
-	console.log('====================================')
+	if (StoryLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
+	if (FavoriteError) return <p className=''>FavoritePosts Error</p>
+	if (FavoriteLoading)
+		return (
+			<div className='loading-bar-container'>
+				<div className='loading-bar'></div>
+			</div>
+		)
 	return (
-		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] w-full py-[50px]'>
-			<section className='flex w-[90%] m-auto gap-[20px] lg:gap-[100px] items-center'>
+		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] m-auto w-full py-[50px]'>
+			<section className='flex w-[90%] m-auto gap-[0px] lg:gap-[100px] items-center'>
 				<div
-					className={`rounded-full cursor-pointer p-[2px] ${
+					className={`rounded-full lg:w-[200px] lg:h-[202px] w-[100px] h-[100px] cursor-pointer p-[2px] ${
 						isViewed
 							? 'bg-gray-500'
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
@@ -107,25 +154,40 @@ export default function ProfileByNamePage() {
 					following={profileData.data?.subscriptionsCount}
 				/>
 			</div>
-			<Tabs className='border-t-[1px] border-[gray] py-[10px]'>
+			<Tabs className='border-t-[1px] relative border-[gray] py-[10px]'>
 				<TabsList className='flex justify-center gap-[50px]'>
 					<TabsTrigger
 						value='Tabs1'
-						className='flex cursor-pointer gap-[10px] items-center'
+						onClick={clickOpenPosts}
+						className={`flex cursor-pointer gap-[10px] items-center ${
+							OpenPosts
+								? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
+								: 'text-[#fff]'
+						}`}
 					>
 						<PostIcon />
 						<p className='text-[#fff] lg:block hidden'>Posts</p>
 					</TabsTrigger>
 					<TabsTrigger
 						value='Tabs1'
-						className='flex cursor-pointer gap-[10px] items-center'
+						onClick={clickOpenReels}
+						className={`flex cursor-pointer gap-[10px] items-center ${
+							OpenReels
+								? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
+								: 'text-[#fff]'
+						}`}
 					>
 						<ReelsIcon />
 						<p className='text-[#fff] lg:block hidden'>Reels</p>
 					</TabsTrigger>
 					<TabsTrigger
 						value='Tabs1'
-						className='flex cursor-pointer gap-[10px] items-center'
+						onClick={clickOpenSaved}
+						className={`flex cursor-pointer gap-[10px] items-center ${
+							OpenSave
+								? 'border-t-[2px] relative z-20 pt-[20px] top-[-10px] border-white font-bold'
+								: 'text-[#fff]'
+						}`}
 					>
 						<SavedIcon />
 						<p className='text-[#fff] lg:block hidden'>Saved</p>
@@ -139,21 +201,63 @@ export default function ProfileByNamePage() {
 					</TabsTrigger>
 				</TabsList>
 			</Tabs>
-			<ReelsContainer>
-				{postsData.map(
-					(post: {
-						images: unknown[]
-						postLikeCount: number
-						comments: object
-					}) => (
-						<ReelsDiv
-							img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
-							likes={post.postLikeCount} 
-							comments={post.comments}
-						/>
-					)
-				)}
-			</ReelsContainer>
+			{OpenPosts && (
+				<ReelsContainer>
+					{postsData.map(
+						(post: {
+							commentCount: string | number
+							images: unknown[]
+							postLikeCount: number
+							comments: object
+							id: number | string
+						}) => (
+							<ReelsDiv
+								img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+								likes={post.postLikeCount}
+								comments={post.commentCount}
+								key={post.id}
+							/>
+						)
+					)}
+				</ReelsContainer>
+			)}
+			{OpenReels && (
+				<ReelsContainer>
+					{postsData.map(
+						(reels: {
+							commentCount: string | number
+							images: unknown[]
+							postLikeCount: number
+							comments: object
+							id: number | string
+						}) => (
+							<ReelsDiv2
+								img={`https://instagram-api.softclub.tj/images/${reels.images[0]}`}
+								likes={reels.postLikeCount}
+								comments={reels.commentCount}
+								key={reels.id}
+							/>
+						)
+					)}
+				</ReelsContainer>
+			)}
+			{OpenSave && (
+				<ReelsContainer>
+					{FavoriteData.data.map(
+						(favorite: {
+							images: unknown[]
+							postLikeCount: number
+							commentCount: number | string
+						}) => (
+							<ReelsDiv
+								img={`https://instagram-api.softclub.tj/images/${favorite.images[0]}`}
+								likes={favorite.postLikeCount}
+								comments={favorite.commentCount}
+							/>
+						)
+					)}
+				</ReelsContainer>
+			)}
 		</div>
 	)
 }
