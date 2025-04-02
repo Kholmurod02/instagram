@@ -342,7 +342,7 @@ export default function DrawerSearch({
 				><img src={'https://instagram-api.softclub.tj/images/' + user.users.avatar} alt="" className='rounded-full w-[40px] h-[40px]'/>
         </div>
             
-            <NavLink to={'/profile'} className='w-[75%]'>
+            <NavLink to={`/profile/${user.users.id}`} className='w-[75%]'>
             <div onClick={()=> setSearchDrawer(false)}>
               <p className='text-[16px] tracking-[1px] font-semibold'>{user.users.userName}</p>
               <p className='text-[12px]'>{user.users.fullName} • Подписчики: {user.users.subscribersCount} млн</p>
