@@ -203,6 +203,16 @@ export function StoryModalHomepage({
 		}
 	}
 
+	const [liked, setLiked] = useState(() => {
+		return localStorage.getItem('liked') === 'true' // Проверяем сохранённое значение
+	})
+
+	const toggleLike = () => {
+		const newLiked = !liked
+		setLiked(newLiked)
+		localStorage.setItem('liked', newLiked.toString()) // Сохраняем в localStorage
+	}
+
 	const handleMediaError = (
 		e: React.SyntheticEvent<HTMLImageElement | HTMLVideoElement>
 	) => {
@@ -417,9 +427,28 @@ export function StoryModalHomepage({
 								className='flex-1 bg-transparent border border-gray-500 text-white rounded-full py-1 sm:py-2 px-3 sm:px-4 text-xs sm:text-sm'
 							/>
 							<div className='flex items-center gap-3 sm:gap-4 ml-3 sm:ml-4'>
-								<button className='text-white'>
-									<Heart className='h-5 w-5 sm:h-6 sm:w-6' />
+								<button
+									onClick={toggleLike}
+									className='relative flex items-center justify-center'
+								>
+									{/* Вспышка при лайке */}
+									<div
+										className={`absolute w-12 h-12 bg-red-500/30 rounded-full 
+        transition-all duration-300 ease-out ${
+					liked ? 'scale-10' : 'scale-0 opacity-0'
+				}`}
+									/>
+
+									{/* Иконка сердца */}
+									<Heart
+										className={`transition-all duration-300 ease-out ${
+											liked
+												? 'text-red-500 fill-red-500 scale-110'
+												: 'text-white'
+										}`}
+									/>
 								</button>
+								
 								<Send
 									className='h-9 w-6'
 									onClick={() => setIsModalOpen(true)}
