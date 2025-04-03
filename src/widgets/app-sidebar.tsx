@@ -31,7 +31,10 @@ export default function AppSidebar() {
 		} else {
 			setExpanded(true)
 		}
-	}, [pathname])
+		if(searchDrawer) {
+			setExpanded(false)
+		  }
+	}, [pathname, searchDrawer])
 
 	useEffect(() => {
 		const checkScreenSize = () => {
