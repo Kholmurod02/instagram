@@ -1,3 +1,4 @@
+import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Dialog, DialogContent } from '@/shared/ui/dialog'
 import { Input } from '@/shared/ui/input'
@@ -55,6 +56,8 @@ export function StoryModalHomepage({
     const extension = fileName.split('.').pop()?.toLowerCase()
     return extension === 'mp4' || extension === 'webm' ? 'video' : 'image'
   }
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Инициализация состояний
   useEffect(() => {
@@ -413,9 +416,11 @@ export function StoryModalHomepage({
                 <button className='text-white'>
                   <Heart className='h-5 w-5 sm:h-6 sm:w-6' />
                 </button>
-                <button className='text-white'>
-                  <Send className='h-5 w-5 sm:h-6 sm:w-6' />
-                </button>
+                <Send className='h-9 w-6' onClick={() => setIsModalOpen(true)} />
+					<ShareModal
+						isOpen={isModalOpen}
+						onClose={() => setIsModalOpen(false)}
+					/>
               </div>
             </div>
           </div>
