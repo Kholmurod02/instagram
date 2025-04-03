@@ -60,10 +60,16 @@ export const postApi = createApi({
       }),
       invalidatesTags: [{ type: 'Posts', id: 'Saved' }],
     }),
-    
+    deleteComment: builder.mutation({
+      query: (commentId) => ({
+        url: `/Post/delete-comment?commentId=${commentId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Posts'],
+    }),
     
   }),
 });
 
-export const { useAddPostMutation,useGetPostsQuery,useLikePostMutation,  useSavePostMutation,  useAddCommentMutation, useUnsavePostMutation,
+export const { useAddPostMutation,useGetPostsQuery,useLikePostMutation,  useSavePostMutation,  useAddCommentMutation, useUnsavePostMutation,useDeleteCommentMutation,
 } = postApi;
