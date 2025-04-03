@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const users = [
 	{ id: 1, name: 'instagram', username: 'rio.tj' },
@@ -17,6 +17,24 @@ const ShareModal = ({
 }) => {
 	const [selectedUsers, setSelectedUsers] = useState<number[]>([])
 
+	useEffect(() => {
+		if (!isOpen) return
+
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				onClose()
+			}
+		}
+
+		document.body.style.overflow = 'hidden'
+		document.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			document.body.style.overflow = 'auto'
+			document.removeEventListener('keydown', handleKeyDown) 
+		}
+	}, [isOpen, onClose])
+
 	const toggleUserSelection = (id: number) => {
 		setSelectedUsers(prev =>
 			prev.includes(id) ? prev.filter(userId => userId !== id) : [...prev, id]
@@ -26,8 +44,14 @@ const ShareModal = ({
 	if (!isOpen) return null
 
 	return (
-		<div className='fixed inset-0 bg-[#120c0c79]  flex justify-center items-center'>
-			<div className='bg-black text-white rounded-lg w-[700px] p-4 shadow-lg '>
+		<div
+			className='fixed inset-0 bg-[#120c0c79] flex justify-center z-50 items-center'
+			onClick={onClose}
+		>
+			<div
+				className='bg-black text-white rounded-lg w-[700px] p-4 shadow-lg'
+				onClick={e => e.stopPropagation()}
+			>
 				<div className='flex justify-between items-center border-b border-gray-700 pb-2'>
 					<h2 className='text-lg font-semibold'>Share</h2>
 					<button onClick={onClose}>
@@ -79,6 +103,9 @@ const ShareModal = ({
 							: 'bg-blue-900 text-gray-400 cursor-not-allowed'
 					}`}
 					disabled={selectedUsers.length === 0}
+					onClick={() => {
+						onClose() 
+					}}
 				>
 					Send
 				</button>
