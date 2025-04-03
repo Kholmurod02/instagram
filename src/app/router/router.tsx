@@ -64,6 +64,9 @@ export default function Router() {
               <Route index element={<LazyDefaulChatPage />} />
               <Route path=":id" element={<ChatByIdPage />} />
             </Route>
+
+            <Route path='profile' element={<LazyProfileByNamePage />} />
+ 						<Route path='profile/:id' element={<LazyProfileByNamePage />} />
             
             <Route path=':name' element={<LazyProfileByNamePage />} />
             
