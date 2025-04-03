@@ -1,5 +1,6 @@
 "use client"
 
+import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar"
 import { Dialog, DialogContent } from "@/shared/ui/dialog"
 import { Input } from "@/shared/ui/input"
@@ -47,6 +48,7 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
   const [progress, setProgress] = useState(0)
   const progressInterval = useRef<NodeJS.Timeout>()
   const isInitialMount = useRef(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     if (storyData?.data?.stories) {
@@ -363,9 +365,11 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
                 <button className="text-white">
                   <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
-                <button className="text-white">
-                  <Send className="h-5 w-5 sm:h-6 sm:w-6" />
-                </button>
+                <Send className='h-9 w-6' onClick={() => setIsModalOpen(true)} />
+					<ShareModal
+						isOpen={isModalOpen}
+						onClose={() => setIsModalOpen(false)}
+					/>
               </div>
             </div>
           </div>

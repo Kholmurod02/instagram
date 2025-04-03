@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import logo from '../../assets/logo.svg'
-import logo2 from '../../assets/logo2.svg'
+import logo2 from '../../assets/download.png'
 import { ChatByIdPage } from '@/pages/(protected)/chats/[id]/page'
 
 // Lazy load all pages
@@ -64,6 +64,9 @@ export default function Router() {
               <Route index element={<LazyDefaulChatPage />} />
               <Route path=":id" element={<ChatByIdPage />} />
             </Route>
+
+            <Route path='profile' element={<LazyProfileByNamePage />} />
+ 						<Route path='profile/:id' element={<LazyProfileByNamePage />} />
             
             <Route path=':name' element={<LazyProfileByNamePage />} />
             

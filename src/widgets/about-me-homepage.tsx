@@ -16,13 +16,9 @@ const AboutMe = () => {
 
 	if (isLoading)
 		return (
-			<div className='flex items-center gap-3 py-3'>
-				<Skeleton className='w-12 h-12 rounded-full' />
-				<div>
-					<Skeleton className='w-32 h-5 mb-1' />
-					<Skeleton className='w-24 h-4' />
-				</div>
-			</div>
+			<div className='loading-bar-container'>
+			<div className='loading-bar'></div>
+		</div>
 		)
 	if (error)return <div className='py-5 text-center'>Error loading</div>
 
