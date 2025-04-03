@@ -11,7 +11,7 @@ import ReelsPage from '@/pages/(protected)/reels/page'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import logo from '../../assets/logo.svg'
-import logo2 from '../../assets/logo2.svg'
+import logo2 from '../../assets/download.png'
 
 const LazyLoginPage = lazy(() => Promise.resolve({ default: LoginPage }));
 const LazyRegistrationPage = lazy(() => Promise.resolve({ default: RegistrationPage }));
