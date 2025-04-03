@@ -6,7 +6,7 @@ import * as React from "react"
 import { X } from "lucide-react"
 import {useSearchUsersQuery, useDeleteUserMutation, useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation, useGetMyStoriesQuery} from '@/entities/search/search'
 import { Skeleton } from '@/shared/ui/skeleton'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import { StoryModal } from '@/widgets/StoriesModal'
 
 
@@ -330,7 +330,8 @@ export default function DrawerSearch({
          value =='' ? data?.data?.length ==0 ? <div className='font-semibold  flex justify-center text-gray-400'>
          <p>Нет недавних запросов.</p> 
         </div> :  data?.data?.map((user:Users)=>{
-          return    <div key={user.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px]' >
+          return   <Link to={`/profile/${user.users.id}`}>
+            <div key={user?.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px]' >
             <div
             onClick={clickOpenModal}
 					className={`w-[45px] h-[45px]  rounded-[50%] cursor-pointer p-[2px] ${
@@ -341,7 +342,7 @@ export default function DrawerSearch({
 				><img src={'https://instagram-api.softclub.tj/images/' + user.users.avatar} alt="" className='rounded-full w-[40px] h-[40px]'/>
         </div>
             
-            <NavLink to={'/profile'} className='w-[75%]'>
+            <NavLink to={`/profile/${user.users.id}`} className='w-[75%]'>
             <div onClick={()=> setSearchDrawer(false)}>
               <p className='text-[16px] tracking-[1px] font-semibold'>{user.users.userName}</p>
               <p className='text-[12px]'>{user.users.fullName} • Подписчики: {user.users.subscribersCount} млн</p>
@@ -350,10 +351,11 @@ export default function DrawerSearch({
              </NavLink> 
             <button onClick={()=> deleteUser(user.id)}> <X/> </button>
           </div>
+             </Link> 
         }): info?.data?.length == 0 ? <div className='font-semibold  flex justify-center text-gray-400'>
           <p>Ничего не найдено</p> 
          </div>  : info?.data?.map((user:Users)=>{
-           return  <NavLink to={'/profile'}>
+           return  <NavLink to={`/profile/${user.id}`}>
             
            <div key={user.id} className='flex py-[8px] hover:bg-[#20272b] items-center gap-[20px] px-[20px]' onClick={()=>cardClick(user.id)}>
             <img src={'https://instagram-api.softclub.tj/images/' + user.avatar} alt="" className='w-[45px] h-[45px]  rounded-[50%]'/>
