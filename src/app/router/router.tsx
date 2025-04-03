@@ -11,6 +11,7 @@ import ReelsPage from '@/pages/(protected)/reels/page'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import logo from '../../assets/logo.svg'
+import logo2 from '../../assets/logo2.svg'
 
 const LazyLoginPage = lazy(() => Promise.resolve({ default: LoginPage }));
 const LazyRegistrationPage = lazy(() => Promise.resolve({ default: RegistrationPage }));
@@ -28,10 +29,16 @@ export default function Router() {
 		<BrowserRouter>
 			<Suspense
 				fallback={
-					<div className="flex justify-center items-center h-screen">
-						<img src={logo} alt="" />
+					<div className="flex flex-col justify-between h-screen items-center">
+					  <div className="flex-1 flex justify-center items-center">
+						 <img src={logo2} alt=""  className='w-full h-20'  />
+					  </div>
+					  <div className="pb-5 flex flex-col justify-center items-center gap-1">
+						 <h2>from</h2>
+						 <img src={logo} alt="" className='w-[60%]' />
+					  </div>
 					</div>
-				}
+				 }				 
 			>
 				<Routes>
 					<Route path='login' element={<LazyLoginPage />} />
