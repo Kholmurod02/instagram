@@ -28,33 +28,33 @@ const items = [
 		icon: Bell,
 	},
 	{
-		title: "Конфиденциальность",
-		url: "#",
+		title: "Конфиденциальность аккаунта",
+		url: "/account_privacy",
 		icon: Lock,
 	},
 	{
 		title: "Близкие друзья",
-		url: "#",
+		url: "/close_friends",
 		icon: Star,
 	},
 	{
 		title: "Заблокированные",
-		url: "#",
+		url: "/blocked_accounts",
 		icon: ShieldBan,
 	},
 	{
 		title: "Скрывать историю и эфиры",
-		url: "#",
+		url: "/hide_story_and_live",
 		icon: CircleOff,
 	},
 	{
 		title: "Сообщение и ответы на истории",
-		url: "#",
+		url: "/messages_and_story_replies",
 		icon: MessageCircle,
 	},
 	{
 		title: "Метки и упоминания",
-		url: "#",
+		url: "/tags_and_mentions",
 		icon: AtSign,
 	},
 	{
@@ -64,12 +64,12 @@ const items = [
 	},
 	{
 		title: "Настройкт репостов",
-		url: "#",
+		url: "/sharing_and_reuse",
 		icon: Repeat2,
 	},
 	{
 		title: "Аккаунты с ограничениями",
-		url: "#",
+		url: "/restricted_accounts",
 		icon: CircleUser,
 	},
 	{
@@ -79,27 +79,27 @@ const items = [
 	},
 	{
 		title: "Скрытые аккаунты",
-		url: "#",
+		url: "/muted_accounts",
 		icon: BellOff,
 	},
 	{
 		title: "Настройки контента",
-		url: "#",
+		url: "/content_preferences",
 		icon: Youtube,
 	},
 	{
 		title: `Число отметок "Нравится" и репостов`,
-		url: "#",
+		url: "/like_count",
 		icon: HeartOff,
 	},
 	{
 		title: "Платные подписки",
-		url: "#",
+		url: "/subscriptions",
 		icon: Crown,
 	},
 	{
 		title: "Архивирование и скачивание",
-		url: "#",
+		url: "/archiving_and_downloading",
 		icon: ArrowDownFromLine,
 	},
 	{
@@ -109,7 +109,7 @@ const items = [
 	},
 	{
 		title: "Разрешение сайта",
-		url: "#",
+		url: "/website_permissions",
 		icon: Laptop,
 	},
 	{
@@ -119,7 +119,7 @@ const items = [
 	},
 	{
 		title: "Тип аккаунта и инмтрументы",
-		url: "#",
+		url: "/account_type_and_tools",
 		icon: ChartColumnIncreasing,
 	},
 	{
@@ -129,12 +129,12 @@ const items = [
 	},
 	{
 		title: "Центр конфиденциальности",
-		url: "#",
+		url: "https://privacycenter.instagram.com/?entry_point=instagram_settings_page",
 		icon: GlobeLock,
 	},
 	{
 		title: "Статус аккаунта",
-		url: "#",
+		url: "/account_status",
 		icon: User,
 	},
 ]
@@ -145,12 +145,12 @@ export const SettingsSidebar = () => {
 	return (
 
 		<div className='flex justify-between'>
-			<Sidebar className='ml-[320px]'>
+			<Sidebar className='ml-[200px] p-[10px]'>
 				<SidebarContent>
 					<SidebarGroup>
-						<div className='flex'>
+						<div className='flex justify-between'>
 							<SidebarGroupLabel className='text-[30px] mb-[40px]'>Настройки</SidebarGroupLabel>
-							<SidebarGroupLabel className='mt-[5px] ml-[60px] cursor-pointer'><Link to={"/"}><ArrowLeft /></Link></SidebarGroupLabel>
+							<SidebarGroupLabel className='mt-[5px] cursor-pointer'><Link to={"/"}><ArrowLeft /></Link></SidebarGroupLabel>
 						</div>
 						<p className='text-[gray] ml-[10px]'>Для вас</p>
 						<SidebarGroupContent>

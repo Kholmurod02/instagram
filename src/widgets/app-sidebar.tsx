@@ -8,6 +8,7 @@ import {
 	MessageCircle,
 	PanelLeftIcon,
 	PlusSquare,
+	Settings,
 	Search,
 	User,
 } from 'lucide-react'
@@ -101,7 +102,7 @@ export default function AppSidebar() {
 	// Desktop sidebar (остается без изменений)
 	return (
 		<nav
-			className={`flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[300px]' : 'w-[72px]'
+			className={` text-[white] flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[200px]' : 'w-[72px]'
 				}`}
 		>
 			{/* Logo */}
@@ -159,6 +160,7 @@ export default function AppSidebar() {
 					label='Уведомления'
 					expanded={expanded}
 				/>
+				
 
 				{/* Кнопка создания */}
 				<button
@@ -178,6 +180,12 @@ export default function AppSidebar() {
 					label='Профиль'
 					expanded={expanded}
 				/>
+				<NavLink
+					href='/settings'
+					icon={<Settings className='w-6 h-6' />}
+					label='Настройки'
+					expanded={expanded}
+				/>
 				
 			</div>
 
@@ -187,7 +195,7 @@ export default function AppSidebar() {
 					}`}
 			>
 				<Menu className='w-6 h-6' />
-				{expanded && <span>Ещё</span>}
+				{expanded && <span>Ещё </span>}
 			</button>
 
 			{/* Collapse button */}
