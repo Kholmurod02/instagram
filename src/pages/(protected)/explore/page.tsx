@@ -33,7 +33,7 @@ export default function ExplorePage() {
 					const fileUrl = `https://instagram-api.softclub.tj/images/${post.images[0]}`
 					const isVideo = fileUrl.endsWith('.mp4') || fileUrl.endsWith('.mov')
 
-					return {
+						return {
 						id: post.postId,
 						url: fileUrl,
 						type: isVideo ? 'video' : 'image',
@@ -114,7 +114,7 @@ export default function ExplorePage() {
       <DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded} />
 
 		<div className='flex flex-col items-center justify-center mt-10 lg:px-4'>
-			<div className='grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2'>
+			<div className='grid grid-cols-3 sm:grid-cols-3 gap-2 max-w-[1400px] mx-auto px-2'>
 				{arrangedMedia.map(post => (    
 					<InstagramDialog key={post.id} post={post}>
 						<div
@@ -129,13 +129,13 @@ export default function ExplorePage() {
 									muted
 									playsInline
 									loop
-									className='w-full h-[900px] object-cover transition-transform duration-300 hover:scale-105'
+									className='w-full h-[300px] lg:h-[900px] object-cover transition-transform duration-300 hover:scale-105'
 								/>
 							) : (
 								<img
 									src={post.url}
 									alt={`Explore ${post.id}`}
-									className='w-full h-[450px] object-cover transition-transform duration-300 hover:scale-105'
+									className='w-full h-[150px] lg:h-[450px] object-cover transition-transform duration-300 hover:scale-105'
 									loading='lazy'
 								/>
 							)}

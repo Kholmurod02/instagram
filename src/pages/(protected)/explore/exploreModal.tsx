@@ -64,10 +64,10 @@ export function InstagramDialog({
 		
 			{post && (
 				<DialogContent
-					className='p-0 w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'
+					className='p-0 w-[96.5%] lg:w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'
 					style={{ backgroundColor: 'black' }}
 				>
-					<div className='grid grid-cols-1 md:grid-cols-2 h-[90vh]'>
+					<div className='grid grid-cols-2 md:grid-cols-2 h-[70vh] lg:h-[90vh]'>
 						<div className='flex items-center justify-center bg-black'>
 							{post.type === 'video' ? (
 								<video
@@ -99,7 +99,7 @@ export function InstagramDialog({
 								<div className='flex items-center gap-3'>
 									<Avatar>
 										<div className=''>
-										 <NavLink to={`/profile/${post.user.id}`}>
+										 <NavLink to={`/profile/${post.userId}`}>
 												Profile
 											</NavLink>
 										</div>
@@ -173,7 +173,7 @@ export function InstagramDialog({
 											userImage?: string
 										}) => (
 											<div key={c.postCommentId}>
-											 <NavLink to={`/profile/${post.user.id}`}>
+											 <NavLink to={`/profile/${c.userId}`}>
 													<CommentItem
 														username={c.userName}
 														comment={c.comment}
@@ -196,11 +196,14 @@ export function InstagramDialog({
 							<div className='p-3 border-t border-b'>
 								<div className='flex justify-between '>
 									<div className='flex gap-5'>
-										<Like
+									{/* <div className=""> */}
+									<Like
 											postId={post.id}
 											initialLiked={false}
 											initialLikes={post.likes}
+										// size={33}
 										/>
+									{/* </div> */}
 
 										<MessageCircle className='h-9 w-8' />
 
