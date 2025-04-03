@@ -21,7 +21,6 @@ import {
 import ProfilePhotoModal from './profile-photo-modal'
 const token = localStorage.getItem('decodeToken')
 const decodeToken = token ? JSON.parse(token) : {}
-console.log(decodeToken)
 export default function ProfileEditModal({
 	openE,
 	setOpenE,
@@ -35,7 +34,6 @@ export default function ProfileEditModal({
 	const [bio, setBio] = useState<string>('')
 	// const [select, setSelect] = useState<string>('')
 	const [open, setOpen] = useState<boolean>(false)
-	console.log(data?.data?.image)
 	useEffect(() => {
 		setBio(data?.data?.about)
 	}, [data])

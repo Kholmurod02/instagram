@@ -15,10 +15,11 @@ import { useDeleteMessageMutation, useGetChatByIdQuery, useSendMessageMutation }
 import { jwtDecode } from "jwt-decode";
 import { Dialog } from "@/shared/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { useGetProfileByIdQuery } from "@/app/store/profileSlice/profileSlice";
 
-const formSchema = z.object({
-  message: z.string().min(1, { message: "Message cannot be empty." }),
-});
+// const formSchema = z.object({
+//   message: z.string().min(1, { message: "Message cannot be empty." }),
+// });
 
 export function ChatByIdPage() {
   const navigate = useNavigate();
@@ -68,10 +69,12 @@ export function ChatByIdPage() {
   }
 
   const [deleteMessage] = useDeleteMessageMutation()
+  const { data: user, error, isLoading } = useGetProfileByIdQuery([]);
+  
 
 
 
-  const { data, error, isLoading } = useGetChatByIdQuery(id, {
+  const { data} = useGetChatByIdQuery(id, {
     skip: !id, // Не отправляем запрос, если id нет
   });
 
@@ -90,19 +93,20 @@ export function ChatByIdPage() {
 
   function addSmile(el) {
     setMessage((message += el))
-    console.log(message);
 
   }
 
   const handleSubmit = (e: string) => {
     e.preventDefault()
+    if(message.trim().length >0){
     sendMessage(formData)
     setMessage("")
     setFile("")
+    }
   }
 
   return (
-    <div className="flex flex-col h-screen w-[120%] max-w-md mx-auto bg-background">
+    <div className="flex flex-col h-[600px] md:h-screen md:w-[550px] w-full mx-auto bg-background">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-3">
@@ -128,7 +132,7 @@ export function ChatByIdPage() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1  overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {isLoading && <p>Загрузка...</p>}
         {error && <p className="text-red-500">Ошибка загрузки</p>}
         {data?.data
@@ -182,7 +186,7 @@ export function ChatByIdPage() {
       </div>
 
       {/* Message Input Form */}
-      <div className="p-4 border-t">
+      <div className="md:p-4 py-3 border-t">
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
           <Button
             type="button" variant="ghost" size="icon" className="rounded-full">
@@ -199,7 +203,7 @@ export function ChatByIdPage() {
           <input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            type="text" className="rounded-[10px] w-[250px] h-[35px] bg-muted" placeholder=" Напишите сообщение..." />
+            type="text" className="rounded-[10px] md:w-[250px] w-[130px] h-[35px] bg-muted" placeholder=" Напишите сообщение..." />
           <Button
             type="submit"
             className="bg-muted "

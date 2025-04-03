@@ -4,7 +4,6 @@ import { Skeleton } from '@/shared/ui/skeleton'
 
 const RecomendedUserHomepage = () => {
 	const { data, error, isLoading } = useGetUsersHomepageQuery(undefined)
-	console.log(data);
 
 	if (isLoading) return (
 		<div className="py-3 text-white">

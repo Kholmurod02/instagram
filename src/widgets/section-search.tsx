@@ -4,10 +4,11 @@ import { Search} from 'lucide-react'
 import { useState } from 'react'
 import * as React from "react"
 import { X } from "lucide-react"
-import {useSearchUsersQuery, useDeleteUserMutation, useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation, useGetMyStoriesQuery} from '@/entities/search/search'
+import {useSearchUsersQuery, useDeleteUserMutation, useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation} from '@/entities/search/search'
 import { Skeleton } from '@/shared/ui/skeleton'
-import { Link, NavLink } from 'react-router'
+import { NavLink } from 'react-router'
 import { StoryModal } from '@/widgets/StoriesModal'
+import { useGetStoryByidQuery } from '@/app/store/profileSlice/profileSlice'
 
 
 interface DrawerSearchProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -42,12 +43,13 @@ export default function DrawerSearch({
   const [postUser, {isLoading: postLoading}]=usePostUserMutation()
   const [deleteAllUser, {isLoading: deleteAllLoading}]=useDeleteAllUserMutation()
   const [openModal, setOpenModal] = useState<boolean>(false)
- const {data: StoryData} = useGetMyStoriesQuery([])
- 
+  const [idx,setIdx]=useState<string>('')
+const {data:StoryById}=useGetStoryByidQuery(idx) 
 
- function clickOpenModal() {
-  setIsViewed(true)
-  setOpenModal(true)
+ function clickOpenModal(id:string) {
+  
+  StoryById?.data?.stories.length>0  ?  (setOpenModal(true), setIdx('') , setIsViewed(true)): setIdx('') ,setIsViewed(false);
+  setIdx(id)  
 }
 
 
@@ -80,6 +82,7 @@ export default function DrawerSearch({
         setValue('')
   }
 
+ React.useEffect(()=>{},[StoryById?.data?.stories.length])
 
   if(error || isLoading || infoError || infoLoading || deleteLoading || postLoading || deleteAllLoading){
     return  <>
@@ -322,7 +325,7 @@ export default function DrawerSearch({
      <StoryModal
               open={openModal}
               setOpen={setOpenModal}
-              storyData={StoryData}
+              storyData={StoryById}
             />
     
     <div>
@@ -330,10 +333,9 @@ export default function DrawerSearch({
          value =='' ? data?.data?.length ==0 ? <div className='font-semibold  flex justify-center text-gray-400'>
          <p>Нет недавних запросов.</p> 
         </div> :  data?.data?.map((user:Users)=>{
-          return   <Link to={`/profile/${user.users.id}`}>
-            <div key={user?.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px]' >
+          return  <div key={user?.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px]' >
             <div
-            onClick={clickOpenModal}
+            onClick={()=>clickOpenModal(user.users.id)}
 					className={`w-[45px] h-[45px]  rounded-[50%] cursor-pointer p-[2px] ${
             isViewed
 							? 'bg-gray-500'
@@ -351,7 +353,6 @@ export default function DrawerSearch({
              </NavLink> 
             <button onClick={()=> deleteUser(user.id)}> <X/> </button>
           </div>
-             </Link> 
         }): info?.data?.length == 0 ? <div className='font-semibold  flex justify-center text-gray-400'>
           <p>Ничего не найдено</p> 
          </div>  : info?.data?.map((user:Users)=>{

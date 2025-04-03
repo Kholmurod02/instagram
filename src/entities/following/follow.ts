@@ -6,7 +6,6 @@ export const followingApi = createApi({
     baseUrl: 'https://instagram-api.softclub.tj',
     prepareHeaders: (headers) => {
       const access_token = localStorage.getItem('access_token');
-      console.log("Текущий токен:", access_token);
       if (access_token) {
         headers.set('Authorization', `Bearer ${access_token}`);
       }

@@ -1,4 +1,3 @@
-
 import {
 	Compass,
 	Heart,
@@ -9,13 +8,15 @@ import {
 	PanelLeftIcon,
 	PlusSquare,
 	Search,
+	Settings,
 	User,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useLocation} from 'react-router'
+
+import { Link, useLocation } from 'react-router'
+
 import InstagramPostModal from './instagram-post-modal'
 import DrawerSearch from './section-search'
-
 
 export default function AppSidebar() {
 	const [expanded, setExpanded] = useState(true)
@@ -24,35 +25,31 @@ export default function AppSidebar() {
 	const { pathname } = useLocation()
 	const [searchDrawer, setSearchDrawer] = useState<boolean>(false)
 
+	useEffect(() => {
+		if (pathname === '/chats' || pathname.startsWith('/chats/')) {
+			setExpanded(false)
+		} else {
+			setExpanded(true)
+		}
+	}, [pathname])
 
 	useEffect(() => {
-		if (pathname === "/chats" || pathname.startsWith("/chats/")) {
-		  setExpanded(false);
-		} else {
-		  if (!searchDrawer) {
-			 setExpanded(true);
-		  }
-		}
-	 }, [pathname, searchDrawer]);
-  
-	 useEffect(() => {
-		if (!searchDrawer && !isMobile) {
-		  if (!pathname.startsWith("/chats")) {
-			 setExpanded(true);
-		  }
-		}
-	 }, [searchDrawer, isMobile, pathname]);
-  
-	 useEffect(() => {
 		const checkScreenSize = () => {
-		  setIsMobile(window.innerWidth < 768);
-		  setExpanded(window.innerWidth >= 1024);
-		};
-  
-		checkScreenSize();
-		window.addEventListener('resize', checkScreenSize);
-		return () => window.removeEventListener('resize', checkScreenSize);
-	 }, []);
+			setIsMobile(window.innerWidth < 768)
+			setExpanded(window.innerWidth >= 1024)
+		}
+	}, [searchDrawer, isMobile, pathname])
+
+	useEffect(() => {
+		const checkScreenSize = () => {
+			setIsMobile(window.innerWidth < 768)
+			setExpanded(window.innerWidth >= 1024)
+		}
+
+		checkScreenSize()
+		window.addEventListener('resize', checkScreenSize)
+		return () => window.removeEventListener('resize', checkScreenSize)
+	}, [])
 
 	if (isMobile) {
 		return (
@@ -90,15 +87,68 @@ export default function AppSidebar() {
 						className='flex flex-col items-center justify-center p-2'
 						onClick={() => setIsCreateOpen(true)}
 					>
-						<PlusSquare className='w-6 h-6' />{' '}
-						{/* Кнопка создания */}
+						<PlusSquare className='w-6 h-6' /> {/* Кнопка создания */}
 					</button>
 					<InstagramPostModal open={isCreateOpen} setOpen={setIsCreateOpen} />
 					<Link
 						to='/reels'
 						className='flex flex-col items-center justify-center p-2'
 					>
-						<svg aria-label="Reels" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Reels</title><line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fill-rule="evenodd"></path></svg>
+						<svg
+							aria-label='Reels'
+							className='x1lliihq x1n2onr6 x5n08af'
+							fill='currentColor'
+							height='24'
+							role='img'
+							viewBox='0 0 24 24'
+							width='24'
+						>
+							<title>Reels</title>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='2.049'
+								x2='21.95'
+								y1='7.002'
+								y2='7.002'
+							></line>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='13.504'
+								x2='16.362'
+								y1='2.001'
+								y2='7.002'
+							></line>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='7.207'
+								x2='10.002'
+								y1='2.11'
+								y2='7.002'
+							></line>
+							<path
+								d='M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z'
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+							></path>
+							<path
+								d='M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z'
+								fillRule='evenodd'
+							></path>
+						</svg>
 					</Link>
 					<Link
 						to='/profile'
@@ -114,8 +164,9 @@ export default function AppSidebar() {
 	// Desktop sidebar (остается без изменений)
 	return (
 		<nav
-			className={`flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[300px]' : 'w-[72px]'
-				}`}
+			className={` text-[white] flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${
+				expanded ? 'w-[200px]' : 'w-[72px]'
+			}`}
 		>
 			{/* Logo */}
 			<div className='p-4 mb-6'>
@@ -139,24 +190,31 @@ export default function AppSidebar() {
 					expanded={expanded}
 				/>
 
-  
-     <button 
-      className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
-        expanded ? 'justify-start space-x-4' : 'justify-center'
-      }`} 
-      onClick={() => {
-        setSearchDrawer(true);
-        setExpanded(false);
-      }}
-    >
-		<div className={`  ${ searchDrawer ? 'transition-all duration-200 ease-in-out border-solid border-1 border-white rounded-[10px] p-[10px]' : 'transition-all duration-200 ease-in-out p-[0px] border-0 border-none'} `} >
-      <Search className={` w-6 h-6`} />
-		</div>
-      {expanded && <span>Поиск</span>}
-       </button>
-		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded}/>
-					
-					
+				<button
+					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
+						expanded ? 'justify-start space-x-4' : 'justify-center'
+					}`}
+					onClick={() => {
+						setSearchDrawer(true)
+						setExpanded(false)
+					}}
+				>
+					<div
+						className={`  ${
+							searchDrawer
+								? 'transition-all duration-200 ease-in-out border-solid border-1 border-white rounded-[10px] p-[10px]'
+								: 'transition-all duration-200 ease-in-out p-[0px] border-0 border-none'
+						} `}
+					>
+						<Search className={` w-6 h-6`} />
+					</div>
+					{expanded && <span>Поиск</span>}
+				</button>
+				<DrawerSearch
+					searchDrawer={searchDrawer}
+					setSearchDrawer={setSearchDrawer}
+					setExpanded={setExpanded}
+				/>
 
 				<NavLink
 					href='/explore'
@@ -166,7 +224,63 @@ export default function AppSidebar() {
 				/>
 				<NavLink
 					href='/reels'
-					icon={<svg aria-label="Reels" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Reels</title><line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fill-rule="evenodd"></path></svg>}
+					icon={
+						<svg
+							aria-label='Reels'
+							className='x1lliihq x1n2onr6 x5n08af'
+							fill='currentColor'
+							height='24'
+							role='img'
+							viewBox='0 0 24 24'
+							width='24'
+						>
+							<title>Reels</title>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='2.049'
+								x2='21.95'
+								y1='7.002'
+								y2='7.002'
+							></line>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='13.504'
+								x2='16.362'
+								y1='2.001'
+								y2='7.002'
+							></line>
+							<line
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+								x1='7.207'
+								x2='10.002'
+								y1='2.11'
+								y2='7.002'
+							></line>
+							<path
+								d='M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z'
+								fill='none'
+								stroke='currentColor'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
+							></path>
+							<path
+								d='M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z'
+								fillRule='evenodd'
+							></path>
+						</svg>
+					}
 					label='Reels'
 					expanded={expanded}
 				/>
@@ -185,8 +299,9 @@ export default function AppSidebar() {
 
 				{/* Кнопка создания */}
 				<button
-					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
-						}`}
+					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${
+						expanded ? 'justify-start space-x-4' : 'justify-center'
+					}`}
 					onClick={() => setIsCreateOpen(true)}
 				>
 					<PlusSquare className='w-6 h-6' />
@@ -201,15 +316,22 @@ export default function AppSidebar() {
 					label='Профиль'
 					expanded={expanded}
 				/>
+				<NavLink
+					href='/settings'
+					icon={<Settings className='w-6 h-6' />}
+					label='Настройки'
+					expanded={expanded}
+				/>
 			</div>
 
 			{/* More button */}
 			<button
-				className={`flex items-center p-3 rounded-md hover:bg-[#b3adad4b] transition-colors mt-auto mb-1 mx-2 ${expanded ? 'justify-start space-x-4' : 'justify-center'
-					}`}
+				className={`flex items-center p-3 rounded-md hover:bg-[#b3adad4b] transition-colors mt-auto mb-1 mx-2 ${
+					expanded ? 'justify-start space-x-4' : 'justify-center'
+				}`}
 			>
 				<Menu className='w-6 h-6' />
-				{expanded && <span>Ещё</span>}
+				{expanded && <span>Ещё </span>}
 			</button>
 
 			{/* Collapse button */}
@@ -238,8 +360,9 @@ function NavLink({
 	return (
 		<Link
 			to={href}
-			className={`flex items-center rounded-md hover:bg-[#b3adad4b] transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
-				}`}
+			className={`flex items-center rounded-md hover:bg-[#b3adad4b] transition-colors p-3 ${
+				expanded ? 'justify-start space-x-4' : 'justify-center'
+			}`}
 		>
 			<span>{icon}</span>
 			{expanded && <span>{label}</span>}

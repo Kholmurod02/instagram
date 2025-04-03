@@ -11,7 +11,6 @@ export const ProfileApi = createApi({
 				headers.set('Authorization', `Bearer ${access_token}`)
 				try {
 					const tokenDecode = jwtDecode(access_token)
-					console.log(tokenDecode)
 					localStorage.setItem('decodeToken', JSON.stringify(tokenDecode))
 				} catch (error) {
 					console.error('Ошибка при декодировании токена:', error)

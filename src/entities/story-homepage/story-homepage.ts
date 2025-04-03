@@ -6,7 +6,6 @@ export const historyApi = createApi({
 		baseUrl: 'https://instagram-api.softclub.tj/Story/',
 		prepareHeaders: (headers) => {
 			const access_token = localStorage.getItem('access_token');
-			console.log(access_token);
 			
 			if (access_token) {
 				headers.set("Authorization", `Bearer ${access_token}`);
