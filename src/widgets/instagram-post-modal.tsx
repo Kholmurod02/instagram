@@ -46,6 +46,7 @@ import Cropper from 'react-easy-crop'
 import type { Area, Point } from 'react-easy-crop'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCroppedImg } from '@/shared/lib/cropUtils'
+import profile from '../assets/download.jpg'
 
 type Step = 'upload' | 'crop' | 'edit' | 'details'
 type Filter =
@@ -733,7 +734,7 @@ export default function InstagramPostModal({
 					)}
 				 </div>
 				 {/* edit panel */}
-				 <div className="w-[250px] bg-[#262626] p-4">
+				 <div className="w-[200px] lg:w-[250px] bg-[#262626] p-4">
 					<div className="flex gap-2 mb-4">
 					  <button
 						 onClick={() => setActiveTab("filters")}
@@ -929,7 +930,7 @@ export default function InstagramPostModal({
 					<div className="flex items-center gap-2">
 					  <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden">
 						 <img
-							src={Normal || "/placeholder.svg"}
+							src={profile}
 							width={32}
 							height={32}
 							alt="Profile"

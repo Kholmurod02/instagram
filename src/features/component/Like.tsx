@@ -7,6 +7,11 @@ interface LikeProps {
   initialLiked?: boolean
   initialLikes?: number
   size?: number
+
+}
+
+const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes = 0, size = 30 }) => {
+=======
   onLikeChange?: (isLiked: boolean, newLikesCount: number) => void
 }
 
@@ -16,6 +21,7 @@ const Like: React.FC<LikeProps> = ({
   initialLikes = 0,
   onLikeChange
 }) => {
+
   const [likePost] = useLikePostMutation()
 
   const storedLikes: Record<string, boolean> =
@@ -63,7 +69,11 @@ const Like: React.FC<LikeProps> = ({
   return (
     <button onClick={handleLike} className="flex items-center cursor-po gap-1">
       <Heart
+
+        size={size} 
+=======
         size={28}
+
         className={liked ? 'fill-red-500 text-red-500' : 'text-gray-100'}
       />
       <span>{likes}</span>
