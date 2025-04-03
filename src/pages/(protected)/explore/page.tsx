@@ -33,7 +33,7 @@ export default function ExplorePage() {
 					const fileUrl = `https://instagram-api.softclub.tj/images/${post.images[0]}`
 					const isVideo = fileUrl.endsWith('.mp4') || fileUrl.endsWith('.mov')
 
-					return {
+						return {
 						id: post.postId,
 						url: fileUrl,
 						type: isVideo ? 'video' : 'image',
