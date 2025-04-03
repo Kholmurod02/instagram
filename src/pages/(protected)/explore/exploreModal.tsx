@@ -1,30 +1,28 @@
-import { useState } from 'react'
-import {
-	Heart,
-	MessageCircle,
-	Send,
-	Bookmark,
-	MoreHorizontal,
-	Smile,
-} from 'lucide-react'
+import Like from '@/features/component/Like'
+import Comment from '@/features/component/comment'
+import Save from '@/features/component/saved'
+import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
-import { Input } from '@/shared/ui/input'
-import { cn } from '../../../shared/lib/utils'
-import Like from '@/features/component/Like'
+import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { NavLink } from 'react-router'
 
+// @ts-ignore
 interface Post {
 	id: string
-	mediaUrl: string
-	likesCount: number
-	commentsCount: number
+	url: string
+	type: 'image' | 'video'
+	likes: number
 	caption?: string
 	createdAt: string
 	user?: {
 		username: string
 		avatarUrl?: string
 	}
+	comments?: { username: string; text: string }[]
+	saved?: boolean
 }
 
 export function InstagramDialog({
@@ -32,147 +30,224 @@ export function InstagramDialog({
 	post,
 }: {
 	children: React.ReactNode
-	post: Post & { comments?: { username: string; text: string }[] }
+	post: any
 }) {
-	const [comment, setComment] = useState('')
-	console.log(post)
+	const [_comment, _setComment] = useState('')
+	console.log('Post data:', post)
+	console.log('Post children:', children)
 
+	useEffect(() => {
+		const style = document.createElement('style')
+		style.innerHTML = `
+			::-webkit-scrollbar {
+				width: 8px;
+			}
+			::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			::-webkit-scrollbar-thumb {
+				background: rgba(255, 255, 255, 0.2);
+				border-radius: 4px;
+			}
+		`
+		document.head.appendChild(style)
+		return () => {
+			document.head.removeChild(style)
+		}
+	}, [])
+
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false)
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className='max-w-5xl p-0 gap-0 overflow-hidden'>
-				<div className='grid grid-cols-1 md:grid-cols-2 h-[80vh]'>
-					<div className='bg-black flex items-center justify-center'>
-						<br />
-
-						<img
-							src={`${post.url}`}
-							alt='Instagram post'
-							className='h-full w-full object-contain'
-						/>
-					</div>
-
-					<div className='flex flex-col h-full'>
-						<div className='flex items-center justify-between p-3 border-b'>
-							<div className='flex items-center gap-3'>
-								<Avatar>
-									<AvatarImage
-										src={`https://instagram-api.softclub.tj/images/${post.user.avatarUrl}`}
-										alt={post.user.username}
-									/>
-									<AvatarFallback>
-										{post.user.username?.slice(0, 2).toUpperCase()}
-									</AvatarFallback>
-								</Avatar>
-								<div>
-									<div className='font-semibold text-sm'>
-										{post.user.username}
-									</div>
-								</div>
-							</div>
-							<Button variant='ghost' size='icon'>
-								<MoreHorizontal className='h-5 w-5' />
-							</Button>
-						</div>
-
-						<div className='flex-1 overflow-y-auto p-3 space-y-3'>	
-						<div className='h-[1px] w-full bg-border my-2'></div>
-
-							{post.comments && post.comments.length > 0 ? (
-								post.comments.map((c, index) => (
-									<CommentItem
-										key={index}
-										username={c.userName}
-										comment={c.comment}
-										timeAgo='just now'
-									/>
-								))
+		
+			{post && (
+				<DialogContent
+					className='p-0 w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'
+					style={{ backgroundColor: 'black' }}
+				>
+					<div className='grid grid-cols-1 md:grid-cols-2 h-[90vh]'>
+						<div className='flex items-center justify-center bg-black'>
+							{post.type === 'video' ? (
+								<video
+									src={post.url}
+									className='object-contain w-full h-[600px]'
+									autoPlay
+									muted
+									loop
+								/>
 							) : (
-								<p className='text-sm text-muted-foreground'>
-									No comments yet.
-								</p>
+								<img
+									src={post.url}
+									alt='Post'
+									className='h-[500px] w-full object-contain'
+								/>
 							)}
 						</div>
 
-						<div className='p-3 border-t border-b'>
-							<div className='flex justify-between'>
-								<div className='flex gap-2'>
-								<Like postId={post.id} initialLiked={post.liked} initialLikes={post.likes} />
-									<Button
-										variant='ghost'
-										size='icon'
-										className='h-9 w-9 rounded-full'
-									>
-										<MessageCircle className='h-6 w-6' />
-									</Button>
-									<Button
-										variant='ghost'
-										size='icon'
-										className='h-9 w-9 rounded-full'
-									>
-										<Send className='h-6 w-6' />
-									</Button>
+						<div
+							className='flex flex-col h-full'
+							style={{
+								overflowY: 'auto',
+								scrollbarWidth: 'thin',
+								scrollbarColor: 'rgba(255, 255, 255, 0.2) transparent',
+								backgroundColor: 'black',
+							}}
+						>
+							<div className='flex items-center justify-between p-3 border-b'>
+								<div className='flex items-center gap-3'>
+									<Avatar>
+										<div className=''>
+										 <NavLink to={`/profile/${post.user.id}`}>
+												Profile
+											</NavLink>
+										</div>
+										<AvatarFallback>
+											{post.user?.username?.slice(0, 2).toUpperCase() || '??'}
+										</AvatarFallback>
+									</Avatar>
+
+									<div>
+										<div className='font-semibold text-sm'>
+											{post.user?.username || ' '}
+										</div>
+									</div>
 								</div>
 								<Button
 									variant='ghost'
 									size='icon'
-									className='h-9 w-9 rounded-full'
+									onClick={() => setIsMoreOptionsOpen(true)}
 								>
-									<Bookmark className='h-6 w-6' />
+									<MoreHorizontal className='h-5 w-5' />
 								</Button>
+								<Dialog
+									open={isMoreOptionsOpen}
+									onOpenChange={setIsMoreOptionsOpen}
+								>
+									<DialogContent className='p-0 w-[480px] h-[340px] bg-[#262626] rounded-xl shadow-xl'>
+										<div className='flex flex-col text-white text-[20px] font-sans'>
+											<button className='text-red-500 py-3 border-b border-[black]-700 hover:bg-gray-800'>
+												Report
+											</button>
+											<button className='py-3 border-b border-[black]-700 hover:bg-[black]-800'>
+												Share to...
+											</button>
+											<button className='py-3 border-b border-[black]-700 hover:bg-[black]-800'>
+												Copy link
+											</button>
+											<button className='py-3 border-b border-[black]-700 hover:bg-[black]-800'>
+												Embed
+											</button>
+											<button className='py-3 border-b border-[black]-700 hover:bg-[black]-800'>
+												About this account
+											</button>
+											<button
+												className='py-3 hover:bg-gray-800 rounded-b-xl'
+												onClick={() => setIsMoreOptionsOpen(false)}
+											>
+												Cancel
+											</button>
+										</div>
+									</DialogContent>
+								</Dialog>
 							</div>
-							<div className='mt-2'>
-								<p className='text-sm font-semibold'>
-									{post.postLikeCount} likes
-								</p>
-								<p className='text-xs text-muted-foreground'></p>
-							</div>
-						</div>
 
-						<div className='p-3 flex items-center gap-2'>
-							<Button
-								variant='ghost'
-								size='icon'
-								className='h-9 w-9 rounded-full'
+							<div
+								className='flex-1 overflow-y-auto p-3 space-y-3'
+								style={{
+									scrollbarWidth: 'thin',
+									scrollbarColor: 'rgba(255, 255, 255, 0.2) transparent',
+									backgroundColor: 'black',
+								}}
 							>
-								<Smile className='h-6 w-6' />
-							</Button>
-							<Input
-								placeholder='Add a comment...'
-								className='flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-0'
-								value={comment}
-								onChange={e => setComment(e.target.value)}
-							/>
-							<Button
-								variant='ghost'
-								size='sm'
-								className={cn(
-									'font-semibold',
-									comment.length > 0 ? 'text-primary' : 'text-primary/50'
+								<div className='h-[1px] w-full bg-border my-2'></div>
+
+								{post?.comments && post?.comments?.length > 0 ? (
+									post?.comments?.map(
+										(c: {
+											postCommentId: string
+											userName: string
+											comment: string
+											dateCommented: string
+											userImage?: string
+										}) => (
+											<div key={c.postCommentId}>
+											 <NavLink to={`/profile/${post.user.id}`}>
+													<CommentItem
+														username={c.userName}
+														comment={c.comment}
+														timeAgo={new Date(c.dateCommented).toLocaleString()}
+														avatar={`https://instagram-api.softclub.tj/images/${
+															c.userImage || ''
+														}`}
+													/>
+												</NavLink>
+											</div>
+										)
+									)
+								) : (
+									<p className='text-sm text-muted-foreground'>
+										No comments yet.
+									</p>
 								)}
-								disabled={comment.length === 0}
-							>
-								Post
-							</Button>
+							</div>
+
+							<div className='p-3 border-t border-b'>
+								<div className='flex justify-between '>
+									<div className='flex gap-5'>
+										<Like
+											postId={post.id}
+											initialLiked={false}
+											initialLikes={post.likes}
+										/>
+
+										<MessageCircle className='h-9 w-8' />
+
+										<Send
+											className='h-9 w-8'
+											onClick={() => setIsModalOpen(true)}
+										/>
+										<ShareModal
+											isOpen={isModalOpen}
+											onClose={() => setIsModalOpen(false)}
+										/>
+									</div>
+
+									<Save postId={post.id} initialSaved={post.saved} />
+								</div>
+								<div className='mt-2'>
+									<p className='text-sm font-semibold'>{post.likes} likes</p>
+								</div>
+							</div>
+
+							<div className='p-3 flex items-center gap-2'>
+								<Comment postId={post.id} initialComments={post.comment} />
+							</div>
 						</div>
 					</div>
-				</div>
-			</DialogContent>
+				</DialogContent>
+			)}
 		</Dialog>
 	)
 }
 
+
+
 function CommentItem({
-	username,
-	comment,
-	timeAgo,
-	avatar,
+	username = '',
+	comment = '',
+	timeAgo = '',
+	avatar = '',
 }: {
 	username: string
 	comment: string
 	timeAgo: string
 	avatar?: string
-}) {
+})
+
+
+{
 	return (
 		<div className='flex gap-2 items-start'>
 			<Avatar>
@@ -188,26 +263,3 @@ function CommentItem({
 		</div>
 	)
 }
-
-function LikeButton({ initialLikes }: { initialLikes: number }) {
-	const [likes, setLikes] = useState(initialLikes)
-	const [liked, setLiked] = useState(false)
-
-	return (
-		<Button
-			variant='ghost'
-			size='icon'
-			className='h-9 w-9 rounded-full'
-			onClick={() => {
-				setLiked(!liked)
-				setLikes(liked ? likes - 1 : likes + 1)
-			}}
-		>
-			<Heart
-				className={`h-6 w-6 ${liked ? 'text-red-500' : 'text-gray-500'}`}
-			/>
-		</Button>
-		
-	)
-}
-

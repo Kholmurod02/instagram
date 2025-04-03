@@ -13,19 +13,26 @@ import {
 	User,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useLocation, } from 'react-router'
+
+import { Link, useLocation} from 'react-router'
+
 import InstagramPostModal from './instagram-post-modal'
+import DrawerSearch from './section-search'
+
 
 export default function AppSidebar() {
 	const [expanded, setExpanded] = useState(true)
 	const [isMobile, setIsMobile] = useState(false)
 	const [isCreateOpen, setIsCreateOpen] = useState(false)
 	const { pathname } = useLocation()
+	const [searchDrawer, setSearchDrawer] = useState<boolean>(false)
+
 
 	useEffect(() => {
 		if (pathname === "/chats" || pathname.startsWith("/chats/")) {
 			setExpanded(false)
 		} else {
+
 			setExpanded(true)
 		}
 	}, [pathname])
@@ -35,12 +42,21 @@ export default function AppSidebar() {
 		const checkScreenSize = () => {
 			setIsMobile(window.innerWidth < 768)
 			setExpanded(window.innerWidth >= 1024)
-		}
 
-		checkScreenSize()
-		window.addEventListener('resize', checkScreenSize)
-		return () => window.removeEventListener('resize', checkScreenSize)
-	}, [])
+
+		}
+	 }, [searchDrawer, isMobile, pathname]);
+  
+	 useEffect(() => {
+		const checkScreenSize = () => {
+		  setIsMobile(window.innerWidth < 768);
+		  setExpanded(window.innerWidth >= 1024);
+		};
+  
+		checkScreenSize();
+		window.addEventListener('resize', checkScreenSize);
+		return () => window.removeEventListener('resize', checkScreenSize);
+	 }, []);
 
 	if (isMobile) {
 		return (
@@ -126,16 +142,26 @@ export default function AppSidebar() {
 					label='Главная'
 					expanded={expanded}
 				/>
-				<button
-					className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer transition-colors p-3 ${expanded ? 'justify-start space-x-4' : 'justify-center'
-						}`}
-					onClick={() => {
-						console.log('Create clicked')
-					}}
-				>
-					<Search className='w-6 h-6' />
-					{expanded && <span>Поиск</span>}
-				</button>
+
+  
+     <button 
+      className={`flex items-center rounded-md hover:bg-[#b3adad4b] cursor-pointer p-3 transition-colors ${
+        expanded ? 'justify-start space-x-4' : 'justify-center'
+      }`} 
+      onClick={() => {
+        setSearchDrawer(true);
+        setExpanded(false);
+      }}
+    >
+		<div className={`  ${ searchDrawer ? 'transition-all duration-200 ease-in-out border-solid border-1 border-white rounded-[10px] p-[10px]' : 'transition-all duration-200 ease-in-out p-[0px] border-0 border-none'} `} >
+      <Search className={` w-6 h-6`} />
+		</div>
+      {expanded && <span>Поиск</span>}
+       </button>
+		<DrawerSearch searchDrawer={searchDrawer} setSearchDrawer={setSearchDrawer} setExpanded={setExpanded}/>
+					
+					
+
 				<NavLink
 					href='/explore'
 					icon={<Compass className='w-6 h-6' />}

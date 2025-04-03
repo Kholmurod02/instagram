@@ -46,6 +46,7 @@ import Cropper from 'react-easy-crop'
 import type { Area, Point } from 'react-easy-crop'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCroppedImg } from '@/shared/lib/cropUtils'
+import profile from '../assets/download.jpg'
 
 type Step = 'upload' | 'crop' | 'edit' | 'details'
 type Filter =
@@ -71,10 +72,8 @@ export default function InstagramPostModal({
 	open: boolean
 	setOpen: (open: boolean) => void
  }) {
-	// API mutation for adding posts
 	const [AddPost, { isLoading }] = useAddPostMutation()
-	
-	// State for selected media files (images/videos)
+	// for selected img/video
 	const [selectedImages, setSelectedImages] = useState<
 	  Array<{
 		 originalFile: File
@@ -89,10 +88,7 @@ export default function InstagramPostModal({
 	  }>
 	>([])
 	
-	// Current image index for multi-image posts
-	const [currentImageIndex, setCurrentImageIndex] = useState(0)
-	
-	// Filter and adjustment states
+	const [currentImageIndex, setCurrentImageIndex] = useState(0)	
 	const [filter, setFilter] = useState<Filter>("Original")
 	const [filterStrength, setFilterStrength] = useState(100)
 	const [activeTab, setActiveTab] = useState<TabType>("filters")
@@ -104,27 +100,19 @@ export default function InstagramPostModal({
 	  temperature: 0,
 	  vignette: 0,
 	})
-	
-	// Post details states
 	const [caption, setCaption] = useState("")
 	const [location, setLocation] = useState("")
 	const [showLocationInput, setShowLocationInput] = useState(false)
 	const [collaborators, setCollaborators] = useState<string[]>([])
 	const [showCollaboratorInput, setShowCollaboratorInput] = useState(false)
 	const [collaboratorInput, setCollaboratorInput] = useState("")
-	
-	// UI states
 	const [balloonImageLoaded, setBalloonImageLoaded] = useState(false)
 	const [step, setStep] = useState<Step>("upload")
-	
-	// Refs and crop-related states
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const [crop, setCrop] = useState<Point>({ x: 0, y: 0 })
-	const [zoom, setZoom] = useState(1)
+	const [zoom, setZoom] = useState(1) // zoom level
 	const [rotation, setRotation] = useState(0)
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
- 
-	// Convert file to base64 string for preview
 	const fileToBase64 = (file: File): Promise<string> => {
 	  return new Promise((resolve, reject) => {
 		 const reader = new FileReader()
@@ -133,26 +121,18 @@ export default function InstagramPostModal({
 		 reader.onerror = (error) => reject(error)
 	  })
 	}
- 
-	// Called when crop area changes
-	const onCropComplete = (_croppedArea: Area, croppedAreaPixels: Area) => {
+	//forcrop
+ 	const onCropComplete = (_croppedArea: Area, croppedAreaPixels: Area) => {
 	  setCroppedAreaPixels(croppedAreaPixels)
 	}
- 
-	// Generate and show the cropped image
 	const showCroppedImage = async () => {
 	  try {
-		 // Skip if no crop area or no selected image
 		 if (!croppedAreaPixels || !selectedImages[currentImageIndex]) return
-		 
-		 // Get the cropped image using helper function
-		 const croppedImage = await getCroppedImg(
+		  const croppedImage = await getCroppedImg(
 			selectedImages[currentImageIndex].previewUrl,
 			croppedAreaPixels,
 			rotation
 		 )
-		 
-		 // Update the selected images with cropped version
 		 const updatedImages = [...selectedImages]
 		 updatedImages[currentImageIndex] = {
 			...updatedImages[currentImageIndex],
@@ -163,15 +143,12 @@ export default function InstagramPostModal({
 			  zoom
 			}
 		 }
-		 
 		 setSelectedImages(updatedImages)
 		 setStep("edit")
 	  } catch (e) {
 		 console.error(e)
 	  }
 	}
- 
-	// Apply filters and adjustments to an image
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const applyFiltersToImage = async (imageUrl: string, filter: Filter, adjustments: any): Promise<File> => {
 	  return new Promise((resolve, reject) => {
@@ -179,21 +156,18 @@ export default function InstagramPostModal({
 		 img.crossOrigin = "anonymous"
 		 img.onload = () => {
 			const canvas = document.createElement("canvas")
-			const ctx = canvas.getContext("2d")
+			const picture = canvas.getContext("2d")
  
 			canvas.width = img.width
 			canvas.height = img.height
  
-			if (!ctx) {
+			if (!picture) {
 			  reject(new Error("Could not get canvas context"))
 			  return
 			}
- 
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
- 
+			picture.drawImage(img, 0, 0, canvas.width, canvas.height)
 			let filterString = ""
- 
-			// Apply all adjustments as CSS filters
+			//for adjustment
 			filterString += `brightness(${1 + adjustments.brightness / 100}) `
 			filterString += `contrast(${1 + adjustments.contrast / 100}) `
 			filterString += `opacity(${1 - adjustments.fade / 100}) `
@@ -204,20 +178,16 @@ export default function InstagramPostModal({
 			} else {
 			  filterString += `hue-rotate(${adjustments.temperature}deg) `
 			}
- 
-			// Add the selected filter if not Original
-			if (filter !== "Original") {
+			//selected filter
+ 			if (filter !== "Original") {
 			  filterString += getFilterStyle(filter)
 			}
- 
-			ctx.filter = filterString
-			ctx.globalCompositeOperation = "source-in"
- 
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
- 
-			// Apply vignette effect if enabled
-			if (adjustments.vignette > 0) {
-			  const gradient = ctx.createRadialGradient(
+			picture.filter = filterString
+			picture.globalCompositeOperation = "source-in"
+			picture.drawImage(img, 0, 0, canvas.width, canvas.height)
+			//effect if needed
+ 			if (adjustments.vignette > 0) {
+			  const gradient = picture.createRadialGradient(
 				 canvas.width / 2,
 				 canvas.height / 2,
 				 0,
@@ -225,24 +195,20 @@ export default function InstagramPostModal({
 				 canvas.height / 2,
 				 Math.max(canvas.width, canvas.height) / 2,
 			  )
- 
 			  gradient.addColorStop(0, "rgba(0,0,0,0)")
 			  gradient.addColorStop(0.8, "rgba(0,0,0,0)")
 			  gradient.addColorStop(1, `rgba(0,0,0,${adjustments.vignette / 50})`)
- 
-			  ctx.fillStyle = gradient
-			  ctx.globalCompositeOperation = "source-over"
-			  ctx.fillRect(0, 0, canvas.width, canvas.height)
+			  picture.fillStyle = gradient
+			  picture.globalCompositeOperation = "source-over"
+			  picture.fillRect(0, 0, canvas.width, canvas.height)
 			}
- 
-			// Convert canvas to blob and create File object
-			canvas.toBlob(
+			//binary large obj
+ 			canvas.toBlob(
 			  (blob) => {
 				 if (!blob) {
-					reject(new Error("Could not create blob from canvas"))
+					reject(new Error("Error"))
 					return
 				 }
- 
 				 const fileName = `filtered_image_${Date.now()}.jpg`
 				 const filteredFile = new File([blob], fileName, { type: "image/jpeg" })
 				 resolve(filteredFile)
@@ -251,21 +217,17 @@ export default function InstagramPostModal({
 			  0.95,
 			)
 		 }
- 
 		 img.onerror = () => {
-			reject(new Error("Failed to load image"))
+			reject(new Error("Failed to load"))
 		 }
- 
 		 img.src = imageUrl
 	  })
 	}
- 
-	// Handle file selection via input
+	//file selection
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 	  const files = e.target.files;
 	  if (files && files.length > 0) {
 		 const fileArray = Array.from(files);
-		 // Convert files to base64 previews and detect their type
 		 const base64Urls = await Promise.all(
 			fileArray.map(async (file) => ({
 			  originalFile: file,
@@ -278,13 +240,10 @@ export default function InstagramPostModal({
 		 setStep("crop");
 	  }
 	};
-	
-	// Handle file drop
 	const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault();
 	  const files = e.dataTransfer.files;
 	  if (files && files.length > 0) {
-		 // Filter only image and video files
 		 const mediaFiles = Array.from(files).filter(
 			(file) => file.type.startsWith("image/") || file.type.startsWith("video/")
 		 );
@@ -303,58 +262,51 @@ export default function InstagramPostModal({
 	  }
 	};
  
-	// Required for drag and drop to work
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault()
 	}
- 
-	// Handle post submission
+	//post submission
 	const handlePost = async () => {
 	  const formData = new FormData()
 	  try {
-		 // Process each selected media file
 		 for (const media of selectedImages) {
 			if (media.type === "image") {
-			  // Apply filters to images
+				//applying filter
 			  const imageUrl = media.croppedUrl || media.previewUrl
 			  const filteredFile = await applyFiltersToImage(imageUrl, filter, adjustments)
 			  formData.append("Images", filteredFile)
 			} else {
-			  // Add videos as-is
+				//video
 			  formData.append("Images", media.originalFile)
 			}
 		 }
- 
-		 // Add caption and submit
 		 formData.append("Content", caption)
 		 await AddPost(formData)
 		 resetModal()
 	  } catch (error) {
-		 console.error("Error processing or uploading media:", error)
+		 console.error(error)
 	  }
 	}
  
-	// Handle next button click
 	const handleNext = () => {
 	  if (step === "crop") {
-		 // Skip cropping for videos
 		 if (selectedImages[currentImageIndex].type === "video") {
+			//skip for video
 			const updatedImages = [...selectedImages];
 			updatedImages[currentImageIndex] = {
 			  ...updatedImages[currentImageIndex],
-			  croppedUrl: updatedImages[currentImageIndex].previewUrl // Use original for videos
+			  croppedUrl: updatedImages[currentImageIndex].previewUrl 
 			};
 			setSelectedImages(updatedImages);
 			setStep("edit");
 		 } else {
-			showCroppedImage();
+			showCroppedImage(); //crop image
 		 }
 	  } else if (step === "edit") {
 		 setStep("details");
 	  }
 	};
  
-	// Handle back button click
 	const handleBack = () => {
 	  if (step === "crop") {
 		 setStep("upload")
@@ -363,7 +315,6 @@ export default function InstagramPostModal({
 	  else if (step === "details") setStep("edit")
 	}
  
-	// Reset modal to initial state
 	const resetModal = () => {
 	  setOpen(false)
 	  setStep("upload")
@@ -383,14 +334,12 @@ export default function InstagramPostModal({
 	  setCaption("")
 	  setLocation("")
 	  setCollaborators([])
-	  // Reset crop state
 	  setCrop({ x: 0, y: 0 })
 	  setZoom(1)
 	  setRotation(0)
 	  setCroppedAreaPixels(null)
 	}
  
-	// Handle adjustment changes
 	const handleAdjustmentChange = (type: keyof typeof adjustments, value: number) => {
 	  setAdjustments((prev) => ({
 		 ...prev,
@@ -398,23 +347,18 @@ export default function InstagramPostModal({
 	  }))
 	}
  
-	// Navigate to next image
 	const nextImage = () => {
 	  if (currentImageIndex < selectedImages.length - 1) {
 		 setCurrentImageIndex((prev) => prev + 1)
-		 // Reset crop settings for new image
 		 setCrop({ x: 0, y: 0 })
 		 setZoom(1)
 		 setRotation(0)
 		 setCroppedAreaPixels(null)
 	  }
-	}
-	
-	// Navigate to previous image
+	}	
 	const prevImage = () => {
 	  if (currentImageIndex > 0) {
 		 setCurrentImageIndex((prev) => prev - 1)
-		 // Reset crop settings for new image
 		 setCrop({ x: 0, y: 0 })
 		 setZoom(1)
 		 setRotation(0)
@@ -422,7 +366,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Add a collaborator
 	const addCollaborator = () => {
 	  if (collaboratorInput.trim() && !collaborators.includes(collaboratorInput.trim())) {
 		 setCollaborators((prev) => [...prev, collaboratorInput.trim()])
@@ -430,13 +373,10 @@ export default function InstagramPostModal({
 	  }
 	  setShowCollaboratorInput(false)
 	}
- 
-	// Remove a collaborator
 	const removeCollaborator = (collaborator: string) => {
 	  setCollaborators((prev) => prev.filter((c) => c !== collaborator))
 	}
- 
-	// Map of filter names to their preview images
+	//filter img
 	const filterPreviews: Record<Filter, string> = {
 	  Original: Normal,
 	  Clarendon: Clarendon,
@@ -451,15 +391,13 @@ export default function InstagramPostModal({
 	  Reyes: Reyes,
 	  Slumber: Slumber,
 	}
- 
-	// Load balloon image for filter previews
-	useEffect(() => {
+	//load filter img
+ 	useEffect(() => {
 	  const img = new Image()
 	  img.src = Normal
 	  img.onload = () => setBalloonImageLoaded(true)
 	}, [])
- 
-	// Get CSS filter style for a given filter name
+	// css filter for filter
 	const getFilterStyle = (filterName: Filter) => {
 	  switch (filterName) {
 		 case "Clarendon":
@@ -488,8 +426,7 @@ export default function InstagramPostModal({
 			return "none"
 	  }
 	}
- 
-	// Get CSS style for current adjustments
+	//style for adjustment
 	const getAdjustmentStyle = () => {
 	  return {
 		 filter: `
@@ -509,8 +446,7 @@ export default function InstagramPostModal({
 			  : "none",
 	  }
 	}
- 
-	// Render content based on current step
+ //rendeering
 	const renderStepContent = () => {
 	  switch (step) {
 		 case "upload":
@@ -523,7 +459,6 @@ export default function InstagramPostModal({
 				 onDrop={handleDrop}
 				 onDragOver={handleDragOver}
 			  >
-				 {/* Upload icon SVG */}
 				 <svg
 					aria-label="Icon for media like images or videos"
 					className="x1lliihq x1n2onr6 x5n08af"
@@ -566,173 +501,175 @@ export default function InstagramPostModal({
 			  </motion.div>
 			)
  
-		 case "crop":
-			return (
-			  <motion.div 
-				 initial={{ opacity: 0 }}
-				 animate={{ opacity: 1 }}
-				 exit={{ opacity: 0 }}
-				 className="flex flex-col bg-[#4d4c4c] h-[500px] border-none"
-			  >
-				 <div className="flex-1 relative overflow-hidden">
-					{selectedImages.length > 0 && selectedImages[currentImageIndex].type === "image" ? (
-					  <div className="relative w-full h-full">
-						 {/* Image cropper component */}
-						 <Cropper
-							image={selectedImages[currentImageIndex].previewUrl}
-							crop={crop}
-							zoom={zoom}
-							rotation={rotation}
-							aspect={1} // Force square aspect ratio
-							onCropChange={setCrop}
-							onCropComplete={onCropComplete}
-							onZoomChange={setZoom}
-							onRotationChange={setRotation}
-							cropShape="rect"
-							showGrid={false}
-							style={{
-							  mediaStyle: {
-								 maxHeight: "100%",
-								 maxWidth: "100%",
-							  },
-							}}
-						 />
-						 
-						 {/* Crop controls toolbar */}
-						 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
-							{/* Zoom Out button */}
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.max(1, zoom - 0.1))} // Decrease zoom by 0.1, minimum 1
-									>
-									  <ZoomOut className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Zoom Out</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-							
-							{/* Rotate button */}
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setRotation((rotation + 90) % 360)} // Rotate 90 degrees
-									>
-									  <RotateCw className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Rotate</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-							
-							{/* Zoom In button */}
-							<TooltipProvider>
-							  <Tooltip>
-								 <TooltipTrigger asChild>
-									<Button
-									  variant="ghost"
-									  size="icon"
-									  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
-									  onClick={() => setZoom(Math.min(3, zoom + 0.1))} // Increase zoom by 0.1, maximum 3
-									>
-									  <ZoomIn className="h-5 w-5" />
-									</Button>
-								 </TooltipTrigger>
-								 <TooltipContent>
-									<p>Zoom In</p>
-								 </TooltipContent>
-							  </Tooltip>
-							</TooltipProvider>
-						 </div>
-					  </div>
-					) : (
-					  // Video preview (no cropping)
-					  <div className="relative w-full h-full">
-						 {selectedImages[currentImageIndex].type === "video" ? (
-							<video
-							  src={selectedImages[currentImageIndex].previewUrl}
-							  className="object-contain w-full h-full"
-							  controls
-							  autoPlay
-							  muted
-							  loop
-							/>
-						 ) : (
-							<img
-							  src={selectedImages[currentImageIndex].previewUrl || "/placeholder.svg"}
-							  alt="Selected image"
-							  className="object-contain w-full h-full"
-							/>
-						 )}
-					  </div>
-					)}
- 
-					{/* Navigation arrows for multiple images */}
-					{selectedImages.length > 1 && (
-					  <>
-						 <Button
-							variant="ghost"
-							size="icon"
-							className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
-							onClick={prevImage}
-							disabled={currentImageIndex === 0}
-						 >
-							<ChevronLeft className="h-5 w-5" />
-						 </Button>
-						 <Button
-							variant="ghost"
-							size="icon"
-							className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
-							onClick={nextImage}
-							disabled={currentImageIndex === selectedImages.length - 1}
-						 >
-							<ChevronRight className="h-5 w-5" />
-						 </Button>
-					  </>
-					)}
-				 </div>
- 
-				 {/* Thumbnail strip for multiple images */}
-				 {selectedImages.length > 1 && (
-					<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
-					  {selectedImages.map((img, index) => (
-						 <div
-							key={index}
-							className={cn(
-							  "w-10 h-10 relative rounded overflow-hidden cursor-pointer border-2",
-							  index === currentImageIndex ? "border-blue-500" : "border-transparent",
-							)}
-							onClick={() => setCurrentImageIndex(index)}
-						 >
-							{img.type === "video" && (
-							  <div className="absolute top-0 right-0 bg-black/50 p-0.5 rounded-bl">
-								 <Play className="h-2 w-2 text-white" />
-							  </div>
-							)}
-							<img
-							  src={img.previewUrl || "/placeholder.svg"}
-							  alt={`Thumbnail ${index + 1}`}
-							  className="object-cover w-full h-full"
-							/>
-						 </div>
-					  ))}
-					</div>
-				 )}
-			  </motion.div>
-			)
+			case "crop":
+				return (
+				  <motion.div 
+					 initial={{ opacity: 0 }}
+					 animate={{ opacity: 1 }}
+					 exit={{ opacity: 0 }}
+					 className="flex flex-col bg-[#4d4c4c] h-[500px] border-none"
+				  >
+					 <div className="flex-1 relative overflow-hidden">
+						{selectedImages.length > 0 && selectedImages[currentImageIndex].type === "image" ? (
+						  <div className="relative w-full h-full">
+							 <Cropper
+								image={selectedImages[currentImageIndex].previewUrl}
+								crop={crop}
+								zoom={zoom}
+								rotation={rotation}
+								aspect={1}
+								onCropChange={setCrop}
+								onCropComplete={onCropComplete}
+								onZoomChange={setZoom}
+								onRotationChange={setRotation}
+								cropShape="rect"
+								showGrid={false}
+								style={{
+								  containerStyle: {
+									 backgroundColor: "#4d4c4c",
+								  },
+								  mediaStyle: {
+									 transform: `scale(${zoom}) rotate(${rotation}deg)`,
+								  },
+								  cropAreaStyle: {
+									 border: "2px solid rgba(255, 255, 255, 0.7)",
+								  },
+								}}
+								classes={{
+								  containerClassName: "!overflow-visible",
+								  cropAreaClassName: "!overflow-hidden",
+								}}
+								restrictPosition={false}
+								minZoom={0.5} 
+							 />
+							 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setZoom(Math.max(0.5, zoom - 0.1))}
+										>
+										  <ZoomOut className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Zoom Out</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+								
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setRotation((rotation + 90) % 360)}
+										>
+										  <RotateCw className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Rotate</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+								
+								<TooltipProvider>
+								  <Tooltip>
+									 <TooltipTrigger asChild>
+										<Button
+										  variant="ghost"
+										  size="icon"
+										  className="bg-black/50 text-white rounded-full h-10 w-10 p-0"
+										  onClick={() => setZoom(Math.min(3, zoom + 0.1))}
+										>
+										  <ZoomIn className="h-5 w-5" />
+										</Button>
+									 </TooltipTrigger>
+									 <TooltipContent>
+										<p>Zoom In</p>
+									 </TooltipContent>
+								  </Tooltip>
+								</TooltipProvider>
+							 </div>
+						  </div>
+						) : (
+						  <div className="relative w-full h-full">
+							 {selectedImages[currentImageIndex].type === "video" ? (
+								<video
+								  src={selectedImages[currentImageIndex].previewUrl}
+								  className="object-contain w-full h-full"
+								  controls
+								  autoPlay
+								  muted
+								  loop
+								/>
+							 ) : (
+								<img
+								  src={selectedImages[currentImageIndex].previewUrl || "/placeholder.svg"}
+								  alt="Selected image"
+								  className="object-contain w-full h-full"
+								/>
+							 )}
+						  </div>
+						)}
+						{/* for multiple img */}
+						{selectedImages.length > 1 && (
+						  <>
+							 <Button
+								variant="ghost"
+								size="icon"
+								className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
+								onClick={prevImage}
+								disabled={currentImageIndex === 0}
+							 >
+								<ChevronLeft className="h-5 w-5" />
+							 </Button>
+							 <Button
+								variant="ghost"
+								size="icon"
+								className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white rounded-full h-8 w-8 p-0"
+								onClick={nextImage}
+								disabled={currentImageIndex === selectedImages.length - 1}
+							 >
+								<ChevronRight className="h-5 w-5" />
+							 </Button>
+						  </>
+						)}
+					 </div>
+					 {/* thumbnail strip */}
+					 {selectedImages.length > 1 && (
+						<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
+						  {selectedImages.map((img, index) => (
+							 <div
+								key={index}
+								className={cn(
+								  "w-10 h-10 relative rounded overflow-hidden cursor-pointer border-2",
+								  index === currentImageIndex ? "border-blue-500" : "border-transparent",
+								)}
+								onClick={() => setCurrentImageIndex(index)}
+							 >
+								{img.type === "video" && (
+								  <div className="absolute top-0 right-0 bg-black/50 p-0.5 rounded-bl">
+									 <Play className="h-2 w-2 text-white" />
+								  </div>
+								)}
+								<img
+								  src={img.previewUrl || "/placeholder.svg"}
+								  alt={`Thumbnail ${index + 1}`}
+								  className="object-cover w-full h-full"
+								/>
+							 </div>
+						  ))}
+						</div>
+					 )}
+				  </motion.div>
+				)
  
 		 case "edit":
 			return (
@@ -742,7 +679,7 @@ export default function InstagramPostModal({
 				 exit={{ opacity: 0 }}
 				 className="flex h-auto"
 			  >
-				 {/* Main preview area */}
+				{/* img/video display */}
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && (
 					  <div className="relative w-full h-full">
@@ -770,8 +707,7 @@ export default function InstagramPostModal({
 							  }}
 							/>
 						 )}
- 
-						 {/* Navigation arrows for multiple images */}
+						 {/* arrow */}
 						 {selectedImages.length > 1 && (
 							<>
 							  <Button
@@ -797,11 +733,9 @@ export default function InstagramPostModal({
 					  </div>
 					)}
 				 </div>
-				 
-				 {/* Edit controls panel */}
-				 <div className="w-[250px] bg-[#262626] p-4">
+				 {/* edit panel */}
+				 <div className="w-[200px] lg:w-[250px] bg-[#262626] p-4">
 					<div className="flex gap-2 mb-4">
-					  {/* Filters tab */}
 					  <button
 						 onClick={() => setActiveTab("filters")}
 						 className={cn(
@@ -811,7 +745,6 @@ export default function InstagramPostModal({
 					  >
 						 Filters
 					  </button>
-					  {/* Adjustments tab */}
 					  <button
 						 onClick={() => setActiveTab("adjustments")}
 						 className={cn(
@@ -823,7 +756,7 @@ export default function InstagramPostModal({
 					  </button>
 					</div>
  
-					{/* Filters panel */}
+					{/* filtertab */}
 					{activeTab === "filters" && (
 					  <div className="grid grid-cols-3 gap-2">
 						 {[
@@ -870,7 +803,6 @@ export default function InstagramPostModal({
 					  </div>
 					)}
  
-					{/* Adjustments panel */}
 					{activeTab === "adjustments" && (
 					  <div className="space-y-6">
 						 {Object.entries(adjustments).map(([key, value]) => (
@@ -912,7 +844,6 @@ export default function InstagramPostModal({
 					  </div>
 					)}
  
-					{/* Filter strength slider (when filter is not Original) */}
 					{filter !== "Original" && activeTab === "filters" && (
 					  <div className="mt-4">
 						 <div className="flex justify-between mb-1">
@@ -941,7 +872,6 @@ export default function InstagramPostModal({
 				 exit={{ opacity: 0 }}
 				 className="flex h-[500px]"
 			  >
-				 {/* Preview area */}
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && (
 					  <div className="relative w-full h-full">
@@ -970,7 +900,6 @@ export default function InstagramPostModal({
 							/>
 						 )}
  
-						 {/* Navigation arrows for multiple images */}
 						 {selectedImages.length > 1 && (
 							<>
 							  <Button
@@ -997,23 +926,20 @@ export default function InstagramPostModal({
 					)}
 				 </div>
 				 
-				 {/* Post details panel */}
 				 <div className="w-[250px] bg-[#222121] p-4 space-y-4 overflow-y-auto">
-					{/* User profile */}
 					<div className="flex items-center gap-2">
 					  <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden">
 						 <img
-							src={Normal || "/placeholder.svg"}
+							src={profile}
 							width={32}
 							height={32}
 							alt="Profile"
 							className="object-cover"
 						 />
 					  </div>
-					  <span className="text-sm text-white">User</span>
+					  <span className="text-sm text-white">string</span>
 					</div>
  
-					{/* Caption input */}
 					<div className="relative">
 					  <textarea
 						 className="w-full h-20 bg-transparent text-white text-sm resize-none border-none focus:outline-none focus:ring-0 p-0"
@@ -1025,7 +951,6 @@ export default function InstagramPostModal({
 					  <div className="absolute bottom-1 right-1 text-xs text-gray-400">{caption.length}/2,200</div>
 					</div>
  
-					{/* Location input */}
 					<div className="flex items-center justify-between py-1">
 					  {showLocationInput ? (
 						 <div className="flex items-center w-full">
@@ -1058,8 +983,6 @@ export default function InstagramPostModal({
 						 </>
 					  )}
 					</div>
- 
-					{/* Collaborators section */}
 					<div className="flex flex-col py-1">
 					  <div className="flex items-center justify-between">
 						 <span className="text-sm text-white">Add collaborators</span>
@@ -1109,7 +1032,6 @@ export default function InstagramPostModal({
 					  )}
 					</div>
  
-					{/* Accessibility tooltip */}
 					<TooltipProvider>
 					  <div className="flex items-center justify-between py-1">
 						 <span className="text-sm text-white">Accessibility</span>
@@ -1126,7 +1048,6 @@ export default function InstagramPostModal({
 					  </div>
 					</TooltipProvider>
  
-					{/* Advanced settings tooltip */}
 					<TooltipProvider>
 					  <div className="flex items-center justify-between py-1">
 						 <span className="text-sm text-white">Advanced settings</span>
@@ -1151,7 +1072,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Get appropriate dialog title based on current step
 	const getDialogTitle = () => {
 	  switch (step) {
 		 case "upload":
@@ -1167,7 +1087,6 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Get appropriate action button based on current step
 	const getActionButton = () => {
 	  switch (step) {
 		 case "crop":
@@ -1217,34 +1136,44 @@ export default function InstagramPostModal({
 	  }
 	}
  
-	// Main modal component
-	return (
-	  <Dialog 
-		 open={open} 
-		 onOpenChange={(val) => {
-			if (!val) {
-			  resetModal();
-			}
-			setOpen(val);
-		 }}
-	  >
-		 <DialogContent
-			aria-describedby={undefined}
-			className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
-		 >
-			<DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
-			  {step !== "upload" && (
-				 <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
-					<ChevronLeft className="h-5 w-5" />
-				 </Button>
-			  )}
-			  <DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
-			  {getActionButton()}
-			</DialogHeader>
-			<AnimatePresence mode="wait">
-			  {renderStepContent()}
-			</AnimatePresence>
-		 </DialogContent>
-	  </Dialog>
+	// modal
+	return (	
+ <Dialog
+  open={open}
+  onOpenChange={(val) => {
+    if (!val) {
+      resetModal();
+    }
+    setOpen(val);
+  }}
+>
+  <AnimatePresence>
+    {open && (
+      <motion.div
+      initial={{ scale: 0.7, opacity: 0 }}
+      animate={{ scale: 1.3, opacity: 1 }}
+      exit={{ scale: 0.7, opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="flex justify-center items-center"
+     >
+        <DialogContent
+          aria-describedby={undefined}
+          className="sm:max-w-[500px] p-0 bg-[#272525] text-white border-gray-800 outline-none [&>button]:hidden"
+        >
+          <DialogHeader className="gap-0 bg-black rounded-t-md border-b border-gray-800 p-4 flex flex-row items-center justify-between">
+            {step !== "upload" && (
+              <Button variant="ghost" size="icon" className="text-white mr-auto" onClick={handleBack}>
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+            )}
+            <DialogTitle className="text-center flex-1">{getDialogTitle()}</DialogTitle>
+            {getActionButton()}
+          </DialogHeader>
+          {renderStepContent()}
+        </DialogContent>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</Dialog>
 	)
  }

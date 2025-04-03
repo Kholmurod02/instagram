@@ -1,8 +1,18 @@
-import { useGetMyProfileQuery } from '@/app/store/profileSlice/profileSlice'
+import { useGetMyProfileQuery, useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { useState } from 'react'
+import { useNavigate } from 'react-router'
+import { StoryModal } from './StoriesModal'
 
 const AboutMe = () => {
 	const { data, error, isLoading } = useGetMyProfileQuery(undefined)
+	const [open, setOpen] = useState(false)
+	const navigate = useNavigate()
+	const { data: StoryData } = useGetMyStoriesQuery(undefined)
+
+	const handleClick = () => {
+		navigate('/profile')
+	}
 
 	if (isLoading)
 		return (
@@ -14,15 +24,7 @@ const AboutMe = () => {
 				</div>
 			</div>
 		)
-	if (error)return (
-		<div className='flex items-center gap-3 py-3'>
-			<Skeleton className='w-12 h-12 rounded-full' />
-			<div>
-				<Skeleton className='w-32 h-5 mb-1' />
-				<Skeleton className='w-24 h-4' />
-			</div>
-		</div>
-	)
+	if (error)return <div className='py-5 text-center'>Error loading</div>
 
 	const profile = data?.data
 	if (!profile) {
@@ -33,7 +35,7 @@ const AboutMe = () => {
 		<div className='py-3 text-white'>
 			<div className='flex justify-between items-center'>
 				<div className='flex gap-3 items-center'>
-					<div className='w-12 h-12 rounded-full p-[1px] border-2 cursor-pointer border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
+					<div onClick={()=> setOpen(true)} className='w-12 h-12 rounded-full p-[1px] border-2 cursor-pointer border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500'>
 						<div className='w-full h-full rounded-full bg-white p-[2px]'>
 							<img
 								src={`https://instagram-api.softclub.tj/images/${profile.image}`}
@@ -42,7 +44,7 @@ const AboutMe = () => {
 							/>
 						</div>
 					</div>
-					<div>
+					<div onClick={handleClick} className='cursor-pointer'>
 						<h2>{profile.userName || 'Unknown User'}</h2>
 						<p className='text-gray-300 text-sm'>{data.data?.firstName}</p>
 					</div>
@@ -53,6 +55,7 @@ const AboutMe = () => {
 					</button>
 				</div>
 			</div>
+			<StoryModal storyData={StoryData} open={open} setOpen={setOpen} />
 		</div>
 	)
 }
