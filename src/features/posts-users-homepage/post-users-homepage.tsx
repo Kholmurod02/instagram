@@ -238,11 +238,9 @@ const PostUsersHomepage = ({ data }) => {
 				<Save postId={data.id} initialSaved={data.saved} />
 			</div>
 
-			<div className='px-2 mt-2'>
+			<div className='px-2 mt-'>
 				<div className='flex items-center gap-2'>
-					<span className='font-semibold text-sm'>
-						{likeCount} отметок "Нравится"
-					</span>
+					<span className='text-sm'>Нравится</span>	
 				</div>
 
 				<div className='mt-1'>
