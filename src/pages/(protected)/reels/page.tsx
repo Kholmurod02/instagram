@@ -19,6 +19,7 @@ import {
 	useDeleteCommentMutation,
 	useFavoRiteMutation,
 	useFollowingMutation,
+	useProFileQuery,
 	useGetReelsQuery,
 	useLikeReelMutation,
 	useViewMutation,
@@ -33,11 +34,12 @@ import {
 	AlertDialogFooter,
 	AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog'
-import Like from '@/features/component/Like'
-import { Link } from 'react-router'
-import EmojiList from '@/features/component/emoji'
+
+import { data, Link } from 'react-router'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
 
 export default function ReelsPage() {
+	const { data: profile } = useProFileQuery('')
 	const [activeVideo, setActiveVideo] = useState<number | null>(null)
 	const videoRefs = useRef<HTMLVideoElement[]>([])
 	const { data: reels, error, isLoading } = useGetReelsQuery('')
@@ -51,6 +53,7 @@ export default function ReelsPage() {
 	const [openedCommentDialog, setOpenedCommentDialog] = useState<number | null>(
 		null
 	)
+
 	const [idxComment, setIdxComment] = useState<null>(null)
 	const [save, setSave] = useState<null | string | number | boolean>()
 	const [deletComment] = useDeleteCommentMutation()
@@ -63,254 +66,9 @@ export default function ReelsPage() {
 	const [activeId, setActiveId] = useState<boolean | number | string | null>(
 		null
 	)
-	const emojis = [
-		'😀',
-		'😂',
-		'😎',
-		'😍',
-		'🤔',
-		'😜',
-		'😇',
-		'😢',
-		'😡',
-		'😏',
-		'😊',
-		'😆',
-		'😅',
-		'😳',
-		'😱',
-		'🥳',
-		'🤩',
-		'😜',
-		'😴',
-		'🤯',
-		'😈',
-		'👻',
-		'💀',
-		'👹',
-		'🧛‍♂️',
-		'🧟‍♂️',
-		'👀',
-		'🦸‍♀️',
-		'💪',
-		'✌️',
-		'🤞',
-		'🙏',
-		'🦾',
-		'🤖',
-		'👽',
-		'🛸',
-		'🚀',
-		'🛶',
-		'⛷️',
-		'🏂',
-		'🏌️‍♂️',
-		'⛸️',
-		'🏇',
-		'🚴‍♀️',
-		'🚶‍♂️',
-		'🤸‍♀️',
-		'🏋️‍♂️',
-		'🏆',
-		'🥇',
-		'🥈',
-		'🥉',
-		'🏅',
-		'⚽',
-		'🏀',
-		'🏈',
-		'⚾',
-		'🎾',
-		'🏐',
-		'🏉',
-		'🎱',
-		'🏓',
-		'🏸',
-		'🥏',
-		'🏒',
-		'🏑',
-		'🥍',
-		'🏹',
-		'🎯',
-		'🎮',
-		'🕹️',
-		'🎲',
-		'🎰',
-		'🎭',
-		'🎤',
-		'🎧',
-		'🎼',
-		'🎷',
-		'🎺',
-		'🎸',
-		'🎻',
-		'🥁',
-		'🎬',
-		'📸',
-		'📷',
-		'📹',
-		'📺',
-		'📞',
-		'📱',
-		'📲',
-		'💻',
-		'🖥️',
-		'🖨️',
-		'⌨️',
-		'🖱️',
-		'🖲️',
-		'💡',
-		'🔦',
-		'🏮',
-		'🎇',
-		'🎆',
-		'🧨',
-		'🎈',
-		'🎉',
-		'🎊',
-		'🎁',
-		'🎗️',
-		'🏷️',
-		'💌',
-		'📨',
-		'📩',
-		'📪',
-		'📫',
-		'📬',
-		'📯',
-		'📜',
-		'📃',
-		'📄',
-		'📰',
-		'🗞️',
-		'📑',
-		'🔖',
-		'🏷️',
-		'📎',
-		'🖇️',
-		'📐',
-		'📏',
-		'📝',
-		'✏️',
-		'🖊️',
-		'🖋️',
-		'🖌️',
-		'🖍️',
-		'🗒️',
-		'📓',
-		'📔',
-		'📕',
-		'📖',
-		'📗',
-		'📘',
-		'📙',
-		'📚',
-		'📒',
-		'📃',
-		'📄',
-		'🗂️',
-		'📑',
-		'🗃️',
-		'🗄️',
-		'📦',
-		'📬',
-		'📥',
-		'📤',
-		'📪',
-		'📫',
-		'📬',
-		'📧',
-		'📨',
-		'💼',
-		'👜',
-		'👝',
+	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 
-		'🍏',
-		'🍎',
-		'🍐',
-		'🍊',
-		'🍋',
-		'🍌',
-		'🍉',
-		'🍇',
-		'🍓',
-		'🍈',
-		'🍒',
-		'🍑',
-		'🍍',
-		'🥥',
-		'🥝',
-		'🍅',
-		'🍆',
-		'🥒',
-		'🌶️',
-		'🥬',
-		'🥦',
-		'🍄',
-		'🌰',
-		'🥜',
-		'🍪',
-		'🍩',
-		'🍫',
-		'🍬',
-		'🍭',
-		'🍮',
-		'🍯',
-		'🥧',
-		'🍰',
-		'🍓',
-		'🍪',
-		'🍿',
-		'🥛',
-		'🍹',
-		'🍸',
-		'🍷',
-		'🥂',
-		'🍺',
-		'🍻',
-		'🥃',
-		'🍽️',
-		'🍴',
-		'🥄',
-		'🥣',
-		'🍚',
-		'🍘',
-		'🍜',
-		'🍲',
-		'🍛',
-		'🍝',
-		'🍠',
-		'🥒',
-		'🥔',
-		'🍠',
-		'🥧',
-		'🍢',
-		'🍙',
-		'🥟',
-		'🍱',
-		'🍛',
-		'🍗',
-		'🍖',
-		'🥩',
-		'🍤',
-		'🥓',
-		'🍕',
-		'🌮',
-		'🌯',
-		'🍔',
-		'🍟',
-		'🍣',
-		'🍤',
-		'🥪',
-		'🥗',
-		'🍛',
-		'🍚',
-		'🍜',
-		'🥠',
-		'🍚',
-		'🍘',
-		'🍡',
-		'🍦',
+	const emojis = ['😀','😂','😎','😍','🤔','😜','😇','😢','😡','😏','😊','😆','😅','😳','😱','🥳','🤩','😜','😴','🤯','😈','👻','💀','👹','🧛‍♂️','🧟‍♂️','👀','🦸‍♀️','💪','✌️','🤞','🙏','🦾','🤖','👽','🛸','🚀','🛶','⛷️','🏂','🏌️‍♂️','⛸️','🏇','🚴‍♀️','🚶‍♂️','🤸‍♀️','🏋️‍♂️','🏆','🥇','🥈','🥉','🏅','⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','🥏','🏒','🏑','🥍','🏹','🎯','🎮','🕹️','🎲','🎰','🎭','🎤','🎧','🎼','🎷','🎺','🎸','🎻','🥁','🎬','📸','📷','📹','📺','📞','📱','📲','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💡','🔦','🏮','🎇','🎆','🧨','🎈','🎉','🎊','🎁','🎗️','🏷️','💌','📨','📩','📪','📫','📬','📯','📜','📃','📄','📰','🗞️','📑','🔖','🏷️','📎','🖇️','📐','📏','📝','✏️','🖊️','🖋️','🖌️','🖍️','🗒️','📓','📔','📕','📖','📗','📘','📙','📚','📒','📃','📄','🗂️','📑','🗃️','🗄️','📦','📬','📥','📤','📪','📫','📬','📧','📨','💼','👜','👝','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🍈','🍒','🍑','🍍','🥥','🥝','🍅','🍆','🥒','🌶️','🥬','🥦','🍄','🌰','🥜','🍪','🍩','🍫','🍬','🍭','🍮','🍯','🥧','🍰','🍓','🍪','🍿','🥛','🍹','🍸','🍷','🥂','🍺','🍻','🥃','🍽️','🍴','🥄','🥣','🍚','🍘','🍜','🍲','🍛','🍝','🍠','🥒','🥔','🍠','🥧','🍢','🍙','🥟','🍱','🍛','🍗','🍖','🥩','🍤','🥓','🍕','🌮','🌯','🍔','🍟','🍣','🍤','🥪','🥗','🍛','🍚','🍜','🥠','🍚','🍘','🍡','🍦',
 	]
 	const [search, setSearch] = useState<string>('')
 	const [emoji, setEmoji] = useState<boolean>(false)
@@ -363,7 +121,17 @@ export default function ReelsPage() {
 		window.addEventListener('keydown', handleKeyDown)
 		return () => window.removeEventListener('keydown', handleKeyDown)
 	}, [reels?.data, isLoading, error])
-
+	useEffect(() => {
+		const token = localStorage.getItem('access_token')
+		if (token) {
+			try {
+				const decoded = jwtDecode(token)
+				setImgDecode(decoded)
+			} catch (error) {
+				console.error('Ошибка при декодировании JWT:', error)
+			}
+		}
+	}, [])
 	useEffect(() => {
 		if (!reels?.data || currentIndex === null) return
 		const video = videoRefs.current[currentIndex]
@@ -448,6 +216,7 @@ export default function ReelsPage() {
 
 	function postComment() {
 		commentAddReel({ postId: idx, comment: postNameComment })
+		setPostNameComment("")
 	}
 
 	return (
@@ -684,28 +453,28 @@ export default function ReelsPage() {
 				{openedCommentDialog === currentIndex && (
 					<>
 						{emoji && (
-							<div
-								className='p-4 max-w-[200px] h-[250px] ml-[200px] absolute top-[30px] right-[-400px] bg-black/50 z-[100] rounded-md overflow-x-auto overflow-y-auto flex-wrap backdrop-blur-md'
-								style={{
-									scrollbarWidth: 'none',
-									msOverflowStyle: 'none',
-								}}
-							>
-								<div className='grid grid-cols-10 gap-10'>
-									{emojis.map((emoji, index) => (
-										<div key={index} className='text-2xl '>
-											<button
-												onClick={() =>
-													setPostNameComment(postNameComment.concat(emoji))
-												}
-											>
-												{emoji}
-											</button>
-										</div>
-									))}
-								</div>
-							</div>
-						)}
+  <div
+    className="p-4 max-w-[250px] h-[250px] ml-[200px] absolute top-[30px] right-[-400px] bg-black/50 z-[100] rounded-md overflow-hidden backdrop-blur-md overflow-y-auto "
+    style={{
+      scrollbarWidth: 'none',  
+      msOverflowStyle: 'none', 
+    }}
+  >
+    <div className=" flex flex-wrap gap-2">
+      {emojis.map((emoji, index) => (
+        <div key={index} className="text-2xl">
+          <button
+            onClick={() =>
+              setPostNameComment(postNameComment.concat(emoji))
+            }
+          >
+            {emoji}
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 						<div className='absolute bottom-12 right-[-420px] w-[400px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
 							<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
 								<h2 className='font-semibold text-lg'>
@@ -742,7 +511,11 @@ export default function ReelsPage() {
 													<span className='font-semibold'>
 														{comment.userName || 'user123'}
 													</span>{' '}
-													{comment.comment || 'Какой классный пост! '}
+												</p>
+												<p>
+													{comment.comment.length > 6
+														? comment.comment.slice(0, 5) + '...'
+														: comment.comment || 'Какой классный пост! '}
 												</p>
 												<div className='text-xs text-gray-400 flex items-center space-x-2'>
 													<span>
@@ -774,31 +547,26 @@ export default function ReelsPage() {
 															</div>
 														</AlertDialogContent>
 													</AlertDialog>
-													<Like />
 												</div>
 											</div>
 										</div>
 									)
 								)}
 							</div>
-
 							<div className='flex items-center border-t border-gray-600 mt-3 pt-2'>
-								<div className='flex w-full rounded-md items-center bg-transparent border-white border-[1px] p-[5px_10px] text-white outline-none'>
-									{
-										(reels?.data
-											?.filter((value: any) => value.userId == idxComment)
-											.map((el: any) => {
-												return (
-													<div key={el.id}>
-														<img
-															src={`https://instagram-api.softclub.tj/images/${el.userImage}`}
-															className='w-15 h-10 rounded-full'
-															alt=''
-														/>
-													</div>
-												)
-											}))[0]
-									}
+								<div className='flex w-[260px] rounded-md items-center bg-transparent border-white border-[1px] p-[5px_10px] text-white outline-none'>
+									{imgDecode ? (
+										<img
+											src={
+												'https://instagram-api.softclub.tj/images/' +
+												imgDecode.sub
+											}
+											className='w-10 h-10 rounded-full'
+											alt=''
+										/>
+									) : (
+										<p>Токен не найден или не удалось декодировать</p>
+									)}
 									<Input
 										value={postNameComment}
 										onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
