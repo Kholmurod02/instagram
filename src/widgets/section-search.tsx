@@ -47,8 +47,8 @@ export default function DrawerSearch({
 const {data:StoryById}=useGetStoryByidQuery(idx) 
 
  function clickOpenModal(id:string) {
-  
-  StoryById?.data?.stories.length>0  ?  (setOpenModal(true), setIdx('') , setIsViewed(true)): setIdx('') ,setIsViewed(false);
+  setIsViewed(true)
+  setOpenModal(true)
   setIdx(id)  
 }
 
