@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import logo from '../../assets/logo.svg'
 import logo2 from '../../assets/logo2.svg'
+import { ChatByIdPage } from '@/pages/(protected)/chats/[id]/page'
 
 // Lazy load all pages
 const LazyLoginPage = lazy(() => import('@/pages/(auth)/login/page'))
@@ -9,7 +10,6 @@ const LazyRegistrationPage = lazy(() => import('@/pages/(auth)/registration/page
 const LazyHomePage = lazy(() => import('@/pages/(protected)/(home)/page'))
 const LazyProfileByNamePage = lazy(() => import('@/pages/(protected)/(profile)/[name]/page'))
 const LazyDefaulChatPage = lazy(() => import('@/pages/(protected)/chats/(defaul-chat)/page'))
-const LazyChatByIdPage = lazy(() => import('@/pages/(protected)/chats/[id]/page'))
 const LazyLayoutChats = lazy(() => import('@/pages/(protected)/chats/layout'))
 const LazyExplorePage = lazy(() => import('@/pages/(protected)/explore/page'))
 const LazyReelsPage = lazy(() => import('@/pages/(protected)/reels/page'))
@@ -62,7 +62,7 @@ export default function Router() {
             
             <Route path="chats" element={<LazyLayoutChats />}>
               <Route index element={<LazyDefaulChatPage />} />
-              <Route path=":id" element={<LazyChatByIdPage />} />
+              <Route path=":id" element={<ChatByIdPage />} />
             </Route>
             
             <Route path=':name' element={<LazyProfileByNamePage />} />

@@ -6,7 +6,6 @@ export const searchApi = createApi({
 		baseUrl: 'https://instagram-api.softclub.tj',
 		prepareHeaders: (headers) => {
 			const access_token = localStorage.getItem('access_token');
-			console.log(access_token);
 			
 			if (access_token) {
 				headers.set("Authorization", `Bearer ${access_token}`);
@@ -46,11 +45,7 @@ export const searchApi = createApi({
 				 }),
 				 invalidatesTags: ['Search'],
 			 }),
-			 getMyStories: builder.query({
-				query: () => '/Story/get-stories',
-				providesTags: ['Search'],
-			}),
 		}),
 })
 
-export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation, useGetMyStoriesQuery } = searchApi;
+export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation  } = searchApi;

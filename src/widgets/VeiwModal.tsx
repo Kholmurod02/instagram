@@ -1,18 +1,5 @@
-'use client'
-
 import Like from '@/features/component/Like'
-import {
-	X,
-	Heart,
-	MessageCircle,
-	Send,
-	Bookmark,
-	MoreHorizontal,
-	ChevronRight,
-	Volume2,
-	Volume2Icon,
-	VolumeOff,
-} from 'lucide-react'
+import { Bookmark, MessageCircle, MoreHorizontal, Send, Volume2Icon, VolumeOff, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 export default function InstagramModal({
@@ -25,15 +12,26 @@ export default function InstagramModal({
 	post: any
 }) {
 	const [isMuted, setIsMuted] = useState(true)
-	const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 	const mutedVideo = () => {
 		setIsMuted(!isMuted)
-		videoRefs.current.forEach((video) => {if(video) video.muted = isMuted}) 
+		videoRefs.current.forEach((video) => {
+			if (video) video.muted = isMuted
+		})
 	}
+
 	return (
 		<>
 			{open && (
-				<div className='fixed inset-0 bg-black/40 flex items-center justify-center z-50'>
+				<div
+					onClick={(e) => {
+						
+						if (e.target === e.currentTarget) {
+							setOpen(false)
+						}
+					}}
+					className='fixed inset-0 bg-black/40 flex items-center justify-center z-50'
+				>
 					<button
 						onClick={() => setOpen(false)}
 						className='absolute top-4 right-4 text-white cursor-pointer'
@@ -42,8 +40,8 @@ export default function InstagramModal({
 					</button>
 
 					<div className='flex flex-col md:flex-row w-full max-w-6xl h-[90vh] bg-black'>
-						{/* Медиа-контейнер */}
-						<div className='relative flex-1 bg-black flex  items-center justify-center min-h-[50vh] md:min-h-full'>
+						
+						<div className='relative flex-1 bg-black flex items-center justify-center min-h-[50vh] md:min-h-full'>
 							<div className='w-full h-full flex items-center justify-center'>
 								{post?.images?.map((img: string, index: number) =>
 									img.toLowerCase().endsWith('.mp4') ? (
@@ -56,12 +54,12 @@ export default function InstagramModal({
 												ref={(el) => (videoRefs.current[index] = el)}
 												className='max-h-full max-w-full object-contain'
 											>
-												<source
+												<source 
 													src={`https://instagram-api.softclub.tj/images/${img}`}
 													type='video/mp4'
 												/>
 											</video>
-											<button onClick={mutedVideo} className='bg-[#202020] absolute rounded-full p-[10px] z-50 right-60  cursor-pointer bottom-0'>
+											<button onClick={mutedVideo} className='bg-[#202020] absolute rounded-full p-[10px] z-50 right-60 cursor-pointer bottom-0'>
 												{isMuted ? (
 													<VolumeOff className='text-[#fff]' size={15} />
 												) : (
@@ -79,15 +77,9 @@ export default function InstagramModal({
 									)
 								)}
 							</div>
-
-							{/* <button className='absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/10 rounded-full p-1'>
-								<ChevronRight className='text-white' size={24} />
-							</button> */}
 						</div>
 
-						
 						<div className='flex flex-col w-full md:w-[350px] bg-black text-white border-l border-gray-800'>
-							
 							<div className='flex items-center p-4 border-b border-gray-800'>
 								<div className='w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 p-[2px]'>
 									<div className='w-full h-full rounded-full overflow-hidden'>
@@ -109,7 +101,7 @@ export default function InstagramModal({
 								</button>
 							</div>
 
-							{/* Основной контент */}
+							
 							<div className='flex-1 overflow-y-auto p-4'>
 								<div className='flex'>
 									<div className='w-8 h-8 rounded-full overflow-hidden'>
@@ -137,10 +129,10 @@ export default function InstagramModal({
 								</div>
 							</div>
 
-							{/* Нижняя панель с кнопками */}
+							
 							<div className='border-t border-gray-800 p-4 flex justify-between'>
 								<div className='flex space-x-4 cursor-pointer'>
-								<Like postId={post.id} initialLiked={post.liked} initialLikes={post.likes} />
+									<Like postId={post.postId} initialLiked={post.liked} initialLikes={post.likes} />
 									<button>
 										<MessageCircle size={24} />
 									</button>

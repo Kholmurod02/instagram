@@ -28,7 +28,6 @@ export default function ProfilePhotoModal({
 	async function deleteImageProfileF() {
 		try {
 			await DeleteImageProfile().unwrap()
-			console.log('Deleted Image Profile')
 			await refetch()
 			setOpen(false)
 		} catch (error) {
@@ -41,13 +40,11 @@ export default function ProfilePhotoModal({
 		const file = event.target.files[0]
 		if (!file) return
 
-		console.log(file)
 		const formData = new FormData()
 		formData.append('imageFile', file)
 
 		try {
 			await EditProfileImage(formData).unwrap()
-			console.log('Success: Image added')
 			await refetch()
 			setOpen(false)
 		} catch (error) {
