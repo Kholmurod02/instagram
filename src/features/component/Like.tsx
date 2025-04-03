@@ -6,10 +6,10 @@ interface LikeProps {
   postId: string
   initialLiked?: boolean
   initialLikes?: number
-  size?: number; 
+  size?: number
 }
 
-const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes = 0 }) => {
+const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes = 0, size = 30 }) => {
   const [likePost] = useLikePostMutation()
 
   const storedLikes: Record<string, boolean> =
@@ -46,7 +46,7 @@ const Like: React.FC<LikeProps> = ({ postId, initialLiked = false, initialLikes 
   return (
     <button onClick={handleLike} className="flex items-center gap-1">
       <Heart
-        size={35}
+        size={size} 
         className={liked ? 'fill-red-500 text-red-500' : 'text-gray-100'}
       />
       <span>{likes}</span>

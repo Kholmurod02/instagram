@@ -734,7 +734,7 @@ export default function InstagramPostModal({
 					)}
 				 </div>
 				 {/* edit panel */}
-				 <div className="w-[250px] bg-[#262626] p-4">
+				 <div className="w-[200px] lg:w-[250px] bg-[#262626] p-4">
 					<div className="flex gap-2 mb-4">
 					  <button
 						 onClick={() => setActiveTab("filters")}
