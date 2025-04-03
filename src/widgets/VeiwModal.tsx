@@ -19,9 +19,7 @@ export default function InstagramModal({
 			if (video) video.muted = isMuted
 		})
 	}
-	console.log('====================================')
-	console.log(post)
-	console.log('====================================')
+
 	return (
 		<>
 			{open && (

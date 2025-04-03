@@ -68,7 +68,253 @@ export default function ReelsPage() {
 	)
 	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 
-	const emojis = ['😀','😂','😎','😍','🤔','😜','😇','😢','😡','😏','😊','😆','😅','😳','😱','🥳','🤩','😜','😴','🤯','😈','👻','💀','👹','🧛‍♂️','🧟‍♂️','👀','🦸‍♀️','💪','✌️','🤞','🙏','🦾','🤖','👽','🛸','🚀','🛶','⛷️','🏂','🏌️‍♂️','⛸️','🏇','🚴‍♀️','🚶‍♂️','🤸‍♀️','🏋️‍♂️','🏆','🥇','🥈','🥉','🏅','⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','🥏','🏒','🏑','🥍','🏹','🎯','🎮','🕹️','🎲','🎰','🎭','🎤','🎧','🎼','🎷','🎺','🎸','🎻','🥁','🎬','📸','📷','📹','📺','📞','📱','📲','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💡','🔦','🏮','🎇','🎆','🧨','🎈','🎉','🎊','🎁','🎗️','🏷️','💌','📨','📩','📪','📫','📬','📯','📜','📃','📄','📰','🗞️','📑','🔖','🏷️','📎','🖇️','📐','📏','📝','✏️','🖊️','🖋️','🖌️','🖍️','🗒️','📓','📔','📕','📖','📗','📘','📙','📚','📒','📃','📄','🗂️','📑','🗃️','🗄️','📦','📬','📥','📤','📪','📫','📬','📧','📨','💼','👜','👝','🍏','🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🍈','🍒','🍑','🍍','🥥','🥝','🍅','🍆','🥒','🌶️','🥬','🥦','🍄','🌰','🥜','🍪','🍩','🍫','🍬','🍭','🍮','🍯','🥧','🍰','🍓','🍪','🍿','🥛','🍹','🍸','🍷','🥂','🍺','🍻','🥃','🍽️','🍴','🥄','🥣','🍚','🍘','🍜','🍲','🍛','🍝','🍠','🥒','🥔','🍠','🥧','🍢','🍙','🥟','🍱','🍛','🍗','🍖','🥩','🍤','🥓','🍕','🌮','🌯','🍔','🍟','🍣','🍤','🥪','🥗','🍛','🍚','🍜','🥠','🍚','🍘','🍡','🍦',
+	const emojis = [
+		'😀',
+		'😂',
+		'😎',
+		'😍',
+		'🤔',
+		'😜',
+		'😇',
+		'😢',
+		'😡',
+		'😏',
+		'😊',
+		'😆',
+		'😅',
+		'😳',
+		'😱',
+		'🥳',
+		'🤩',
+		'😜',
+		'😴',
+		'🤯',
+		'😈',
+		'👻',
+		'💀',
+		'👹',
+		'🧛‍♂️',
+		'🧟‍♂️',
+		'👀',
+		'🦸‍♀️',
+		'💪',
+		'✌️',
+		'🤞',
+		'🙏',
+		'🦾',
+		'🤖',
+		'👽',
+		'🛸',
+		'🚀',
+		'🛶',
+		'⛷️',
+		'🏂',
+		'🏌️‍♂️',
+		'⛸️',
+		'🏇',
+		'🚴‍♀️',
+		'🚶‍♂️',
+		'🤸‍♀️',
+		'🏋️‍♂️',
+		'🏆',
+		'🥇',
+		'🥈',
+		'🥉',
+		'🏅',
+		'⚽',
+		'🏀',
+		'🏈',
+		'⚾',
+		'🎾',
+		'🏐',
+		'🏉',
+		'🎱',
+		'🏓',
+		'🏸',
+		'🥏',
+		'🏒',
+		'🏑',
+		'🥍',
+		'🏹',
+		'🎯',
+		'🎮',
+		'🕹️',
+		'🎲',
+		'🎰',
+		'🎭',
+		'🎤',
+		'🎧',
+		'🎼',
+		'🎷',
+		'🎺',
+		'🎸',
+		'🎻',
+		'🥁',
+		'🎬',
+		'📸',
+		'📷',
+		'📹',
+		'📺',
+		'📞',
+		'📱',
+		'📲',
+		'💻',
+		'🖥️',
+		'🖨️',
+		'⌨️',
+		'🖱️',
+		'🖲️',
+		'💡',
+		'🔦',
+		'🏮',
+		'🎇',
+		'🎆',
+		'🧨',
+		'🎈',
+		'🎉',
+		'🎊',
+		'🎁',
+		'🎗️',
+		'🏷️',
+		'💌',
+		'📨',
+		'📩',
+		'📪',
+		'📫',
+		'📬',
+		'📯',
+		'📜',
+		'📃',
+		'📄',
+		'📰',
+		'🗞️',
+		'📑',
+		'🔖',
+		'🏷️',
+		'📎',
+		'🖇️',
+		'📐',
+		'📏',
+		'📝',
+		'✏️',
+		'🖊️',
+		'🖋️',
+		'🖌️',
+		'🖍️',
+		'🗒️',
+		'📓',
+		'📔',
+		'📕',
+		'📖',
+		'📗',
+		'📘',
+		'📙',
+		'📚',
+		'📒',
+		'📃',
+		'📄',
+		'🗂️',
+		'📑',
+		'🗃️',
+		'🗄️',
+		'📦',
+		'📬',
+		'📥',
+		'📤',
+		'📪',
+		'📫',
+		'📬',
+		'📧',
+		'📨',
+		'💼',
+		'👜',
+		'👝',
+		'🍏',
+		'🍎',
+		'🍐',
+		'🍊',
+		'🍋',
+		'🍌',
+		'🍉',
+		'🍇',
+		'🍓',
+		'🍈',
+		'🍒',
+		'🍑',
+		'🍍',
+		'🥥',
+		'🥝',
+		'🍅',
+		'🍆',
+		'🥒',
+		'🌶️',
+		'🥬',
+		'🥦',
+		'🍄',
+		'🌰',
+		'🥜',
+		'🍪',
+		'🍩',
+		'🍫',
+		'🍬',
+		'🍭',
+		'🍮',
+		'🍯',
+		'🥧',
+		'🍰',
+		'🍓',
+		'🍪',
+		'🍿',
+		'🥛',
+		'🍹',
+		'🍸',
+		'🍷',
+		'🥂',
+		'🍺',
+		'🍻',
+		'🥃',
+		'🍽️',
+		'🍴',
+		'🥄',
+		'🥣',
+		'🍚',
+		'🍘',
+		'🍜',
+		'🍲',
+		'🍛',
+		'🍝',
+		'🍠',
+		'🥒',
+		'🥔',
+		'🍠',
+		'🥧',
+		'🍢',
+		'🍙',
+		'🥟',
+		'🍱',
+		'🍛',
+		'🍗',
+		'🍖',
+		'🥩',
+		'🍤',
+		'🥓',
+		'🍕',
+		'🌮',
+		'🌯',
+		'🍔',
+		'🍟',
+		'🍣',
+		'🍤',
+		'🥪',
+		'🥗',
+		'🍛',
+		'🍚',
+		'🍜',
+		'🥠',
+		'🍚',
+		'🍘',
+		'🍡',
+		'🍦',
 	]
 	const [search, setSearch] = useState<string>('')
 	const [emoji, setEmoji] = useState<boolean>(false)
@@ -177,7 +423,6 @@ export default function ReelsPage() {
 			</div>
 		)
 
-	console.log(favorite)
 
 	const handlePlayPause = (index: number) => {
 		const video = videoRefs.current[index]
@@ -216,7 +461,7 @@ export default function ReelsPage() {
 
 	function postComment() {
 		commentAddReel({ postId: idx, comment: postNameComment })
-		setPostNameComment("")
+		setPostNameComment('')
 	}
 
 	return (
@@ -453,28 +698,28 @@ export default function ReelsPage() {
 				{openedCommentDialog === currentIndex && (
 					<>
 						{emoji && (
-  <div
-    className="p-4 max-w-[250px] h-[250px] ml-[200px] absolute top-[30px] right-[-400px] bg-black/50 z-[100] rounded-md overflow-hidden backdrop-blur-md overflow-y-auto "
-    style={{
-      scrollbarWidth: 'none',  
-      msOverflowStyle: 'none', 
-    }}
-  >
-    <div className=" flex flex-wrap gap-2">
-      {emojis.map((emoji, index) => (
-        <div key={index} className="text-2xl">
-          <button
-            onClick={() =>
-              setPostNameComment(postNameComment.concat(emoji))
-            }
-          >
-            {emoji}
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+							<div
+								className='p-4 max-w-[250px] h-[250px] ml-[200px] absolute top-[30px] right-[-400px] bg-black/50 z-[100] rounded-md overflow-hidden backdrop-blur-md overflow-y-auto '
+								style={{
+									scrollbarWidth: 'none',
+									msOverflowStyle: 'none',
+								}}
+							>
+								<div className=' flex flex-wrap gap-2'>
+									{emojis.map((emoji, index) => (
+										<div key={index} className='text-2xl'>
+											<button
+												onClick={() =>
+													setPostNameComment(postNameComment.concat(emoji))
+												}
+											>
+												{emoji}
+											</button>
+										</div>
+									))}
+								</div>
+							</div>
+						)}
 						<div className='absolute bottom-12 right-[-420px] w-[400px] bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
 							<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
 								<h2 className='font-semibold text-lg'>

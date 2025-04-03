@@ -91,7 +91,6 @@ export default function ExplorePage() {
 	let videoIndex = 0
 	let imageIndex = 0
 
-	console.log(media)
 	for (let i = 0; i < media.length; i++) {
 		if (i % 5 === 2 && videos[videoIndex]) {
 			arrangedMedia.push(videos[videoIndex])

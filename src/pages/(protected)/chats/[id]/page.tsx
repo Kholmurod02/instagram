@@ -70,7 +70,6 @@ export function ChatByIdPage() {
 
   const [deleteMessage] = useDeleteMessageMutation()
   const { data: user, error, isLoading } = useGetProfileByIdQuery([]);
-  console.log(user);
   
 
 
@@ -94,7 +93,6 @@ export function ChatByIdPage() {
 
   function addSmile(el) {
     setMessage((message += el))
-    console.log(message);
 
   }
 

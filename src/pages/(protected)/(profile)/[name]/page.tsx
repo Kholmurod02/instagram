@@ -88,7 +88,6 @@ export default function ProfileByNamePage() {
 	const { data: storyByIdData, isLoading: storyByIdLoading } =
 		useGetStoryByidQuery(id ? id : skipToken)
 
-	console.log(postsData)
 	if (profileError) return <p className=''>Profile Error</p>
 	if (profileLoading)
 		return (
@@ -136,9 +135,7 @@ export default function ProfileByNamePage() {
 				<div className='loading-bar'></div>
 			</div>
 		)
-	console.log('====================================')
-	console.log(storyByIdData)
-	console.log('====================================')
+
 	return (
 		<div className='lg:ml-[50px] ml-0 overflow-hidden max-w-[900px] m-auto w-full py-[50px]'>
 			<section className='flex pb-[20px] w-[90%] lg:w-[100%] m-auto gap-[20px] lg:gap-[70px] items-center'>
