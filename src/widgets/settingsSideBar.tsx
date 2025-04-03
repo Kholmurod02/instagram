@@ -143,9 +143,8 @@ const items = [
 
 export const SettingsSidebar = () => {
 	return (
-
 		<div className='flex justify-between'>
-			<Sidebar className='ml-[200px] p-[10px]'>
+			<Sidebar className='ml-[300px] p-[10px]'>
 				<SidebarContent>
 					<SidebarGroup>
 						<div className='flex justify-between'>
