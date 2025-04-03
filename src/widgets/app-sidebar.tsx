@@ -118,7 +118,7 @@ export default function AppSidebar() {
 	// Desktop sidebar (остается без изменений)
 	return (
 		<nav
-			className={` text-[white] flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[200px]' : 'w-[72px]'
+			className={` text-[white] flex sticky top-0 left-0 flex-col border-r h-screen bg-black transition-all duration-300 z-30 ${expanded ? 'w-[300px]' : 'w-[72px]'
 				}`}
 		>
 			{/* Logo */}
