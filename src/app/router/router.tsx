@@ -72,10 +72,10 @@ export default function Router() {
 		</Routes>
 	</BrowserRouter>
 }
-=======
+// =======
 import ReelsPage from '@/pages/(protected)/reels/page'
 import { Suspense, lazy } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from 're act-router'
 import logo from '../../assets/logo.svg'
 import logo2 from '../../assets/logo2.svg'
 

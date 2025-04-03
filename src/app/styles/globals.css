@@ -2,7 +2,9 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
-
+*{
+	scrollbar-color: transparent transparent;
+}
 :root {
 	--radius: 0.625rem;
 	--background: oklch(1 0 0);
