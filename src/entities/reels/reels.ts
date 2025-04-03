@@ -7,7 +7,6 @@ export const reelsApi = createApi({
 		baseUrl: 'https://instagram-api.softclub.tj/',
 		prepareHeaders: headers => {
 			const token = localStorage.getItem('access_token')
-			console.log('🔑Токен:', token)
 			if (token) {
 				headers.set('Authorization', `Bearer ${token}`)
 			}

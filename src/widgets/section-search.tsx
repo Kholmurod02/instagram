@@ -48,7 +48,7 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
 
  function clickOpenModal(id:string) {
   
-  StoryById?.data?.stories.length>0  ?  (setOpenModal(true), setIdx('') , setIsViewed(true)): console.log('hi'), setIdx('') ,setIsViewed(false);
+  StoryById?.data?.stories.length>0  ?  (setOpenModal(true), setIdx('') , setIsViewed(true)): setIdx('') ,setIsViewed(false);
   setIdx(id)  
 }
 

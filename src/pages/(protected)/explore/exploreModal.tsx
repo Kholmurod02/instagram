@@ -33,8 +33,6 @@ export function InstagramDialog({
 	post: any
 }) {
 	const [_comment, _setComment] = useState('')
-	console.log('Post data:', post)
-	console.log('Post children:', children)
 
 	useEffect(() => {
 		const style = document.createElement('style')
