@@ -46,11 +46,7 @@ export const searchApi = createApi({
 				 }),
 				 invalidatesTags: ['Search'],
 			 }),
-			 getMyStories: builder.query({
-				query: () => '/Story/get-stories',
-				providesTags: ['Search'],
-			}),
 		}),
 })
 
-export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation, useGetMyStoriesQuery } = searchApi;
+export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation  } = searchApi;
