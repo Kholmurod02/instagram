@@ -23,7 +23,22 @@ export const chatApi = createApi({
             query: (id) => `/Chat/get-chat-by-id?chatId=${id}`,
             providesTags: (result, error, id) => [{ type: "Chats", id }], // Кеширование по ID
         }),
-    }),
+        sendMessage: builder.mutation({
+            query:(formData)=>({
+                url: "/Chat/send-message",
+                method:'PUT',
+                body:formData
+            }),
+            invalidatesTags: ['Chats'],
+        }),
+        deleteMessage: builder.mutation({
+            query: (id) => ({
+                url: `/Chat/delete-message?massageId=${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Chats'],
+    })
+})
 });
 
-export const { useGetChatsQuery, useGetChatByIdQuery } = chatApi;
+export const { useGetChatsQuery, useGetChatByIdQuery , useSendMessageMutation , useDeleteMessageMutation} = chatApi;

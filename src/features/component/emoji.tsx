@@ -1,34 +1,6 @@
 import React, { useState } from 'react'
-import { Smile } from 'lucide-react' 
-import { useAddCommentMutation } from '../../entities/post/postApi'
-import { Popover, PopoverTrigger, PopoverContent } from '@/shared/ui/popover'
 
-interface CommentProps {
-	postId: string
-	initialComments: string[]
-}
-
-const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
-	const [commentText, setCommentText] = useState('')
-	const [addComment] = useAddCommentMutation()
-
-	const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setCommentText(e.target.value)
-	}
-
-	const handleAddComment = async () => {
-		if (commentText.trim()) {
-			try {
-				await addComment({ postId, comment: commentText })
-				setCommentText('')
-			} catch (err) {
-				console.error('Error adding comment:', err)
-			}
-		}
-	}
-
-	const comments = Array.isArray(initialComments) ? initialComments : []
-
+const EmojiList = () => {
 	const emojis = [
 		'😀',
 		'😂',
@@ -190,6 +162,7 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 		'💼',
 		'👜',
 		'👝',
+
 		'🍏',
 		'🍎',
 		'🍐',
@@ -278,57 +251,21 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 		'🍦',
 	]
 
+	const [filter, setFilter] = useState('')
+
+	const filteredEmojis = emojis.filter(emoji => emoji.includes(filter))
+
 	return (
-		<div className='flex flex-col'>
-			<div className='flex flex-col space-y-2'>
-				<div className='flex items-center gap-2 mt-2'>
-					<Popover>
-						<PopoverTrigger asChild>
-							<button className='text-xl'>
-								<Smile className='h-6 w-6' />
-							</button>
-						</PopoverTrigger>
-						<PopoverContent className='p-4 bg-black border rounded-lg shadow-md max-h-[200px] overflow-y-auto'>
-							<div className='grid grid-cols-5 gap-2'>
-								{emojis.map((emoji, index) => (
-									<button
-										key={index}
-										onClick={() => setCommentText(commentText + emoji)}
-										className='text-2xl p-1 hover:bg-gray-800 rounded-md'
-									>
-										{emoji}
-									</button>
-								))}
-							</div>
-						</PopoverContent>
-					</Popover>
-
-					<input
-						type='text'
-						value={commentText}
-						onChange={handleCommentChange}
-						placeholder='Add a comment...'
-						className='p-2 rounded-md w-full lg:w-[480px]'
-					/>
-					<button
-						onClick={handleAddComment}
-						disabled={!commentText.trim()}
-						className='text-white p-2 rounded-md'
-					>
-						Post
-					</button>
-				</div>
-
-				<div className='space-y-2 mt-4'>
-					{comments.map((comment, index) => (
-						<div key={index} className='text-sm text-gray-700'>
-							{comment}
-						</div>
-					))}
-				</div>
+		<div className='p-4 max-w-[200px] h-[300px] ml-[200px] absolute top-10 bg-gray-500 overflow-x-auto overflow-y-auto flex-wrap'>
+			<div className='grid grid-cols-10 gap-10'>
+				{filteredEmojis.map((emoji, index) => (
+					<div key={index} className='text-2xl '>
+						{emoji}
+					</div>
+				))}
 			</div>
 		</div>
 	)
 }
 
-export default Comment
+export default EmojiList

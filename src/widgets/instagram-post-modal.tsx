@@ -46,6 +46,7 @@ import Cropper from 'react-easy-crop'
 import type { Area, Point } from 'react-easy-crop'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCroppedImg } from '@/shared/lib/cropUtils'
+import profile from '../assets/download.jpg'
 
 type Step = 'upload' | 'crop' | 'edit' | 'details'
 type Filter =
@@ -72,7 +73,7 @@ export default function InstagramPostModal({
 	setOpen: (open: boolean) => void
  }) {
 	const [AddPost, { isLoading }] = useAddPostMutation()
-	
+	// for selected img/video
 	const [selectedImages, setSelectedImages] = useState<
 	  Array<{
 		 originalFile: File
@@ -87,8 +88,7 @@ export default function InstagramPostModal({
 	  }>
 	>([])
 	
-	const [currentImageIndex, setCurrentImageIndex] = useState(0)
-	
+	const [currentImageIndex, setCurrentImageIndex] = useState(0)	
 	const [filter, setFilter] = useState<Filter>("Original")
 	const [filterStrength, setFilterStrength] = useState(100)
 	const [activeTab, setActiveTab] = useState<TabType>("filters")
@@ -100,23 +100,19 @@ export default function InstagramPostModal({
 	  temperature: 0,
 	  vignette: 0,
 	})
-	
 	const [caption, setCaption] = useState("")
 	const [location, setLocation] = useState("")
 	const [showLocationInput, setShowLocationInput] = useState(false)
 	const [collaborators, setCollaborators] = useState<string[]>([])
 	const [showCollaboratorInput, setShowCollaboratorInput] = useState(false)
 	const [collaboratorInput, setCollaboratorInput] = useState("")
-	
 	const [balloonImageLoaded, setBalloonImageLoaded] = useState(false)
 	const [step, setStep] = useState<Step>("upload")
-	
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const [crop, setCrop] = useState<Point>({ x: 0, y: 0 })
-	const [zoom, setZoom] = useState(1)
+	const [zoom, setZoom] = useState(1) // zoom level
 	const [rotation, setRotation] = useState(0)
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
- 
 	const fileToBase64 = (file: File): Promise<string> => {
 	  return new Promise((resolve, reject) => {
 		 const reader = new FileReader()
@@ -125,20 +121,18 @@ export default function InstagramPostModal({
 		 reader.onerror = (error) => reject(error)
 	  })
 	}
+	//forcrop
  	const onCropComplete = (_croppedArea: Area, croppedAreaPixels: Area) => {
 	  setCroppedAreaPixels(croppedAreaPixels)
 	}
- 
 	const showCroppedImage = async () => {
 	  try {
 		 if (!croppedAreaPixels || !selectedImages[currentImageIndex]) return
-		 
-		 const croppedImage = await getCroppedImg(
+		  const croppedImage = await getCroppedImg(
 			selectedImages[currentImageIndex].previewUrl,
 			croppedAreaPixels,
 			rotation
 		 )
-		 
 		 const updatedImages = [...selectedImages]
 		 updatedImages[currentImageIndex] = {
 			...updatedImages[currentImageIndex],
@@ -149,14 +143,12 @@ export default function InstagramPostModal({
 			  zoom
 			}
 		 }
-		 
 		 setSelectedImages(updatedImages)
 		 setStep("edit")
 	  } catch (e) {
 		 console.error(e)
 	  }
 	}
- 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const applyFiltersToImage = async (imageUrl: string, filter: Filter, adjustments: any): Promise<File> => {
 	  return new Promise((resolve, reject) => {
@@ -164,20 +156,18 @@ export default function InstagramPostModal({
 		 img.crossOrigin = "anonymous"
 		 img.onload = () => {
 			const canvas = document.createElement("canvas")
-			const ctx = canvas.getContext("2d")
+			const picture = canvas.getContext("2d")
  
 			canvas.width = img.width
 			canvas.height = img.height
  
-			if (!ctx) {
+			if (!picture) {
 			  reject(new Error("Could not get canvas context"))
 			  return
 			}
- 
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
- 
+			picture.drawImage(img, 0, 0, canvas.width, canvas.height)
 			let filterString = ""
- 
+			//for adjustment
 			filterString += `brightness(${1 + adjustments.brightness / 100}) `
 			filterString += `contrast(${1 + adjustments.contrast / 100}) `
 			filterString += `opacity(${1 - adjustments.fade / 100}) `
@@ -188,16 +178,16 @@ export default function InstagramPostModal({
 			} else {
 			  filterString += `hue-rotate(${adjustments.temperature}deg) `
 			}
+			//selected filter
  			if (filter !== "Original") {
 			  filterString += getFilterStyle(filter)
 			}
- 
-			ctx.filter = filterString
-			ctx.globalCompositeOperation = "source-in"
- 
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+			picture.filter = filterString
+			picture.globalCompositeOperation = "source-in"
+			picture.drawImage(img, 0, 0, canvas.width, canvas.height)
+			//effect if needed
  			if (adjustments.vignette > 0) {
-			  const gradient = ctx.createRadialGradient(
+			  const gradient = picture.createRadialGradient(
 				 canvas.width / 2,
 				 canvas.height / 2,
 				 0,
@@ -205,22 +195,20 @@ export default function InstagramPostModal({
 				 canvas.height / 2,
 				 Math.max(canvas.width, canvas.height) / 2,
 			  )
- 
 			  gradient.addColorStop(0, "rgba(0,0,0,0)")
 			  gradient.addColorStop(0.8, "rgba(0,0,0,0)")
 			  gradient.addColorStop(1, `rgba(0,0,0,${adjustments.vignette / 50})`)
- 
-			  ctx.fillStyle = gradient
-			  ctx.globalCompositeOperation = "source-over"
-			  ctx.fillRect(0, 0, canvas.width, canvas.height)
+			  picture.fillStyle = gradient
+			  picture.globalCompositeOperation = "source-over"
+			  picture.fillRect(0, 0, canvas.width, canvas.height)
 			}
+			//binary large obj
  			canvas.toBlob(
 			  (blob) => {
 				 if (!blob) {
-					reject(new Error("Could not create blob from canvas"))
+					reject(new Error("Error"))
 					return
 				 }
- 
 				 const fileName = `filtered_image_${Date.now()}.jpg`
 				 const filteredFile = new File([blob], fileName, { type: "image/jpeg" })
 				 resolve(filteredFile)
@@ -229,15 +217,13 @@ export default function InstagramPostModal({
 			  0.95,
 			)
 		 }
- 
 		 img.onerror = () => {
-			reject(new Error("Failed to load image"))
+			reject(new Error("Failed to load"))
 		 }
- 
 		 img.src = imageUrl
 	  })
 	}
- 
+	//file selection
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 	  const files = e.target.files;
 	  if (files && files.length > 0) {
@@ -254,7 +240,6 @@ export default function InstagramPostModal({
 		 setStep("crop");
 	  }
 	};
-	
 	const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault();
 	  const files = e.dataTransfer.files;
@@ -280,31 +265,33 @@ export default function InstagramPostModal({
 	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
 	  e.preventDefault()
 	}
- 
+	//post submission
 	const handlePost = async () => {
 	  const formData = new FormData()
 	  try {
 		 for (const media of selectedImages) {
 			if (media.type === "image") {
+				//applying filter
 			  const imageUrl = media.croppedUrl || media.previewUrl
 			  const filteredFile = await applyFiltersToImage(imageUrl, filter, adjustments)
 			  formData.append("Images", filteredFile)
 			} else {
+				//video
 			  formData.append("Images", media.originalFile)
 			}
 		 }
- 
 		 formData.append("Content", caption)
 		 await AddPost(formData)
 		 resetModal()
 	  } catch (error) {
-		 console.error("Error processing or uploading media:", error)
+		 console.error(error)
 	  }
 	}
  
 	const handleNext = () => {
 	  if (step === "crop") {
 		 if (selectedImages[currentImageIndex].type === "video") {
+			//skip for video
 			const updatedImages = [...selectedImages];
 			updatedImages[currentImageIndex] = {
 			  ...updatedImages[currentImageIndex],
@@ -313,7 +300,7 @@ export default function InstagramPostModal({
 			setSelectedImages(updatedImages);
 			setStep("edit");
 		 } else {
-			showCroppedImage();
+			showCroppedImage(); //crop image
 		 }
 	  } else if (step === "edit") {
 		 setStep("details");
@@ -368,8 +355,7 @@ export default function InstagramPostModal({
 		 setRotation(0)
 		 setCroppedAreaPixels(null)
 	  }
-	}
-	
+	}	
 	const prevImage = () => {
 	  if (currentImageIndex > 0) {
 		 setCurrentImageIndex((prev) => prev - 1)
@@ -387,11 +373,10 @@ export default function InstagramPostModal({
 	  }
 	  setShowCollaboratorInput(false)
 	}
- 
 	const removeCollaborator = (collaborator: string) => {
 	  setCollaborators((prev) => prev.filter((c) => c !== collaborator))
 	}
- 
+	//filter img
 	const filterPreviews: Record<Filter, string> = {
 	  Original: Normal,
 	  Clarendon: Clarendon,
@@ -406,12 +391,13 @@ export default function InstagramPostModal({
 	  Reyes: Reyes,
 	  Slumber: Slumber,
 	}
+	//load filter img
  	useEffect(() => {
 	  const img = new Image()
 	  img.src = Normal
 	  img.onload = () => setBalloonImageLoaded(true)
 	}, [])
- 
+	// css filter for filter
 	const getFilterStyle = (filterName: Filter) => {
 	  switch (filterName) {
 		 case "Clarendon":
@@ -440,7 +426,7 @@ export default function InstagramPostModal({
 			return "none"
 	  }
 	}
- 
+	//style for adjustment
 	const getAdjustmentStyle = () => {
 	  return {
 		 filter: `
@@ -460,7 +446,7 @@ export default function InstagramPostModal({
 			  : "none",
 	  }
 	}
- 
+ //rendeering
 	const renderStepContent = () => {
 	  switch (step) {
 		 case "upload":
@@ -556,7 +542,6 @@ export default function InstagramPostModal({
 								restrictPosition={false}
 								minZoom={0.5} 
 							 />
-							 
 							 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4 z-10">
 								<TooltipProvider>
 								  <Tooltip>
@@ -633,7 +618,7 @@ export default function InstagramPostModal({
 							 )}
 						  </div>
 						)}
-			 
+						{/* for multiple img */}
 						{selectedImages.length > 1 && (
 						  <>
 							 <Button
@@ -657,7 +642,7 @@ export default function InstagramPostModal({
 						  </>
 						)}
 					 </div>
-			 
+					 {/* thumbnail strip */}
 					 {selectedImages.length > 1 && (
 						<div className="flex justify-center gap-2 p-2 bg-[#1a1a1a]">
 						  {selectedImages.map((img, index) => (
@@ -694,6 +679,7 @@ export default function InstagramPostModal({
 				 exit={{ opacity: 0 }}
 				 className="flex h-auto"
 			  >
+				{/* img/video display */}
 				 <div className="flex-1 relative overflow-hidden">
 					{selectedImages.length > 0 && (
 					  <div className="relative w-full h-full">
@@ -721,7 +707,7 @@ export default function InstagramPostModal({
 							  }}
 							/>
 						 )}
- 
+						 {/* arrow */}
 						 {selectedImages.length > 1 && (
 							<>
 							  <Button
@@ -747,8 +733,8 @@ export default function InstagramPostModal({
 					  </div>
 					)}
 				 </div>
-				 
-				 <div className="w-[250px] bg-[#262626] p-4">
+				 {/* edit panel */}
+				 <div className="w-[200px] lg:w-[250px] bg-[#262626] p-4">
 					<div className="flex gap-2 mb-4">
 					  <button
 						 onClick={() => setActiveTab("filters")}
@@ -770,7 +756,7 @@ export default function InstagramPostModal({
 					  </button>
 					</div>
  
-					{/* filter */}
+					{/* filtertab */}
 					{activeTab === "filters" && (
 					  <div className="grid grid-cols-3 gap-2">
 						 {[
@@ -944,14 +930,14 @@ export default function InstagramPostModal({
 					<div className="flex items-center gap-2">
 					  <div className="w-8 h-8 rounded-full bg-gray-500 overflow-hidden">
 						 <img
-							src={Normal || "/placeholder.svg"}
+							src={profile}
 							width={32}
 							height={32}
 							alt="Profile"
 							className="object-cover"
 						 />
 					  </div>
-					  <span className="text-sm text-white">User</span>
+					  <span className="text-sm text-white">string</span>
 					</div>
  
 					<div className="relative">
@@ -1151,9 +1137,8 @@ export default function InstagramPostModal({
 	}
  
 	// modal
-	return (
-	
-<Dialog
+	return (	
+ <Dialog
   open={open}
   onOpenChange={(val) => {
     if (!val) {

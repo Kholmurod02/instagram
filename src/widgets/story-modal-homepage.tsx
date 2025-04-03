@@ -38,6 +38,7 @@ export function StoryModalHomepage({
   storyDataHome = [],
   userName,
   userImage,
+  onAllStoriesViewed,
 }: StoryModalHomepageProps) {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -161,17 +162,11 @@ export function StoryModalHomepage({
 
   const nextStory = () => {
     if (currentIndex < storyDataHome.length - 1) {
-      const currentVideo = videoRefs.current[currentIndex]
-      if (currentVideo) currentVideo.pause()
-
-      if (!watchedStories.includes(currentIndex)) {
-        setWatchedStories([...watchedStories, currentIndex])
-      }
-
       setCurrentIndex(prev => prev + 1)
       setProgress(0)
     } else {
       setOpen(false)
+      onAllStoriesViewed?.()
     }
   }
 
@@ -201,6 +196,14 @@ export function StoryModalHomepage({
         }
       }
     }
+  }
+
+  const handleMediaError = (e: React.SyntheticEvent<HTMLImageElement | HTMLVideoElement>) => {
+    const target = e.target as HTMLMediaElement
+    console.error('Error loading media:', target.src)
+    
+    // Пропускаем эту историю и переходим к следующей
+    setTimeout(nextStory, 1000)
   }
 
   const toggleMute = (index: number) => {
