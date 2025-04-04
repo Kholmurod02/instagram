@@ -19,6 +19,7 @@ interface DrawerSearchProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 interface Users {
+  users: any
   id: number,
   avatar: string,
   fullName: string,
@@ -47,11 +48,10 @@ export default function DrawerSearch({
 const {data:StoryById}=useGetStoryByidQuery(idx) 
 
  function clickOpenModal(id:string) {
-  
-  StoryById?.data?.stories.length>0  ?  (setOpenModal(true), setIdx('') , setIsViewed(true)): setIdx('') ,setIsViewed(false);
+  setIsViewed(true)
+  setOpenModal(true)
   setIdx(id)  
 }
-
 
   const handleFocus = () => {
     setIsFocused(true) 
@@ -61,7 +61,7 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
     setIsFocused(false)
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     if (props.onChange) {
       props.onChange(e)
@@ -78,11 +78,10 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
   const cardClick=(id:number)=>{
     postUser(id)
     setSearchDrawer(false);
-        setExpanded(false);
-        setValue('')
+    setExpanded(false);
+    setValue('')    
   }
 
- React.useEffect(()=>{},[StoryById?.data?.stories.length])
 
   if(error || isLoading || infoError || infoLoading || deleteLoading || postLoading || deleteAllLoading){
     return  <>
@@ -198,7 +197,7 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
               <Skeleton className='w-[250px] h-[15px] rounded-[10px]'/>
             </div>
             
-          </div>
+          </div> 
           <div  className='flex py-[8px]  items-center gap-[20px] px-[20px]' >
               <Skeleton className='w-[45px] h-[45px]  rounded-[50%]'/>
             <div className='w-[75%] flex flex-col gap-[10px]' >
@@ -254,6 +253,8 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
     setSearchDrawer(false)
     setValue('')
   }
+
+
   return (
    <> 
   
@@ -333,14 +334,14 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
          value =='' ? data?.data?.length ==0 ? <div className='font-semibold  flex justify-center text-gray-400'>
          <p>Нет недавних запросов.</p> 
         </div> :  data?.data?.map((user:Users)=>{
-          return  <div key={user?.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px]' >
+          return  <div key={user?.id} className='flex py-[8px] hover:bg-[#20272b] items-center justify-between  px-[20px] ' >
             <div
             onClick={()=>clickOpenModal(user.users.id)}
-					className={`w-[45px] h-[45px]  rounded-[50%] cursor-pointer p-[2px] ${
-            isViewed
-							? 'bg-gray-500'
-							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
-					}`}
+					className={`w-[45px] h-[45px]  rounded-[50%] cursor-pointer p-[2px] 
+            ${isViewed
+              ? 'bg-gray-500'
+              : 'bg-gradient-to-tr from-yellow-400 to-pink-600'
+          }`}
 				><img src={'https://instagram-api.softclub.tj/images/' + user.users.avatar} alt="" className='rounded-full w-[40px] h-[40px]'/>
         </div>
             
@@ -353,7 +354,7 @@ const {data:StoryById}=useGetStoryByidQuery(idx)
              </NavLink> 
             <button onClick={()=> deleteUser(user.id)}> <X/> </button>
           </div>
-        }): info?.data?.length == 0 ? <div className='font-semibold  flex justify-center text-gray-400'>
+        }) : info?.data?.length == 0 ? <div className='font-semibold  flex justify-center text-gray-400'>
           <p>Ничего не найдено</p> 
          </div>  : info?.data?.map((user:Users)=>{
            return  <NavLink to={`/profile/${user.id}`}>
