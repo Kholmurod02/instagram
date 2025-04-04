@@ -141,36 +141,35 @@ const items = [
 
 
 export const SettingsSidebar = () => {
-  return (
-
-    <div className='flex justify-between'>
-      <Sidebar className='ml-[200px] p-[10px]'>
-        <SidebarContent>
-          <SidebarGroup>
-            <div className='flex justify-between'>
-              <SidebarGroupLabel className='text-[30px] mb-[40px]'>Настройки</SidebarGroupLabel>
-              <SidebarGroupLabel className='mt-[5px] cursor-pointer'><Link to={"/"}><ArrowLeft /></Link></SidebarGroupLabel>
-            </div>
-            <p className='text-[gray] ml-[10px]'>Для вас</p>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-      <Outlet />
-    </div>
-  )
+	return (
+		<div className='flex justify-between'>
+			<Sidebar className='ml-[300px] p-[10px]'>
+				<SidebarContent>
+					<SidebarGroup>
+						<div className='flex justify-between'>
+							<SidebarGroupLabel className='text-[30px] mb-[40px]'>Настройки</SidebarGroupLabel>
+							<SidebarGroupLabel className='mt-[5px] cursor-pointer'><Link to={"/"}><ArrowLeft /></Link></SidebarGroupLabel>
+						</div>
+						<p className='text-[gray] ml-[10px]'>Для вас</p>
+						<SidebarGroupContent>
+							<SidebarMenu>
+								{items.map((item) => (
+									<SidebarMenuItem key={item.title}>
+										<SidebarMenuButton asChild>
+											<Link to={item.url}>
+												<item.icon />
+												<span>{item.title}</span>
+											</Link>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
+								))}
+							</SidebarMenu>
+						</SidebarGroupContent>
+					</SidebarGroup>
+				</SidebarContent>
+			</Sidebar>
+			<Outlet />
+		</div>
+	)
 }
 export default SettingsSidebar

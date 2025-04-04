@@ -228,7 +228,7 @@ const PostUsersHomepage = ({ data }) => {
 						</svg>
 					</button>
 
-					<Send className='h-9 w-6' onClick={() => setIsModalOpen(true)} />
+					<Send className='h-9 w-6 cursor-pointer' onClick={() => setIsModalOpen(true)} />
 					<ShareModal
 						isOpen={isModalOpen}
 						onClose={() => setIsModalOpen(false)}

@@ -24,7 +24,7 @@ const Save: React.FC<SaveProps> = ({ postId }) => {
   const handleSave = async () => {
     const newSavedState = !saved
     setSaved(newSavedState)
-
+  
     const updatedSavedPosts = { ...storedSavedPosts, [postId]: newSavedState }
     localStorage.setItem('savedPosts', JSON.stringify(updatedSavedPosts))
 
@@ -44,12 +44,11 @@ const Save: React.FC<SaveProps> = ({ postId }) => {
   }
 
   return (
-<div
-  onClick={handleSave}
-  className={`flex items-center gap-1 cursor-pointer ${saving || unsaving ? 'opacity-50 pointer-events-none' : ''}`}
-  aria-disabled={saving || unsaving}
->
-
+    <div
+      onClick={handleSave}
+      className={`flex items-center gap-1 cursor-pointer ${saving || unsaving ? 'opacity-50 pointer-events-none' : ''}`}
+      aria-disabled={saving || unsaving}
+    >
       {saving || unsaving ? (
         <Loader2 size={25} className="animate-spin text-gray-500" />
       ) : (
