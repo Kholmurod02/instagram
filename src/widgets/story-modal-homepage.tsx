@@ -20,7 +20,7 @@ interface Story {
   id: number | string
   fileName: string
   postId?: number | null
-  createAt?: string
+  createdAt?: string
   liked?: boolean
   likedCount?: number
 }
@@ -44,7 +44,6 @@ export function StoryModalHomepage({
 }: StoryModalHomepageProps) {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [watchedStories, setWatchedStories] = useState<number[]>([])
   const [isPlaying, setIsPlaying] = useState<boolean[]>([])
   const [isMuted, setIsMuted] = useState<boolean[]>([])
   const [videoDurations, setVideoDurations] = useState<number[]>([])
@@ -52,18 +51,25 @@ export function StoryModalHomepage({
   const progressInterval = useRef<NodeJS.Timeout>()
   const isInitialMount = useRef(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [likedStories, setLikedStories] = useState<boolean[]>([])
 
   const detectMediaType = (fileName: string): 'image' | 'video' => {
-    const extension = fileName.split('.').pop()?.toLowerCase()
-    return extension === 'mp4' || extension === 'webm' ? 'video' : 'image'
+    if (!fileName) return 'image'
+    const extension = fileName.split('.').pop()?.toLowerCase() || ''
+    return ['mp4', 'webm'].includes(extension) ? 'video' : 'image'
   }
 
   // Инициализация состояний
   useEffect(() => {
     if (storyDataHome.length > 0) {
-      setIsPlaying(storyDataHome.map(() => true))
-      setIsMuted(storyDataHome.map(() => false))
-      setVideoDurations(storyDataHome.map(() => 5))
+      setIsPlaying(Array(storyDataHome.length).fill(true))
+      setIsMuted(Array(storyDataHome.length).fill(false))
+      setVideoDurations(Array(storyDataHome.length).fill(5))
+      setLikedStories(
+        storyDataHome.map(story => 
+          localStorage.getItem(`liked_${story.id}`) === 'true'
+        )
+      )
     }
   }, [storyDataHome])
 
@@ -72,25 +78,29 @@ export function StoryModalHomepage({
     if (!open || storyDataHome.length === 0) return
 
     const loadDurations = async () => {
-      const durations = await Promise.all(
-        storyDataHome.map(async (story, index) => {
-          if (detectMediaType(story.fileName) === 'video') {
+      try {
+        const durations = await Promise.all(
+          storyDataHome.map(async (story, index) => {
+            if (detectMediaType(story.fileName) !== 'video') return 5
+
             const video = videoRefs.current[index]
-            if (video) {
-              return new Promise<number>(resolve => {
-                const onLoadedMetadata = () => {
-                  video.removeEventListener('loadedmetadata', onLoadedMetadata)
-                  resolve(video.duration)
-                }
-                video.addEventListener('loadedmetadata', onLoadedMetadata)
-                video.load()
-              })
-            }
-          }
-          return 5 // Дефолтная длительность для изображений
-        })
-      )
-      setVideoDurations(durations)
+            if (!video) return 5
+
+            return new Promise<number>((resolve) => {
+              const onLoadedMetadata = () => {
+                video.removeEventListener('loadedmetadata', onLoadedMetadata)
+                resolve(video.duration)
+              }
+              video.addEventListener('loadedmetadata', onLoadedMetadata)
+              video.load()
+            })
+          })
+        )
+        setVideoDurations(durations)
+      } catch (error) {
+        console.error('Error loading video durations:', error)
+        setVideoDurations(Array(storyDataHome.length).fill(5))
+      }
     }
 
     loadDurations()
@@ -98,7 +108,7 @@ export function StoryModalHomepage({
 
   // Управление воспроизведением и прогрессом
   useEffect(() => {
-    if (!open || videoDurations.length === 0) return
+    if (!open || videoDurations.length === 0 || !storyDataHome[currentIndex]) return
 
     const startProgress = () => {
       clearInterval(progressInterval.current)
@@ -122,14 +132,24 @@ export function StoryModalHomepage({
       }
     }
 
-    const currentMediaType = detectMediaType(storyDataHome[currentIndex].fileName)
+    const currentStory = storyDataHome[currentIndex]
+    if (!currentStory) return
+
+    const currentMediaType = detectMediaType(currentStory.fileName)
 
     if (currentMediaType === 'video') {
       const video = videoRefs.current[currentIndex]
       if (video) {
         video.muted = isMuted[currentIndex]
         if (isPlaying[currentIndex]) {
-          video.play().catch(e => console.error('Video play error:', e))
+          video.play().catch(e => {
+            console.error('Video play error:', e)
+            setIsPlaying(prev => {
+              const newState = [...prev]
+              newState[currentIndex] = false
+              return newState
+            })
+          })
           startProgress()
         } else {
           video.pause()
@@ -153,7 +173,6 @@ export function StoryModalHomepage({
   useEffect(() => {
     if (!open) {
       setCurrentIndex(0)
-      setWatchedStories([])
       setProgress(0)
       clearInterval(progressInterval.current)
     } else if (isInitialMount.current) {
@@ -188,7 +207,14 @@ export function StoryModalHomepage({
       const video = videoRefs.current[index]
       if (video) {
         if (newIsPlaying[index]) {
-          video.play().catch(e => console.error('Video play error:', e))
+          video.play().catch(e => {
+            console.error('Video play error:', e)
+            setIsPlaying(prev => {
+              const newState = [...prev]
+              newState[index] = false
+              return newState
+            })
+          })
         } else {
           video.pause()
         }
@@ -196,20 +222,19 @@ export function StoryModalHomepage({
     }
   }
 
-  const [likedStories, setLikedStories] = useState<boolean[]>(() => {
-    return storyDataHome.map(
-      story => localStorage.getItem(`liked_${story.id}`) === 'true'
-    )
-  })
-
   const toggleLike = (index: number) => {
     const newLikedStories = [...likedStories]
     newLikedStories[index] = !likedStories[index]
     setLikedStories(newLikedStories)
-    localStorage.setItem(
-      `liked_${storyDataHome[index].id}`,
-      newLikedStories[index].toString()
-    )
+    
+    try {
+      localStorage.setItem(
+        `liked_${storyDataHome[index].id}`,
+        newLikedStories[index].toString()
+      )
+    } catch (error) {
+      console.error('Error saving like to localStorage:', error)
+    }
   }
 
   const handleMediaError = (
@@ -237,6 +262,8 @@ export function StoryModalHomepage({
   if (!open || storyDataHome.length === 0) return null
 
   const currentStory = storyDataHome[currentIndex]
+  if (!currentStory) return null
+
   const currentMediaType = detectMediaType(currentStory.fileName)
 
   return (
@@ -355,7 +382,7 @@ export function StoryModalHomepage({
               {currentMediaType === 'video' ? (
                 <video
                   ref={el => {
-                    videoRefs.current[currentIndex] = el
+                    if (el) videoRefs.current[currentIndex] = el
                   }}
                   autoPlay
                   muted={isMuted[currentIndex]}
@@ -374,6 +401,7 @@ export function StoryModalHomepage({
                       return newState
                     })
                   }}
+                  onError={handleMediaError}
                   onLoadedMetadata={() => {
                     setVideoDurations(prev => {
                       const newDurations = [...prev]
@@ -397,9 +425,7 @@ export function StoryModalHomepage({
                   src={`https://instagram-api.softclub.tj/images/${currentStory.fileName}`}
                   alt={`Story ${currentIndex + 1}`}
                   className="w-full h-full object-contain"
-                  onError={e => {
-                    ;(e.target as HTMLImageElement).src = '/fallback-image.jpg'
-                  }}
+                  onError={handleMediaError}
                 />
               )}
             </div>
