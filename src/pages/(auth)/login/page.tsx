@@ -27,8 +27,7 @@ export default function LoginPage() {
         setError(error);
       }
     } catch (err: any) {
-      console.error("Ошибка при входе:", err);
-      setError(err?.data?.message ?? err?.error ?? "Ошибка авторизации");
+     console.log(error)
     }
   };
   

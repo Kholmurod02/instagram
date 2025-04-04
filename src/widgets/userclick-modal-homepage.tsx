@@ -11,11 +11,16 @@ import { Link } from 'react-router'
 const UserclickModalHomepage = () => {
 	const [open, setOpen] = useState(false)
 	const { data, error, isLoading } = useGetPostsHomepageQuery(undefined)
+	const [followState, setFollowState] = useState({})
 
-	if (error)
-		return (
-			<div></div>
-		)
+	const handleFollowClick = (userId) => {
+		setFollowState((prev) => ({
+			...prev,
+			[userId]: !prev[userId],
+		}))
+	}
+
+	if (error) return <div></div>
 	if (!data || data.length === 0) return <div></div>
 	if (isLoading)
 		return (
@@ -50,11 +55,11 @@ const UserclickModalHomepage = () => {
 					>
 						{data && (
 							<ul>
-								{data.data.map(user => (
+								{data.data.map((user) => (
 									<li key={user.id} className='py-3'>
 										<div className='flex items-center justify-between gap-2'>
 											<div className='flex items-center gap-2'>
-												<div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent bg-gradient-to-bl to-yellow-500 via-red-500 from-pink-500 cursor-pointer'>
+												<div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent cursor-pointer'>
 													<div className='w-full h-full rounded-full bg-white p-[2px]'>
 														<img
 															className='rounded-full w-full h-full object-cover'
@@ -72,8 +77,15 @@ const UserclickModalHomepage = () => {
 													</Link>
 												</div>
 											</div>
-											<button className='text-blue-500 font-semibold text-sm hover:text-white cursor-pointer'>
-												Follow
+											<button
+												onClick={() => handleFollowClick(user.userId)}
+												className={`font-semibold text-sm cursor-pointer transition-colors duration-200 ${
+													followState[user.userId]
+														? 'text-red-500 hover:text-white'
+														: 'text-blue-500 hover:text-white'
+												}`}
+											>
+												{followState[user.userId] ? 'Unfollow' : 'Follow'}
 											</button>
 										</div>
 									</li>

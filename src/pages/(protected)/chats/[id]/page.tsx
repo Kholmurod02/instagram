@@ -69,12 +69,11 @@ export function ChatByIdPage() {
   }
 
   const [deleteMessage] = useDeleteMessageMutation()
-  const { data: user, error, isLoading } = useGetProfileByIdQuery([]);
-  
 
 
 
-  const { data} = useGetChatByIdQuery(id, {
+
+  const { data,error,isLoading } = useGetChatByIdQuery(id, {
     skip: !id, // Не отправляем запрос, если id нет
   });
 
@@ -98,46 +97,91 @@ export function ChatByIdPage() {
 
   const handleSubmit = (e: string) => {
     e.preventDefault()
-    if(message.trim().length >0){
-    sendMessage(formData)
-    setMessage("")
-    setFile("")
+    if (message.trim().length > 0) {
+      sendMessage(formData)
+      setMessage("")
+      setFile("")
     }
   }
 
+  const infoUser = JSON.parse(localStorage.getItem("user"))
+
   return (
-    <div className="flex flex-col h-[600px] md:h-screen md:w-[550px] w-full mx-auto bg-background">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="rounded-full" onClick={handleBackToList}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex items-center gap-2">
-            <Avatar>
-              <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User Avatar" />
-              <AvatarFallback></AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="font-semibold text-lg">Chat</h1>
-              <p className="text-xs text-muted-foreground">Online</p>
-            </div>
+    <div className="flex flex-col h-[600px] md:h-screen md:w-[700px] w-full mx-auto bg-background">
+    {/* Header */}
+    <div className="flex items-center justify-between p-4 border-b">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="rounded-full" onClick={handleBackToList}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarImage src={`https://instagram-api.softclub.tj/images/${infoUser.receiveUserImage}`} alt="User Avatar" />
+            <AvatarFallback>{infoUser.receiveUserName[0].toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="font-semibold text-lg">{infoUser.receiveUserName}</h1>
+            <p className="text-xs text-muted-foreground"></p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="rounded-full"><Phone className="h-5 w-5" /></Button>
-          <Button variant="ghost" size="icon" className="rounded-full"><Video className="h-5 w-5" /></Button>
-          <Button variant="ghost" size="icon" className="rounded-full"><MoreVertical className="h-5 w-5" /></Button>
-        </div>
       </div>
-
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {isLoading && <p>Загрузка...</p>}
-        {error && <p className="text-red-500">Ошибка загрузки</p>}
-        {data?.data
-          ?.slice() 
-          .sort((a, b) => new Date(a.sendMassageDate) - new Date(b.sendMassageDate)) // Sort by date
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="icon" className="rounded-full"><Phone className="h-5 w-5" /></Button>
+        <Button variant="ghost" size="icon" className="rounded-full"><Video className="h-5 w-5" /></Button>
+        <Button variant="ghost" size="icon" className="rounded-full"><MoreVertical className="h-5 w-5" /></Button>
+      </div>
+    </div>
+  
+    {/* Chat Messages */}
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {isLoading ? (
+        // Skeleton Loading State
+        <div className="space-y-6">
+          {/* Incoming message skeleton */}
+          <div className="flex flex-col max-w-[80%] mr-auto items-start">
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-10 rounded-full bg-muted animate-pulse"></div>
+              <div className="space-y-2">
+                <div className="h-4 w-32 rounded-full bg-muted animate-pulse"></div>
+                <div className="h-16 w-48 rounded-2xl bg-muted animate-pulse"></div>
+              </div>
+            </div>
+            <div className="h-4 w-24 mt-1 rounded-full bg-muted animate-pulse"></div>
+          </div>
+  
+          {/* Outgoing message skeleton */}
+          <div className="flex flex-col max-w-[80%] ml-auto items-end">
+            <div className="flex items-center gap-2">
+              <div className="space-y-2">
+                <div className="h-16 w-48 rounded-2xl bg-muted animate-pulse"></div>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-muted animate-pulse"></div>
+            </div>
+            <div className="h-4 w-24 mt-1 rounded-full bg-muted animate-pulse"></div>
+          </div>
+  
+          {/* Repeat similar patterns for more skeleton messages */}
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex flex-col max-w-[80%] mr-auto items-start">
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 rounded-full bg-muted animate-pulse"></div>
+                <div className="space-y-2">
+                  <div className="h-4 w-32 rounded-full bg-muted animate-pulse"></div>
+                  <div className="h-16 w-48 rounded-2xl bg-muted animate-pulse"></div>
+                </div>
+              </div>
+              <div className="h-4 w-24 mt-1 rounded-full bg-muted animate-pulse"></div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="text-center p-4 text-red-500">
+          Error loading messages
+        </div>
+      ) : (
+        data?.data
+          ?.slice()
+          .sort((a, b) => new Date(a.sendMassageDate) - new Date(b.sendMassageDate))
           .map((message) => (
             <div
               key={message.messageId}
@@ -181,49 +225,47 @@ export function ChatByIdPage() {
                 {format(new Date(message.sendMassageDate), "dd MMM yyyy, HH:mm")}
               </span>
             </div>
-          ))}
-
-      </div>
-
-      {/* Message Input Form */}
-      <div className="md:p-4 py-3 border-t">
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <Button
-            type="button" variant="ghost" size="icon" className="rounded-full">
-            <Popover>
-              <PopoverTrigger> <Smile className="h-5 w-5" /></PopoverTrigger>
-              <PopoverContent className="h-[200px] overflow-auto">
-                {
-                  allEmojis.map((e) => <span onClick={() => addSmile(e)} className="cursor-pointer">{e}</span>)
-                }
-              </PopoverContent>
-            </Popover>
-
-          </Button>
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            type="text" className="rounded-[10px] md:w-[250px] w-[130px] h-[35px] bg-muted" placeholder=" Напишите сообщение..." />
-          <Button
-            type="submit"
-            className="bg-muted "
-          ><SendHorizontal size={"34px"} className="h-5 w-5 text-white" /></Button>
-          <div className="flex items-center gap-1">
-            <Button type="button" variant="ghost" size="icon" className="rounded-full"><Mic className="h-5 w-5" /></Button>
-            <Button type="button" variant="ghost" size="icon" className="rounded-full relative">
-              <ImageIcon className="h-5 w-5" />
-              <input
-                onChange={(e) => setFile(e.target.files)}
-                type="file"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-            </Button>
-            <Button type="button" variant="ghost" size="icon" className="rounded-full"><Sticker className="h-5 w-5" /></Button>
-            <Button type="button" variant="ghost" size="icon" className="rounded-full"><Heart className="h-5 w-5" /></Button>
-          </div>
-        </form>
-
-      </div>
+          ))
+      )}
     </div>
+  
+    {/* Message Input Form */}
+    <div className="md:p-4 py-3 border-t">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <Button
+          type="button" variant="ghost" size="icon" className="rounded-full">
+          <Popover>
+            <PopoverTrigger> <Smile className="h-5 w-5" /></PopoverTrigger>
+            <PopoverContent className="h-[200px] overflow-auto">
+              {
+                allEmojis.map((e) => <span onClick={() => addSmile(e)} className="cursor-pointer">{e}</span>)
+              }
+            </PopoverContent>
+          </Popover>
+        </Button>
+        <input
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          type="text" className="rounded-[10px] md:w-[250px] w-[130px] h-[35px] bg-muted" placeholder=" Напишите сообщение..." />
+        <Button
+          type="submit"
+          className="bg-muted "
+        ><SendHorizontal size={"34px"} className="h-5 w-5 text-white" /></Button>
+        <div className="flex items-center gap-1">
+          <Button type="button" variant="ghost" size="icon" className="rounded-full"><Mic className="h-5 w-5" /></Button>
+          <Button type="button" variant="ghost" size="icon" className="rounded-full relative">
+            <ImageIcon className="h-5 w-5" />
+            <input
+              onChange={(e) => setFile(e.target.files)}
+              type="file"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+          </Button>
+          <Button type="button" variant="ghost" size="icon" className="rounded-full"><Sticker className="h-5 w-5" /></Button>
+          <Button type="button" variant="ghost" size="icon" className="rounded-full"><Heart className="h-5 w-5" /></Button>
+        </div>
+      </form>
+    </div>
+  </div>
   );
 }

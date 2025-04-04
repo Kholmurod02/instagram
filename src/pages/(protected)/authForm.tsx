@@ -76,8 +76,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
     <motion.form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 p-4 border rounded-lg" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <img className="w-35 ml-[75px]" src={Logo} alt="" />
       <motion.input {...register("userName")} placeholder="Имя пользователя" className="border p-2 rounded w-[323px] sm:w-[300px]" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} />
-      {errors.userName && <p className="text-red-500">{errors.userName.message}</p>}
-
+      {/* {errors.userName && <p className="text-red-500">{errors.userName.message}</p>} */}
 
       <div className="relative">
         <motion.input {...register("password")} type={showPassword ? "text" : "password"} placeholder="Пароль" className="border p-2 rounded w-full" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }} />
