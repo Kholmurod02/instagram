@@ -407,7 +407,7 @@ export default function ReelsPage() {
 	if (isLoading)
 		return (
 			<div className='flex items-center'>
-				<div className='flex sm:ml-[380px] mt-[10px]  flex-col m-auto items-center justify-center space-y-3'>
+				<div className='flex sm:ml-[100px] mt-[10px]  flex-col m-auto items-center justify-center space-y-3'>
 					<Skeleton className='w-[400px] h-[80vh] rounded-xl' />
 					<div className='flex items-center mt-[10px] space-x-4 '>
 						<Skeleton className='h-12 w-12 rounded-full' />
@@ -473,7 +473,7 @@ export default function ReelsPage() {
 	}
 	
 	return (
-		<div className=' sm:w-[600px]  ml-[50%] sm:overflow-none overflow-hidden m-auto bg-green flex justify-center h-[100vh] sm:h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
+		<div className=' sm:w-[600px]  ml-[50%]  m-auto bg-green flex justify-center h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
 			<Carousel
 				opts={{ align: 'start' }}
 				orientation='vertical'
@@ -720,7 +720,7 @@ export default function ReelsPage() {
 					<>
 						{emoji && (
 							<div
-								className='p-4 max-w-[240px] h-[250px] ml-[200px] absolute sm:bottom-0 bottom-[100px] sm:top-[100px] sm:right-[-400px] bg-black/50 z-[100] rounded-md overflow-hidden backdrop-blur-md overflow-y-auto'
+								className='p-4 max-w-[240px] sm:h-fit h-[250px] ml-[200px] absolute sm:bottom-0 bottom-[100px] sm:top-[100px] sm:right-[-400px] bg-black/50 z-[100] rounded-md overflow-hidden backdrop-blur-md overflow-y-auto'
 								style={{
 									scrollbarWidth: 'none',
 									msOverflowStyle: 'none',
@@ -741,7 +741,7 @@ export default function ReelsPage() {
 								</div>
 							</div>
 						)}
-						<div className='absolute bottom-0 right-[90px] sm:bottom-[-10px] sm:right-[-420px] w-[400px]  h-[70vh] sm:h-fit bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
+						<div className='absolute bottom-0 right-[90px] sm:bottom-[-100px] sm:right-[-420px] w-[400px]  h-[70vh] sm:h-fit bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
 							<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
 								<h2 className='font-semibold text-lg'>
 									{reels.data[currentIndex]?.comments?.length || 0} Комментариев
