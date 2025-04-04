@@ -2,13 +2,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const chatApi = createApi({
     reducerPath: "chatsCache", // Лучше исправить "chatsCash" на "chatsCache"
-    baseQuery: fetchBaseQuery({ 
+    baseQuery: fetchBaseQuery({
         baseUrl: "https://instagram-api.softclub.tj",
         prepareHeaders: (headers) => {
             const access_token = localStorage.getItem("access_token");
-            
+
             if (access_token) {
-                headers.set("Authorization", `Bearer ${access_token}`);      
+                headers.set("Authorization", `Bearer ${access_token}`);
             }
             return headers;
         },
@@ -24,10 +24,10 @@ export const chatApi = createApi({
             providesTags: (result, error, id) => [{ type: "Chats", id }], // Кеширование по ID
         }),
         sendMessage: builder.mutation({
-            query:(formData)=>({
+            query: (formData) => ({
                 url: "/Chat/send-message",
-                method:'PUT',
-                body:formData
+                method: 'PUT',
+                body: formData
             }),
             invalidatesTags: ['Chats'],
         }),
@@ -37,8 +37,22 @@ export const chatApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: ['Chats'],
+        }),
+        createChat : builder.mutation({
+            query : (userId)=>({
+                url:`/Chat/create-chat?receiverUserId=${userId}`,
+                method:"POST"
+            }),
+            invalidatesTags: ['Chats'],
+        }),
+        deleteChat: builder.mutation({
+            query: (id) => ({
+                url: `/Chat/delete-chat?chatId=${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Chats'],
+        }),
     })
-})
 });
 
-export const { useGetChatsQuery, useGetChatByIdQuery , useSendMessageMutation , useDeleteMessageMutation} = chatApi;
+export const { useGetChatsQuery, useGetChatByIdQuery, useSendMessageMutation, useDeleteMessageMutation , useCreateChatMutation , useDeleteChatMutation} = chatApi;

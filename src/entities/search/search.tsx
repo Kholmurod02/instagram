@@ -48,4 +48,4 @@ export const searchApi = createApi({
 		}),
 })
 
-export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation  } = searchApi;
+export const {useSearchUsersQuery, useDeleteUserMutation,useSearchUsersAfterClickQuery, usePostUserMutation, useDeleteAllUserMutation} = searchApi;
