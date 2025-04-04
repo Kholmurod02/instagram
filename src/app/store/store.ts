@@ -20,7 +20,7 @@ export const store = configureStore({
     [searchApi.reducerPath] : searchApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
+    getDefaultMiddleware().concat( 
       postApi.middleware,
       reelsApi.middleware,
       chatApi.middleware,
