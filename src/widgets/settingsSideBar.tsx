@@ -151,7 +151,7 @@ export const SettingsSidebar = () => {
 							<SidebarGroupLabel className='mt-[5px] cursor-pointer'><Link to={"/"}><ArrowLeft /></Link></SidebarGroupLabel>
 						</div>
 						<p className='text-[gray] ml-[10px]'>Для вас</p>
-						<SidebarGroupContent>
+						<SidebarGroupContent>  
 							<SidebarMenu>
 								{items.map((item) => (
 									<SidebarMenuItem key={item.title}>
