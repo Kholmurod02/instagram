@@ -1,6 +1,13 @@
-import { Link } from 'react-router'
+import { useState } from 'react';
+import { Link } from 'react-router';
 
 const RecomendedUsers = ({ data }) => {
+  const [isFollowing, setIsFollowing] = useState(false); // локальный флаг
+
+  const handleFollowClick = () => {
+    setIsFollowing(prev => !prev); // переключаем состояние
+  };
+
   return (
     <div className='py-3 text-white'>
       <div className='flex justify-between items-center'>
@@ -30,11 +37,18 @@ const RecomendedUsers = ({ data }) => {
           </div>
         </div>
         <div>
-          <button className='text-blue-500 text-sm hover:text-white cursor-pointer'>Follow</button>
+          <button 
+            onClick={handleFollowClick}
+            className={`text-sm cursor-pointer transition-colors duration-200 ${
+              isFollowing ? 'text-red-500 hover:text-white' : 'text-blue-500 hover:text-white'
+            }`}
+          >
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RecomendedUsers
+export default RecomendedUsers;
