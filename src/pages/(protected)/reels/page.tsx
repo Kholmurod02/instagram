@@ -473,7 +473,7 @@ export default function ReelsPage() {
 	}
 	
 	return (
-		<div className='lg:w-[600px] md:w-[400px] ml-[50%]  m-auto bg-green flex justify-center h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
+		<div className=' sm:w-[600px]  ml-[50%] sm:overflow-none overflow-hidden m-auto bg-green flex justify-center h-[100vh] sm:h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
 			<Carousel
 				opts={{ align: 'start' }}
 				orientation='vertical'
@@ -482,7 +482,7 @@ export default function ReelsPage() {
 				<CarouselContent className='mt-[45px] md:w-[650px] w-full h-[90vh]'>
 					{reels?.data?.map((reel: any, index: number) => (
 						<CarouselItem key={index} className='md:basis-1/2m mt-'>
-							{
+							{ 
 							ellips && <div className='w-[400px] absolute top-0 z-30 right-[-200px] h-[700px] bg-gray-500'> 
 							</div>
 						}
@@ -525,7 +525,7 @@ export default function ReelsPage() {
 															Your browser does not support the video tag.
 														</video>
 														{pausedVideo === index && (
-															<div className='absolute inset-0 flex  items-center justify-center z-20 opacity-100 transition-opacity duration-100 ease-in-out'>
+															<div className='absolute top-[300px] left-[200px] sm:inset-0 flex  items-center justify-center z-20 opacity-100 transition-opacity duration-100 ease-in-out'>
 																<button
 																	onClick={() => handlePlayPause(index)}
 																	className='rounded-full transition-transform duration-300 scale-95 hover:scale-105'

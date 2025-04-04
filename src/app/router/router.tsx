@@ -26,7 +26,7 @@ export default function Router() {
             </div>
             <div className="pb-5 flex flex-col justify-center items-center gap-1">
               <h2>from</h2>
-              <img src={logo} alt="" className='w-[60%]' />
+              <img   src={logo} alt="" className='w-[60%]' />
             </div>
           </div>
         }
