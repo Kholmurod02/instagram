@@ -482,7 +482,7 @@ export default function ReelsPage() {
 				<CarouselContent className='mt-[45px] md:w-[650px] w-full h-[90vh]'>
 					{reels?.data?.map((reel: any, index: number) => (
 						<CarouselItem key={index} className='md:basis-1/2m mt-'>
-							{
+							{ 
 							ellips && <div className='w-[400px] absolute top-0 z-30 right-[-200px] h-[700px] bg-gray-500'> 
 							</div>
 						}
