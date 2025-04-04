@@ -5,20 +5,19 @@ import { ProfileSettingsModal } from '@/widgets/profile-settings-modal'
 import { formatDistanceToNow } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import {
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  MessageCircle,
-  Send,
-  Volume2Icon,
-  VolumeXIcon,
+	ChevronLeft,
+	ChevronRight,
+	MessageCircle,
+	Send,
+	Volume2Icon,
+	VolumeXIcon
 } from 'lucide-react'
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import Like from '../component/Like'
 import Save from '../component/saved'
 import ShareModal from '../component/shere'
-import { InstagramDialog } from '../../pages/(protected)/explore/exploreModal'
+import { InstagramDialogHome } from '@/pages/(protected)/explore/exploreModalHome'
 
 interface PostData {
   postId: string
@@ -230,11 +229,11 @@ const PostUsersHomepage = ({ data }: { data: PostData }) => {
             onLikeChange={handleLikeChange}
           />
 
-          <InstagramDialog post={data}>
+          <InstagramDialogHome post={data}>
             <button className='p-1' aria-label="View comments">
               <MessageCircle className='h-6 w-6' />
             </button>
-          </InstagramDialog>
+          </InstagramDialogHome>
 
           <button 
             className='p-1'
@@ -264,12 +263,15 @@ const PostUsersHomepage = ({ data }: { data: PostData }) => {
           <span className='text-sm ml-2'>{data.content}</span>
         </div>
 
-        <button 
-          className='text-gray-400 text-xs mt-1'
-          aria-label="View all comments"
-        >
-          Посмотреть все комментарии ({data.commentCount})
-        </button>
+		  <InstagramDialogHome post={data}>
+			<button 
+				className='text-gray-400 text-xs mt-1 cursor-pointer'
+				aria-label="View all comments"
+			>
+				Посмотреть все комментарии ({data.commentCount})
+			</button>
+          </InstagramDialogHome>
+       
       </div>
     </div>
   )
