@@ -84,15 +84,18 @@ export const ProfileApi = createApi({
 			query: id => ({
 				url: `/FollowingRelationShip/add-following-relation-ship?followingUserId=${id}`,
 				method: 'POST',
-				headers: {
-					Accept: '*/*',
-					Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-					'Content-Type': 'application/json'
-				},
-				body: "",
+				body: '', 
 			}),
 			invalidatesTags: ['Profile'],
 		}),
+		UnFollowByUserId : build.mutation({
+			query : id => ({
+				url : `/FollowingRelationShip/delete-following-relation-ship?followingUserId=${id}`,
+				method : "DELETE",
+				body : '',
+			}),
+			invalidatesTags: ['Profile'],
+		})
 	}),
 	keepUnusedDataFor: 30,
 })
@@ -111,4 +114,5 @@ export const {
 	useGetPostsByIdQuery,
 	useGetStoryByidQuery,
 	useFollowByUserIdMutation,
+	useUnFollowByUserIdMutation,
 } = ProfileApi

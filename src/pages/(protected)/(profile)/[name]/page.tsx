@@ -15,7 +15,9 @@ import InfoFollowers from '@/shared/ui/infoFollowers'
 import InfoProfile from '@/shared/ui/infoProfile'
 import ReelsDiv from '@/shared/ui/reels-div'
 import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
+import DefaultImageUser from "@/assets/UserIcon.png"
 import StoryCircle from '@/shared/ui/story-circle'
+import AddStoryModal from '@/widgets/add-story-modal'
 import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
@@ -34,6 +36,7 @@ export default function ProfileByNamePage() {
 	const [OpenPosts, setOpenPosts] = useState<boolean>(true)
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
+	const [modalStories,setModalStories] = useState<boolean>(false)
 	const [view, setView] = useState<boolean>(false)
 	const [selectPost, setSelectPost] = useState({})
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -146,27 +149,31 @@ export default function ProfileByNamePage() {
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
 					}`}
 				>
+					
 					<Avatar
-						className='w-full h-full rounded-full'
-						onClick={clickOpenModal}
-					>
-						<AvatarImage
-							src={`https://instagram-api.softclub.tj/images/${
-								profileData?.data?.image ||
-								profileIdData?.data?.image ||
-								'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnTQT4yxZTOXn7cMGVwW6yv4DCqN5Snmd7bA&s'
-							}`}
-							className='w-full h-full rounded-full object-cover'
-							alt='Profile Image'
-						/>
-						<AvatarFallback>
-							<AvatarImage
-								src='https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o='
-								className='w-full h-full rounded-full object-cover'
-								alt='Profile Image'
-							/>
-						</AvatarFallback>
-					</Avatar>
+	className='w-full h-full rounded-full'
+	onClick={clickOpenModal}
+>
+	<AvatarImage
+		src={
+			profileData?.data?.image
+				? `https://instagram-api.softclub.tj/images/${profileData?.data?.image}`
+				: profileIdData?.data?.image
+				? `https://instagram-api.softclub.tj/images/${profileIdData?.data?.image}`
+				: DefaultImageUser
+		}
+		className='w-full h-full rounded-full object-cover'
+		alt='Profile Image'
+	/>
+	<AvatarFallback>
+		<img
+			src={DefaultImageUser}
+			className='w-full h-full rounded-full object-cover'
+			alt='Default Profile Image'
+		/>
+	</AvatarFallback>
+</Avatar>
+
 				</div>
 
 				<StoryModal
@@ -203,7 +210,7 @@ export default function ProfileByNamePage() {
 				/>
 			</div>
 			{!id && (
-				<div className='hidden lg:flex gap-[20px] items-center'>
+				<div onClick={() => setModalStories(true)} className='hidden lg:flex gap-[20px] items-center'>
 					<StorySection>
 						<StoryCircle />
 					</StorySection>
@@ -279,7 +286,7 @@ export default function ProfileByNamePage() {
 			{OpenPosts && (
 				<ReelsContainer>
 					{postsData || PostsById.data ? (
-						(postsData || PostsById.data)?.map(
+						(postsData || PostsById.data)?.toReversed()?.map(
 							(post: {
 								commentCount: string | number
 								images: unknown[]
@@ -368,6 +375,7 @@ export default function ProfileByNamePage() {
 				</ReelsContainer>
 			)}
 			<InstagramModalView open={view} setOpen={setView} post={selectPost} />
+			<AddStoryModal open={modalStories} setOpen={setModalStories} posts={postsData}/>
 		</div>
 	)
 }
