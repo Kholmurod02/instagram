@@ -20,13 +20,17 @@ export const authApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<{ token: string }, { email: string; password: string }>({
-      query: (data) => ({
-        url: "/login",
-        method: "POST",
-        body: data,
-      }),
-    }),
+	login: builder.mutation<
+	{ data: { token: string } }, // This defines the expected response shape
+	{ email: string; password: string } // This defines the request parameters
+ >({
+	query: (data) => ({
+	  url: "/login",
+	  method: "POST",
+	  body: data,
+	}),
+ }),
+ 
     register: builder.mutation<{ message: string }, { userName: string; fullName: string; email: string; password: string; confirmPassword: string }>({
       query: (data) => ({
         url: "/register",
