@@ -1,0 +1,18 @@
+{
+    "Start": {
+      "1": "Login",
+      "2": "or",
+      "3": "Login with Facebook",
+      "4": "Forgot your password?",
+      "5": "Don't have an account?",
+      "6": "Register"
+    },
+    "Registration": {
+        "1": "Register to view your friends' photos and videos.",
+        "2": "Register",
+        "3": "People who use our service may have uploaded your contact information to Instagram. Learn more",
+        "4": "By registering, you agree to our Terms, Privacy Policy and Cookie Policy.",
+        "5": "Do you have an account?",
+        "6": "Login"
+    }
+}

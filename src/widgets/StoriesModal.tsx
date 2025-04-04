@@ -1,5 +1,6 @@
 "use client"
 
+import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar"
 import { Dialog, DialogContent } from "@/shared/ui/dialog"
 import { Input } from "@/shared/ui/input"
@@ -47,6 +48,8 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
   const [progress, setProgress] = useState(0)
   const progressInterval = useRef<NodeJS.Timeout>()
   const isInitialMount = useRef(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [likedStories, setLikedStories] = useState<boolean[]>([])
 
   useEffect(() => {
     if (storyData?.data?.stories) {
@@ -195,6 +198,21 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 
   const handleVideoEnd = () => {
     nextStory()
+  }
+
+  const toggleLike = (index: number) => {
+    const newLikedStories = [...likedStories]
+    newLikedStories[index] = !likedStories[index]
+    setLikedStories(newLikedStories)
+    
+    try {
+      localStorage.setItem(
+        `liked_${storyDataHome[index].id}`,
+        newLikedStories[index].toString()
+      )
+    } catch (error) {
+      console.error('Error saving like to localStorage:', error)
+    }
   }
 
   return (
@@ -360,12 +378,29 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
                 className="flex-1 bg-transparent border border-gray-500 text-white rounded-full py-1 sm:py-2 px-3 sm:px-4 text-xs sm:text-sm"
               />
               <div className="flex items-center gap-3 sm:gap-4 ml-3 sm:ml-4">
-                <button className="text-white">
-                  <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
+              <button
+                  onClick={() => toggleLike(currentIndex)}
+                  className="relative flex items-center justify-center"
+                >
+                  <div
+                    className={`absolute w-12 h-12 bg-red-500/30 rounded-full 
+                    transition-all duration-300 ease-out ${
+                      likedStories[currentIndex] ? 'scale-10' : 'scale-0 opacity-0'
+                    }`}
+                  />
+                  <Heart
+                    className={`transition-all duration-300 ease-out ${
+                      likedStories[currentIndex]
+                        ? 'text-red-500 fill-red-500 scale-110'
+                        : 'text-white'
+                    }`}
+                  />
                 </button>
-                <button className="text-white">
-                  <Send className="h-5 w-5 sm:h-6 sm:w-6" />
-                </button>
+                <Send className='h-9 w-6 cursor-pointer' onClick={() => setIsModalOpen(true)} />
+					<ShareModal
+						isOpen={isModalOpen}
+						onClose={() => setIsModalOpen(false)}
+					/>
               </div>
             </div>
           </div>

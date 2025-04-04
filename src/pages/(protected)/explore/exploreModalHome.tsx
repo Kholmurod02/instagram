@@ -4,12 +4,7 @@ import Save from '@/features/component/saved'
 import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
-import {
-	Dialog,
-	DialogContent,
-	DialogTrigger,
-	DialogTitle,
-} from '@/shared/ui/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '@/shared/ui/dialog'
 import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
@@ -30,7 +25,7 @@ interface Post {
 	saved?: boolean
 }
 
-export function InstagramDialog({
+export function InstagramDialogHome({
 	children,
 	post,
 }: {
@@ -64,30 +59,27 @@ export function InstagramDialog({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-
+		
 			{post && (
 				<DialogContent
 					className='p-0 w-[96.5%] lg:w-[75vw] !max-w-[1200px] gap-0 overflow-hidden'
 					style={{ backgroundColor: 'black' }}
 				>
-					<DialogTitle className='text-white text-lg font-bold px-4 pt-4'>
-						Posted by {post.user?.username || 'User'}
-					</DialogTitle>
-
 					<div className='grid grid-cols-2 md:grid-cols-2 h-[70vh] lg:h-[90vh]'>
 						<div className='flex items-center justify-center bg-black'>
 							{post.type === 'video' ? (
 								<video
-									src={post.url}
-									className='object-contain w-full h-[600px]'
 									autoPlay
 									muted
 									loop
-								/>
+								>
+									<source type="video/mp4" src={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+									className='object-contain w-full h-[600px]' />
+								</video>
 							) : (
 								<img
-									src={post.url}
-									alt='Post'
+									src={`https://instagram-api.softclub.tj/images/${post.images}`}
+									alt={post.userName}
 									className='h-[500px] w-full object-contain'
 								/>
 							)}
@@ -106,7 +98,9 @@ export function InstagramDialog({
 								<div className='flex items-center gap-3'>
 									<Avatar>
 										<div className=''>
-											<NavLink to={`/profile/${post.userId}`}>Profile</NavLink>
+										 <NavLink to={`/profile/${post.userId}`}>
+												Profile
+											</NavLink>
 										</div>
 										<AvatarFallback>
 											{post.user?.username?.slice(0, 2).toUpperCase() || '??'}
@@ -178,8 +172,7 @@ export function InstagramDialog({
 											userImage?: string
 										}) => (
 											<div key={c.postCommentId}>
-												<NavLink to={`/profile/${(c as any).userId}`}>
-
+											 <NavLink to={`/profile/${c.userId}`}>
 													<CommentItem
 														username={c.userName}
 														comment={c.comment}
@@ -202,14 +195,14 @@ export function InstagramDialog({
 							<div className='p-3 border-t border-b'>
 								<div className='flex justify-between '>
 									<div className='flex gap-5'>
-										{/* <div className=""> */}
-										<Like
+									{/* <div className=""> */}
+									<Like
 											postId={post.id}
 											initialLiked={false}
 											initialLikes={post.likes}
-											// size={33}
+										// size={33}
 										/>
-										{/* </div> */}
+									{/* </div> */}
 
 										<MessageCircle className='h-9 w-8' />
 
@@ -241,6 +234,8 @@ export function InstagramDialog({
 	)
 }
 
+
+
 function CommentItem({
 	username = '',
 	comment = '',
@@ -251,7 +246,10 @@ function CommentItem({
 	comment: string
 	timeAgo: string
 	avatar?: string
-}) {
+})
+
+
+{
 	return (
 		<div className='flex gap-2 items-start'>
 			<Avatar>
