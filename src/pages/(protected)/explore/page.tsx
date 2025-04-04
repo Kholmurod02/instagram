@@ -27,31 +27,38 @@ export default function ExplorePage() {
 
 	useEffect(() => {
 		if (posts?.data) {
-			setMedia(prev => [
-				...prev,
-				...posts.data.map((post: any) => {
-					const fileUrl = `https://instagram-api.softclub.tj/images/${post.images[0]}`
-					const isVideo = fileUrl.endsWith('.mp4') || fileUrl.endsWith('.mov')
-
-						return {
-						id: post.postId,
-						url: fileUrl,
-						type: isVideo ? 'video' : 'image',
-						likes: post.postLikeCount || 0,
-						commentsCount: post.commentCount || 0,
-						comments: post.comments || [],
-						caption: post.caption || 'salom',
-						createdAt: post.datePublished,
-						user: { 
-							username: post.userName,
-							avatarUrl: post.userImage,
-						},
-					}
-				}),
-			])
-			setHasMore(posts.data.length > 0)
+		  setMedia(prev => {
+			 const existingIds = new Set(prev.map(p => p.id))
+	 
+			 const newMedia = posts.data
+				.filter((post: any) => !existingIds.has(post.postId))
+				.map((post: any) => {
+				  const fileUrl = `https://instagram-api.softclub.tj/images/${post.images[0]}`
+				  const isVideo = fileUrl.endsWith('.mp4') || fileUrl.endsWith('.mov')
+	 
+				  return {
+					 id: post.postId,
+					 url: fileUrl,
+					 type: isVideo ? 'video' : 'image',
+					 likes: post.postLikeCount || 0,
+					 commentsCount: post.commentCount || 0,
+					 comments: post.comments || [],
+					 caption: post.caption || 'salom',
+					 createdAt: post.datePublished,
+					 user: {
+						username: post.userName,
+						avatarUrl: post.userImage,
+					 },
+				  }
+				})
+	 
+			 return [...prev, ...newMedia]
+		  })
+	 
+		  setHasMore(posts.data.length > 0)
 		}
-	}, [posts])
+	 }, [posts])
+	 
 
 	const handleObserver = useCallback(
 		(entries: IntersectionObserverEntry[]) => {

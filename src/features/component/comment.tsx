@@ -308,7 +308,7 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 						value={commentText}
 						onChange={handleCommentChange}
 						placeholder='Add a comment...'
-						className='p-2 rounded-md w-full lg:w-[480px]'
+						className='p-2 rounded-md w-full lg:w-[400px]'
 					/>
 					<button
 						onClick={handleAddComment}
