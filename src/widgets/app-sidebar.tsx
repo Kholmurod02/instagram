@@ -311,12 +311,6 @@ export default function AppSidebar() {
 					label='Профиль'
 					expanded={expanded}
 				/>
-				<NavLink
-					href='/settings'
-					icon={<Settings className='w-6 h-6' />}
-					label='Настройки'
-					expanded={expanded}
-				/>
 			</div>
 
 			{/* More button */}
