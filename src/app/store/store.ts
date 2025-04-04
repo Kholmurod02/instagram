@@ -7,7 +7,6 @@ import { historyApi } from '@/entities/story-homepage/story-homepage'
 import { usersHomepageApi } from '@/entities/users-homepage/users-homepage'
 import { postsHomepageApi } from '@/entities/posts-homepage/post-homepage'
 import { searchApi } from '@/entities/search/search'
-import { followingApi } from '@/entities/following/follow'
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +18,6 @@ export const store = configureStore({
     [usersHomepageApi.reducerPath] : usersHomepageApi.reducer,
     [postsHomepageApi.reducerPath] : postsHomepageApi.reducer,
     [searchApi.reducerPath] : searchApi.reducer,
-    [followingApi.reducerPath] : followingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -31,7 +29,6 @@ export const store = configureStore({
       usersHomepageApi.middleware,
       postsHomepageApi.middleware,
       searchApi.middleware,
-      followingApi.middleware,
     ),
 })
 

@@ -5,7 +5,6 @@ const History = ({ story, isActive, onAllStoriesViewed }) => {
   const [open, setOpen] = useState(false)
   const hasStories = story?.stories?.length > 0
 
-  // Открываем только при явной активации (клике или автоматическом переходе)
   useEffect(() => {
     if (isActive && hasStories) {
       setOpen(true)
@@ -27,11 +26,19 @@ const History = ({ story, isActive, onAllStoriesViewed }) => {
         }`}
       >
         <div className='w-full h-full rounded-full bg-white p-[2px]'>
-          <img
-            className='rounded-full w-full h-full object-cover'
-            src={`https://instagram-api.softclub.tj/images/${story.userImage}`}
-            alt={story.userName}
-          />
+          {story.userImage ? (
+            <img
+              className='rounded-full w-full h-full object-cover'
+              src={`https://instagram-api.softclub.tj/images/${story.userImage}`}
+              alt={story.userName}
+            />
+          ) : (
+            <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+              <span className="text-lg font-semibold text-gray-600">
+                {story.userName.substring(0, 2).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
       </div>
       <p className='text-[12px] text-center py-1'>{story.userName}</p>

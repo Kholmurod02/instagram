@@ -106,7 +106,6 @@ export function StoryModalHomepage({
     loadDurations()
   }, [open, storyDataHome])
 
-  // Управление воспроизведением и прогрессом
   useEffect(() => {
     if (!open || videoDurations.length === 0 || !storyDataHome[currentIndex]) return
 
