@@ -95,24 +95,7 @@ export function InstagramDialogHome({
 							}}
 						>
 							<div className='flex items-center justify-between p-3 border-b'>
-								<div className='flex items-center gap-3'>
-									<Avatar>
-										<div className=''>
-										 <NavLink to={`/profile/${post.userId}`}>
-												Profile
-											</NavLink>
-										</div>
-										<AvatarFallback>
-											{post.user?.username?.slice(0, 2).toUpperCase() || '??'}
-										</AvatarFallback>
-									</Avatar>
-
-									<div>
-										<div className='font-semibold text-sm'>
-											{post.user?.username || ' '}
-										</div>
-									</div>
-								</div>
+							
 								<Button
 									variant='ghost'
 									size='icon'
