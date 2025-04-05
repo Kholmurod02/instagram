@@ -6,7 +6,6 @@ import { z } from "zod";
 import { FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Logo from '../../assets/photo_2025-04-04_16-36-39.jpg';
-import "../../app/i18n";
 
 const loginSchema = z.object({
   userName: z.string().min(3, "Имя пользователя должно содержать минимум 3 символа"),

@@ -1,11 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 
-const RecomendedUsers = ({ data }) => {
-  const [isFollowing, setIsFollowing] = useState(false); // локальный флаг
+interface RecommendedUserProps {
+  data: {
+    id: string | number;
+    userName: string;
+    fullName: string;
+    avatar?: string;
+  };
+}
+
+const RecomendedUsers: React.FC<RecommendedUserProps> = ({ data }) => {
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollowClick = () => {
-    setIsFollowing(prev => !prev); // переключаем состояние
+    setIsFollowing(prev => !prev);
   };
 
   return (
@@ -15,10 +24,10 @@ const RecomendedUsers = ({ data }) => {
           <div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent cursor-pointer'>
             <div className='w-full h-full rounded-full bg-white p-[2px]'>
               {data.avatar ? (
-                <img 
-                  className='rounded-full w-full h-full object-cover' 
-                  src={`https://instagram-api.softclub.tj/images/${data.avatar}`} 
-                  alt={data.userName} 
+                <img
+                  className='rounded-full w-full h-full object-cover'
+                  src={`https://instagram-api.softclub.tj/images/${data.avatar}`}
+                  alt={data.userName}
                 />
               ) : (
                 <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
@@ -37,11 +46,10 @@ const RecomendedUsers = ({ data }) => {
           </div>
         </div>
         <div>
-          <button 
+          <button
             onClick={handleFollowClick}
-            className={`text-sm cursor-pointer transition-colors duration-200 ${
-              isFollowing ? 'text-red-500 hover:text-white' : 'text-blue-500 hover:text-white'
-            }`}
+            className={`text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200 
+              ${isFollowing ? 'text-red-500 hover:text-white' : 'text-blue-500 hover:text-white'}`}
           >
             {isFollowing ? 'Unfollow' : 'Follow'}
           </button>

@@ -1,5 +1,4 @@
 import { useGetMyProfileQuery, useGetMyStoriesQuery } from '@/app/store/profileSlice/profileSlice'
-import { Skeleton } from '@/shared/ui/skeleton'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { StoryModal } from './StoriesModal'

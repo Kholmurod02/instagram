@@ -25,9 +25,6 @@ const handleChat=(id:string)=>{
  setOpen(false)
 }
 
-
-
-
   return (
     <div className="flex flex-col items-center justify-center  min-h-[100vh] bg-black text-white p-24 w-[720px]">
       <div className="flex flex-col items-center gap-6 max-w-md text-center mb-10">

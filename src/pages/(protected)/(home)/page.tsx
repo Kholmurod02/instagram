@@ -49,7 +49,6 @@ export default function HomePage() {
 
 			<footer className='w-[100%] md:w-full text-gray-300 py-6 md:py-10 md:px-6 text-xs sm:text-sm'>
 				<div className='max-w-6xl mx-auto'>
-					{/* Ссылки - адаптивное отображение */}
 					<div className='flex flex-wrap justify-center gap-x-3 gap-y-2 md:gap-x-4 mb-4'>
 						<p className='hover:underline whitespace-nowrap'>Meta</p>
 						<p className='hover:underline whitespace-nowrap'>Информация</p>
@@ -61,7 +60,6 @@ export default function HomePage() {
 							Конфиденциальность
 						</p>
 
-						{/* Эти элементы скрываются на маленьких экранах */}
 						<p className='hidden sm:inline hover:underline whitespace-nowrap'>
 							Условия
 						</p>
@@ -75,7 +73,6 @@ export default function HomePage() {
 							Threads
 						</p>
 
-						{/* Длинный текст - адаптация */}
 						<p className='hidden lg:inline hover:underline whitespace-nowrap'>
 							Загрузка контактов и лица, не являющиеся пользователями
 						</p>
@@ -84,7 +81,6 @@ export default function HomePage() {
 						</p>
 					</div>
 
-					{/* Нижняя часть с выбором языка */}
 					<div className='flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4'>
 						<div className='relative group'>
 							<select
