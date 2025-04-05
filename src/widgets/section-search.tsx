@@ -19,6 +19,7 @@ interface DrawerSearchProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 interface Users {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   users: any
   id: number,
   avatar: string,

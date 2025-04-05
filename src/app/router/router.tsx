@@ -35,7 +35,7 @@ export default function Router() {
           <Route path="login" element={<LazyLoginPage />} />
           <Route path='registration' element={<LazyRegistrationPage />} />
 
-          <Route element={<LazyLayout />}>
+          <Route element={<LazyLayout children={undefined} />}>
             <Route path='/' element={<LazyHomePage />} />
             <Route path="explore" element={<LazyExplorePage />} />
             <Route path="reels" element={<LazyReelsPage />} />

@@ -72,6 +72,7 @@ const PostUsersHomepage = ({ data }: { data: PostData }) => {
 
   const togglePlayPause = useCallback(() => {
     if (videoRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       videoRef.current.paused ? videoRef.current.play() : videoRef.current.pause()
     }
   }, [])
