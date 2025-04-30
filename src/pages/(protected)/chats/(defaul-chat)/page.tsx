@@ -11,8 +11,17 @@ import {
 } from "@/shared/ui/dialog"
 import { Input } from "@/shared/ui/input"
 import { useSearchUsersQuery } from "@/entities/search/search"
-import { NavLink, useNavigate } from "react-router"
 import { useCreateChatMutation } from "@/entities/chats/chat-api"
+
+
+interface IUserProfile {
+  id: string;
+  avatar: string;
+  fullName: string;
+  subscribersCount: number;
+  userName: string;
+}
+
 
 export default function DefaultChatPage() {
   const [open, setOpen] = useState(false)
@@ -71,9 +80,8 @@ const handleChat=(id:string)=>{
             <div className="flex flex-col gap-3 overflow-hidden">
               {
                 value == '' ? '' :
-                  data?.data?.slice(0, 3).map((user) => {
+                  data?.data?.slice(0, 3).map((user:IUserProfile) => {
                     return <>
-                      {/* <NavLink to={`/chat/${chatId}`}> */}
 
                       <div key={user.id}
                        className='flex py-[8px] hover:bg-[#20272b] items-center gap-[20px] px-[20px]'
@@ -86,7 +94,6 @@ const handleChat=(id:string)=>{
                         </div>
                       </div>
 
-                      {/* </NavLink> */}
                     </>
                   })
               }

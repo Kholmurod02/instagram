@@ -3,35 +3,46 @@
 import { useState, useEffect } from "react"
 import { Edit, ChevronDown } from "lucide-react"
 import { Avatar } from "@/shared/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import userImg from '@/assets/UserIcon.png'
-import { Outlet, useLocation, useNavigate, useParams } from "react-router"
+import { Outlet, useNavigate, useParams } from "react-router"
 import { useDeleteChatMutation, useGetChatsQuery } from "@/entities/chats/chat-api"
 import { jwtDecode } from 'jwt-decode'
-import { useGetProfileByIdQuery } from "@/app/store/profileSlice/profileSlice"
-import DefaultChatPage from "./(defaul-chat)/page"
-import { Dialog } from "@/shared/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 import { Button } from "@/shared/ui/button"
 
-interface UserType {
+interface IUserType {
   sendUserId: string
   sendUserName: string
-  sendUserImage: string
+  sendUserImage: string | null
   chatId: number
   receiveUserId: string
   receiveUserName: string
-  receiveUserImage: string
+  receiveUserImage: string | null
+}
+
+interface IChatItem {
+  sendUserId: string;
+  sendUserName: string;
+  sendUserImage: string | null;
+  chatId: number;
+  receiveUserId: string;
+  receiveUserName: string;
+  receiveUserImage: string | null;
+}
+
+interface IDecodedToken {
+  sid: string;   
+  name: string;
+  [key: string]: any;
 }
 
 export default function LayoutChats() {
-  const [activeTab, setActiveTab] = useState("messages")
   const [selectedChat, setSelectedChat] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
-  const params = useParams()
+  const params = useParams<{ id?: string }>()
 
-  const { data, error, isLoading } = useGetChatsQuery()
+  const { data, error, isLoading } = useGetChatsQuery("")
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -44,7 +55,7 @@ export default function LayoutChats() {
     return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
 
-  const [tokenId, setTokenId] = useState(null)
+  const [tokenId, setTokenId] = useState<string | null>(null)
   const [userName, setUserName] = useState("")
 
   useEffect(() => {
@@ -55,21 +66,23 @@ export default function LayoutChats() {
     }
   }, [params.id])
 
-
   useEffect(() => {
     const accessToken = localStorage.getItem("access_token")
     if (accessToken) {
-      const decoded = jwtDecode(accessToken)
-      setTokenId(decoded.sid)
-      setUserName(decoded.name)
+      try {
+        const decoded: IDecodedToken = jwtDecode(accessToken)
+        setTokenId(decoded.sid)
+        setUserName(decoded.name)
+      } catch (error) {
+        console.error("Error decoding token:", error)
+      }
     }
   }, [])
 
-  const handleSelectChat = (chat: UserType) => {   
+  const handleSelectChat = (chat: IUserType) => {   
     console.log(chat);
-     
     navigate(`/chats/${chat.chatId}`)
-    localStorage.setItem("user",JSON.stringify(chat))
+    localStorage.setItem("user", JSON.stringify(chat))
   }
 
   const handleBackToList = () => {
@@ -81,7 +94,7 @@ export default function LayoutChats() {
   const showBackButton = isMobile && selectedChat !== null
 
   return (
-    <div className="flex w-full   bg-black text-white">
+    <div className="flex w-full bg-black text-white">
       {/* Left sidebar - full width on mobile when no chat selected */}
       <div
         className={`
@@ -127,28 +140,28 @@ export default function LayoutChats() {
                 Error loading chats
               </div>
             ) : (
-              data?.data?.toReversed().map((chat) => (
-                <div className={`flex justify-between hover:bg-gray-800/50 active:bg-gray-700
-                  transition-colors w-full cursor-pointer 
-                  ${selectedChat === chat.chatId ? 'bg-grey-900' : ''}`}>
+              data?.data?.toReversed().map((chat: IChatItem) => (
+                <div 
+                  key={chat.chatId}
+                  className={`flex justify-between hover:bg-gray-800/50 active:bg-gray-700
+                    transition-colors w-full cursor-pointer 
+                    ${selectedChat === chat.chatId ? 'bg-grey-900' : ''}`}
+                >
                   <div
-                    key={chat.chatId}
-                    className={`
-                  flex items-center gap-3 p-4 
-                 
-                `}
+                    className="flex items-center gap-3 p-4 flex-1"
                     onClick={() => handleSelectChat(chat)}
                   >
                     <Avatar className="h-12 w-12 flex-shrink-0 rounded-full border border-gray-600">
                       <img
-                        src={`https://instagram-api.softclub.tj/images/${chat.sendUserId === tokenId
-                          ? chat?.receiveUserImage
-                          : chat.sendUserImage
-                          }`}
+                        src={`https://instagram-api.softclub.tj/images/${
+                          chat.sendUserId === tokenId
+                            ? chat?.receiveUserImage
+                            : chat.sendUserImage
+                        }`}
                         alt={
                           chat.sendUserId === tokenId
-                            ? chat?.receiveUserName[0]
-                            : chat.sendUserName[0]
+                            ? chat?.receiveUserName[0]?.toUpperCase() || 'U'
+                            : chat.sendUserName[0]?.toUpperCase() || 'U'
                         }
                         className="h-full w-full object-cover"
                         loading="lazy"
@@ -164,29 +177,27 @@ export default function LayoutChats() {
                           : chat.sendUserName}
                       </h3>
                     </div>
-
                   </div>
-               <div className="flex justify-center">
-               <Popover>
-                    <PopoverTrigger>
-                    <button>•••</button>
-                    </PopoverTrigger>
-                    <PopoverContent className="h-[70px] w-[170px]">
-                      <Button
-                        onClick={() => deleteChat(chat.chatId)}
-                        className="bg-muted hover:bg-black text-red-500"
-                      >
-                        Delete This chat
-                      </Button>
-                    </PopoverContent>
-                  </Popover>
-               </div>
+                  <div className="flex justify-center items-center pr-4">
+                    <Popover>
+                      <PopoverTrigger>
+                        <button>•••</button>
+                      </PopoverTrigger>
+                      <PopoverContent className="h-[70px] w-[170px]">
+                        <Button
+                          onClick={() => deleteChat(chat.chatId)}
+                          className="bg-muted hover:bg-black text-red-500"
+                        >
+                          Delete This chat
+                        </Button>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               ))
             )}
           </div>
         </div>
-
       </div>
 
       {/* Right content area - full width on mobile when chat selected */}
@@ -226,7 +237,6 @@ export default function LayoutChats() {
         )}
         <Outlet />
       </div>
-
     </div>
   )
 }
