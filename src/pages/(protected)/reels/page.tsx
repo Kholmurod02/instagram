@@ -75,7 +75,7 @@ export default function ReelsPage() {
 	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 
 	console.log(imgDecode?.sub)
-
+	
 	const emojis = [
 		'😀',
 		'😂',
@@ -83,7 +83,7 @@ export default function ReelsPage() {
 		'😍',
 		'🤔',
 		'😜',
-		'😇',
+		'😇', 
 		'😢',
 		'😡',
 		'😏',
@@ -474,7 +474,7 @@ export default function ReelsPage() {
 	}
 
 	return (
-		<div className=' sm:w-[600px]  ml-[50%]  m-auto bg-green flex justify-center h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
+		<div className=' sm:w-[600px]  ml-[50%] sm:overflow-none overflow-hidden m-auto bg-green flex justify-center h-[100vh] sm:h-[60vh] items-center absolute top-0 right-[-100px] lg:right-[470px]'>
 			<Carousel
 				opts={{ align: 'start' }}
 				orientation='vertical'

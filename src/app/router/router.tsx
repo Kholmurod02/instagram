@@ -4,7 +4,6 @@ import logo from '../../assets/logo.svg'
 import logo2 from '../../assets/download.png'
 import { ChatByIdPage } from '@/pages/(protected)/chats/[id]/page'
 
-// Lazy load all pages
 const LazyLoginPage = lazy(() => import('@/pages/(auth)/login/page'))
 const LazyRegistrationPage = lazy(() => import('@/pages/(auth)/registration/page'))
 const LazyHomePage = lazy(() => import('@/pages/(protected)/(home)/page'))
