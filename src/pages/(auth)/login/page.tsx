@@ -25,9 +25,8 @@ export default function LoginPage() {
       } else {
         setError("Invalid login response");
       }
-    } catch (err: any) {
-      console.error(err);
-      setError("Login failed. Please check your credentials.");
+    } catch (error) {
+     console.log(error)
     }
   };
   
