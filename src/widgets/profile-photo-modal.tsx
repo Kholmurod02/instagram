@@ -20,14 +20,14 @@ export default function ProfilePhotoModal({
 	open: boolean
 	setOpen: (open: boolean) => void
 }) {
-	const { refetch } = useGetMyProfileQuery()
+	const { refetch } = useGetMyProfileQuery(undefined)
 	const [DeleteImageProfile] = useDeleteImageProfileMutation()
 	const [EditProfileImage] = useEditProfileImageMutation()
 	const FileRef = useRef<HTMLInputElement>(null)
 
 	async function deleteImageProfileF() {
 		try {
-			await DeleteImageProfile().unwrap()
+			await DeleteImageProfile(undefined).unwrap()
 			await refetch()
 			setOpen(false)
 		} catch (error) {
@@ -36,10 +36,11 @@ export default function ProfilePhotoModal({
 		}
 	}
 
-	async function fileChange(event: { target: { files: File[] } }) {
-		const file = event.target.files[0]
-		if (!file) return
+	async function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const files = event.target.files
+		if (!files || files.length === 0) return
 
+		const file = files[0]
 		const formData = new FormData()
 		formData.append('imageFile', file)
 
