@@ -1,33 +1,20 @@
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { RegisterForm } from "../../(protected)/authForm";
 import { useRegisterMutation } from "../../../entities/account/api/authApi";
-import Logo from '../../../components/img/logo_instagram_color-removebg-preview.png';
-import { useTranslation } from "react-i18next";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
+// import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 export default function RegistrationPage() {
-    const [isDarkMode, setDarkMode] = useState(false);
-    const { t, i18n } = useTranslation();
+    // const [isDarkMode, setDarkMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
+
   
-    const TranslateClick = (lang: string) => {
-      i18n.changeLanguage(lang);
-    };
-  
-    useEffect(() => {
-      if (isDarkMode) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }, [isDarkMode]);
-  
-    const toggleDarkMode = (checked: boolean) => {
-      setDarkMode(checked);
-    };
+    // const toggleDarkMode = (checked: boolean) => {
+    //   setDarkMode(checked);
+    // };
 
   const handleRegister = async (data: any) => {
     console.log("Регистрация:", data);
@@ -50,10 +37,10 @@ export default function RegistrationPage() {
     {isLoading && <p>Загрузка...</p>}
   </div>
 
-  <div className="flex flex-wrap justify-center sm:justify-start items-center gap-5 w-full sm:w-auto sm:ml-[60px]">
+  {/* <div className="flex flex-wrap justify-center sm:justify-start items-center gap-5 w-full sm:w-auto sm:ml-[60px]">
     <button
       className="px-3 py-2 text-white font-semibold rounded-full bg-gradient-to-r from-[#feda75] via-[#fa7e1e] to-[#d62976] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
-      onClick={() => TranslateClick("en")}
+      // onClick={() => TranslateClick("en")}
     >
       EN
     </button>
@@ -76,7 +63,7 @@ export default function RegistrationPage() {
       onChange={toggleDarkMode}
       size={25}
     />
-  </div>
+  </div> */}
 </div>
 
   );

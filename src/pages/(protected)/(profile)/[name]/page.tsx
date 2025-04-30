@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	useGetFavoritePostsQuery,
 	useGetMyPostsQuery,
@@ -17,7 +18,7 @@ import ReelsDiv from '@/shared/ui/reels-div'
 import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
 import DefaultImageUser from "@/assets/UserIcon.png"
 import StoryCircle from '@/shared/ui/story-circle'
-import AddStoryModal from '@/widgets/add-story-modal'
+
 import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
@@ -39,7 +40,6 @@ export default function ProfileByNamePage() {
 	const [modalStories,setModalStories] = useState<boolean>(false)
 	const [view, setView] = useState<boolean>(false)
 	const [selectPost, setSelectPost] = useState({})
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { id } = useParams()
 	function clickOpenModal() {
 		setIsViewed(true)
@@ -375,7 +375,6 @@ export default function ProfileByNamePage() {
 				</ReelsContainer>
 			)}
 			<InstagramModalView open={view} setOpen={setView} post={selectPost} />
-			<AddStoryModal open={modalStories} setOpen={setModalStories} posts={postsData}/>
 		</div>
 	)
 }

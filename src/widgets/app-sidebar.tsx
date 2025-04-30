@@ -8,7 +8,6 @@ import {
 	PanelLeftIcon,
 	PlusSquare,
 	Search,
-	Settings,
 	User,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'

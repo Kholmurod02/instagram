@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
 import { motion } from "framer-motion";
-import Logo from '../../app/components/img/imageLogin/logo_instagram_color-removebg-preview.png';
-import "../../app/i18n";
-import { useTranslation } from "react-i18next";
+import Logo from '../../assets/photo_2025-04-04_16-36-39.jpg';
 
 const loginSchema = z.object({
   userName: z.string().min(3, "Имя пользователя должно содержать минимум 3 символа"),
@@ -27,8 +26,6 @@ const registerSchema = z
   });
 
 const LoginOptions = () => {
-  const { i18n } = useTranslation();
-  const { t } = useTranslation();
 
   const handleFacebookLogin = () => {
     window.location.href = "https://www.facebook.com/login/";
@@ -42,30 +39,26 @@ const LoginOptions = () => {
     window.location.href = "/registration";
   };
 
-  const TranslateClick = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
-  
   return (
     <>
       <div className="w-full text-center">
         <div className="flex items-center my-4 w-full relative dark:bg-black">
           <hr className="w-full border-t dark:border-white" />
           <span className="absolute left-1/2 transform -translate-x-1/2 bg-white dark:bg-[#090909] px-2 text-gray-500 dark:text-white">
-          {t('Start.2')}
+            Start
           </span>
         </div>
         <button className="flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-white rounded-md w-full hover:bg-blue-600 hover:text-white dark:bg-[#090909]  dark:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all duration-1000 ease-in-out mt-5" onClick={handleFacebookLogin}>
-          <FaFacebook size={20} /> {t('Start.3')}
+          <FaFacebook size={20} /> Facebook Login
         </button>
-        <p className="mt-2 text-blue-600 cursor-pointer hover:underline mt-5" onClick={handleForgotPassword}>
-        {t('Start.4')}
+        <p className=" text-blue-600 cursor-pointer hover:underline mt-5" onClick={handleForgotPassword}>
+          Forgot Password
         </p>
         <div className="border-t mt-5 pt-4">
           <p className="text-gray-700">
-          {t('Start.5')} 
+            Already have an account? 
             <span className="text-blue-600 cursor-pointer hover:underline ml-1" onClick={handleRegister}>
-            {t('Start.6')}
+              Register here
             </span>
           </p>
         </div>
@@ -77,13 +70,12 @@ const LoginOptions = () => {
 export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
   const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(loginSchema) });
   const [showPassword, setShowPassword] = useState(false);
-  const { t } = useTranslation();
 
   return (
     <motion.form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 p-4 border rounded-lg" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <img className="w-35 ml-[75px]" src={Logo} alt="" />
       <motion.input {...register("userName")} placeholder="Имя пользователя" className="border p-2 rounded w-[323px] sm:w-[300px]" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} />
-      {errors.userName && <p className="text-red-500">{errors.userName.message}</p>}
+      {/* {errors.userName && <p className="text-red-500">{errors.userName.message}</p>} */}
 
       <div className="relative">
         <motion.input {...register("password")} type={showPassword ? "text" : "password"} placeholder="Пароль" className="border p-2 rounded w-full" initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }} />
@@ -93,7 +85,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
       </div>
 
       <motion.button type="submit" className="bg-blue-500 text-white p-2 rounded" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-        {t('Start.1')}
+        Login
       </motion.button>
 
       <LoginOptions />
@@ -103,33 +95,27 @@ export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
 
 export function RegisterForm({ onSubmit }: { onSubmit: (data: any) => void }) {
   const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(registerSchema) });
-  const { t } = useTranslation();
 
   const handleFacebookLogin = () => {
     window.location.href = "https://www.facebook.com/login/";
-  };
-  
-  const handleForgotPassword = () => {
-    window.location.href = "https://www.instagram.com/accounts/password/reset/";
   };
 
   const handleLogin = () => {
     window.location.href = "/login";
   };
 
-
   return (
     <motion.form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-6 border rounded-lg" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-      <h3 className="w-[200px] text-center ml-5 text-sm">{t('Registration.1')}</h3>
+      <h3 className="w-[200px] text-center ml-5 text-sm">Registration</h3>
       <div className="w-full text-center">
         <div className="flex items-center my-4 w-full relative dark:bg-black">
           <hr className="w-full border-t dark:border-white" />
           <span className="absolute left-1/2 transform -translate-x-1/2 bg-white dark:bg-[#090909] px-2 text-gray-500 dark:text-white">
-          {t('Start.2')}
+            Start
           </span>
         </div>
         <button className="flex items-center justify-center gap-2 px-4 py-2 text-blue-600 bg-white rounded-md w-full hover:bg-blue-600 hover:text-white dark:bg-[#090909]  dark:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all duration-1000 ease-in-out mt-5" onClick={handleFacebookLogin}>
-          <FaFacebook size={20} /> {t('Start.3')}
+          <FaFacebook size={20} /> Facebook Login
         </button>
       </div>
       <input {...register("userName")} placeholder="Имя пользователя" className="border p-2 rounded" />
@@ -142,19 +128,19 @@ export function RegisterForm({ onSubmit }: { onSubmit: (data: any) => void }) {
       {errors.password && <p className="text-red-500">{errors.password.message}</p>}
       <input {...register("confirmPassword")} type="password" placeholder="Подтвердите пароль" className="border p-2 rounded" />
       {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
-      <p className="w-66 text-center text-xs">{t('Registration.3')}</p>
-      <p className="w-66 text-center text-xs">{t('Registration.4')}</p>
+      <p className="w-66 text-center text-xs">Password should be at least 6 characters</p>
+      <p className="w-66 text-center text-xs">Please confirm your password</p>
       <motion.button type="submit" className="bg-blue-500 text-white p-2 rounded" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-        {t('Registration.2')}
+        Register
       </motion.button>
       <div className="border-t mt-5 pt-4 text-center">
-          <p className="text-gray-700">
-          {t('Registration.5')} 
-            <span className="text-blue-600 cursor-pointer hover:underline ml-1" onClick={handleLogin}>
-            {t('Registration.6')}
-            </span>
-          </p>
-        </div>
+        <p className="text-gray-700">
+          Already have an account? 
+          <span className="text-blue-600 cursor-pointer hover:underline ml-1" onClick={handleLogin}>
+            Login here
+          </span>
+        </p>
+      </div>
     </motion.form>
   );
 }
