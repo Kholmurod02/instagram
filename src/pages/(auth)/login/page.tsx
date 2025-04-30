@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { LoginForm } from "../../(protected)/authForm";
 import { useLoginMutation } from "../../../entities/account/api/authApi";
 import WebLogo from "../../../assets/photo_2025-04-04_16-36-44.jpg";
-import "../../../app/i18n"; 
+// import "../../../app/i18n"; 
 
 export default function LoginPage() {
   // const [isDarkMode, setDarkMode] = useState(false);
@@ -11,25 +12,24 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
-  const handleLogin = async (data: { userName: string; password: string }) => {
-    console.log("Отправляемые данные:", data);
+  const handleLogin = async (data: { email: string; password: string }) => {
     try {
       const response = await login(data).unwrap();
       console.log("Успешный вход:", response);
   
-      const token = response?.data; // The token is directly in response.data
+      const token = response?.data;
   
       if (token) {
-        localStorage.setItem("access_token", token);
+        localStorage.setItem("access_token", token.token); 
         navigate("/");
       } else {
-        console.error(error);
-        setError(error);
+        setError("Invalid login response");
       }
     } catch (error) {
      console.log(error)
     }
   };
+  
   
 
   return (

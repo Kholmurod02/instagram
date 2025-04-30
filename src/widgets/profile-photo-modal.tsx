@@ -79,7 +79,7 @@ export default function ProfilePhotoModal({
 					>
 						<Upload className='h-4 w-4 mr-2' />
 						Upload Photo
-					</Button>
+					</Button> 
 
 					<Button
 						variant='ghost'
