@@ -26,7 +26,7 @@ export default function LoginPage() {
         console.error(error);
         setError(error);
       }
-    } catch (err: any) {
+    } catch (error) {
      console.log(error)
     }
   };
