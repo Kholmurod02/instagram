@@ -20,14 +20,14 @@ export default function ProfilePhotoModal({
 	open: boolean
 	setOpen: (open: boolean) => void
 }) {
-	const { refetch } = useGetMyProfileQuery()
+	const { refetch } = useGetMyProfileQuery(undefined)
 	const [DeleteImageProfile] = useDeleteImageProfileMutation()
 	const [EditProfileImage] = useEditProfileImageMutation()
 	const FileRef = useRef<HTMLInputElement>(null)
 
 	async function deleteImageProfileF() {
 		try {
-			await DeleteImageProfile().unwrap()
+			await DeleteImageProfile(undefined).unwrap()
 			await refetch()
 			setOpen(false)
 		} catch (error) {
