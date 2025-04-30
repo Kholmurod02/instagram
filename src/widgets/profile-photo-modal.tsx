@@ -36,10 +36,11 @@ export default function ProfilePhotoModal({
 		}
 	}
 
-	async function fileChange(event: { target: { files: File[] } }) {
-		const file = event.target.files[0]
-		if (!file) return
+	async function fileChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const files = event.target.files
+		if (!files || files.length === 0) return
 
+		const file = files[0]
 		const formData = new FormData()
 		formData.append('imageFile', file)
 
@@ -79,7 +80,7 @@ export default function ProfilePhotoModal({
 					>
 						<Upload className='h-4 w-4 mr-2' />
 						Upload Photo
-					</Button> 
+					</Button>
 
 					<Button
 						variant='ghost'
