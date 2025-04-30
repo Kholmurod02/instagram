@@ -72,7 +72,7 @@ export default function ReelsPage() {
 		null
 	)
 	const [like, setLike] = useState<boolean>(false)
-	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
+	const [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 
 	console.log(imgDecode?.sub)
 	
