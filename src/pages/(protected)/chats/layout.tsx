@@ -81,7 +81,6 @@ export default function LayoutChats() {
   }, [])
 
   const handleSelectChat = (chat: IUserType) => {   
-    console.log(chat);
     navigate(`/chats/${chat.chatId}`)
     localStorage.setItem("user", JSON.stringify(chat))
   }
@@ -182,15 +181,15 @@ export default function LayoutChats() {
                   <div className="flex justify-center items-center pr-4">
                     <Popover>
                       <PopoverTrigger>
-                        <button>•••</button>
+                        <span>•••</span>
                       </PopoverTrigger>
-                      <PopoverContent className="h-[70px] w-[170px]">
-                        <Button
+                      <PopoverContent className="h-[70px] w-[170px] flex">
+                        <span
                           onClick={() => deleteChat(chat.chatId)}
-                          className="bg-muted hover:bg-black text-red-500"
+                          className="bg-muted hover:bg-black text-red-500 p-2 rounded"
                         >
                           Delete This chat
-                        </Button>
+                        </span>
                       </PopoverContent>
                     </Popover>
                   </div>

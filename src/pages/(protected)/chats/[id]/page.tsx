@@ -199,13 +199,13 @@ export function ChatByIdPage() {
                         )}
                         <p>{message.messageText}</p>
                       </PopoverTrigger>
-                      <PopoverContent className="h-[70px] w-[200px]">
-                        <Button
+                      <PopoverContent className="h-[70px] w-[200px] flex">
+                        <span
                           onClick={() => deleteMessage(message.messageId)}
-                          className="bg-muted hover:bg-black text-red-500"
+                          className="bg-muted hover:bg-black text-red-500 p-2 rounded"
                         >
                           Delete This Message
-                        </Button>
+                        </span>
                       </PopoverContent>
                     </Popover>
                   </div>

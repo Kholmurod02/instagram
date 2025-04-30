@@ -12,10 +12,8 @@ export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
 
   const handleLogin = async (data: { userName: string; password: string }) => {
-    console.log("Отправляемые данные:", data);
     try {
       const response = await login(data).unwrap();
-      console.log("Успешный вход:", response);
   
       const token = response?.data; // The token is directly in response.data
   
@@ -26,8 +24,8 @@ export default function LoginPage() {
         console.error(error);
         setError(error);
       }
-    } catch (err: any) {
-     console.log(error)
+    } catch (error: any) {
+     console.error(error)
     }
   };
   

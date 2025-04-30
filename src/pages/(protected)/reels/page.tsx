@@ -72,7 +72,6 @@ export default function ReelsPage() {
 	const [like,setLike] = useState<boolean>(false)
 	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 	
-	console.log(imgDecode?.sub)
 	
 	const emojis = [
 		'😀',

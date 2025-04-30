@@ -35,7 +35,7 @@ const handleChat=(id:string)=>{
 }
 
   return (
-    <div className="flex flex-col items-center justify-center  min-h-[100vh] bg-black text-white p-24 w-[720px]">
+    <div className="flex flex-col items-center justify-center  min-h-[100vh] bg-black text-white p-24 w-[600px]">
       <div className="flex flex-col items-center gap-6 max-w-md text-center mb-10">
         <div className="rounded-full bg-black p-5 border-2 border-white/80 w-28 h-28 flex items-center justify-center 
                     hover:border-white hover:scale-[1.03] transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]">

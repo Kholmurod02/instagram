@@ -17,11 +17,9 @@ export default function RegistrationPage() {
     // };
 
   const handleRegister = async (data: any) => {
-    console.log("Регистрация:", data);
 
     try {
       const response = await register(data).unwrap();
-      console.log("Успешная регистрация:", response);
       navigate("/login");
     } catch (err: any) {
       console.error("Ошибка при регистрации:", err.data?.message || err.message);
