@@ -1,7 +1,7 @@
 import { StoryModalHomepage } from '@/widgets/story-modal-homepage'
 import { useState, useEffect } from 'react'
 
-const History = ({ story, isActive, onAllStoriesViewed }) => {
+const History = ({ story, isActive, onAllStoriesViewed } : {isActive : boolean, onAllStoriesViewed : string  }) => {
   const [open, setOpen] = useState(false)
   const [isView, setIsView] = useState(false)
   const hasStories = story.stories.length > 0
