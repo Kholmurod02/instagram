@@ -3,9 +3,9 @@ import { Bookmark, MessageCircle, MoreHorizontal, Send, Volume2Icon, VolumeOff, 
 import { useRef, useState } from 'react'
 interface Post {
 	id: string;
-	userImage: string;
+	userImage?: string;
 	userName: string;
-	description: string;
+	description?: string;
 	postLikeCount: number;
 	liked: boolean;
 	likes: number;

@@ -254,7 +254,7 @@ export function StoryModal({ storyData, open, setOpen }: StoryModalProps) {
 					<div className='relative w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] h-[70vh] sm:h-[80vh] mx-auto'>
 						{/* Progress bar */}
 						<div className='absolute top-0 left-0 right-0 flex gap-1 p-2 z-20'>
-							{storyData?.data?.stories.map((el: IStoryData, index: number) => {
+						{storyData?.data?.stories.map((_: any, index: number) => {
 								const segmentProgress =
 									index < currentIndex
 										? 100
