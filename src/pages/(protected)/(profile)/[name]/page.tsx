@@ -37,7 +37,6 @@ export default function ProfileByNamePage() {
 	const [OpenPosts, setOpenPosts] = useState<boolean>(true)
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
-	const [modalStories,setModalStories] = useState<boolean>(false)
 	const [view, setView] = useState<boolean>(false)
 	const [selectPost, setSelectPost] = useState({})
 	const { id } = useParams()
@@ -210,7 +209,7 @@ export default function ProfileByNamePage() {
 				/>
 			</div>
 			{!id && (
-				<div onClick={() => setModalStories(true)} className='hidden lg:flex gap-[20px] items-center'>
+				<div className='hidden lg:flex gap-[20px] items-center'>
 					<StorySection>
 						<StoryCircle />
 					</StorySection>

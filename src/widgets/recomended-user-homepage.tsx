@@ -1,5 +1,6 @@
 import { useGetUsersHomepageQuery } from '@/entities/users-homepage/users-homepage'
 import RecomendedUsers from '@/features/recomended-user-homepage/recomended-users'
+import { IUsersHomePage } from '@/features/users/model/types'
 import { Skeleton } from '@/shared/ui/skeleton'
 
 const RecomendedUserHomepage = () => {
@@ -31,7 +32,7 @@ const RecomendedUserHomepage = () => {
 
 	return (
 		<div>
-			{data.data.slice(0,5)?.map((user) => (
+			{data.data.slice(0,5)?.map((user : IUsersHomePage) => (
 				<RecomendedUsers key={user.id} data={user} />
 			))}
 		</div>

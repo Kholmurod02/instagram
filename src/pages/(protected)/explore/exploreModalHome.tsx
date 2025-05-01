@@ -11,20 +11,6 @@ import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
 
-interface Post {
-	id: string
-	url: string
-	type: 'image' | 'video'
-	likes: number
-	caption?: string
-	createdAt: string
-	user?: {
-		username: string
-		avatarUrl?: string
-	}
-	comments?: { username: string; text: string }[]
-	saved?: boolean
-}
 
 export function InstagramDialogHome({
 	children,
