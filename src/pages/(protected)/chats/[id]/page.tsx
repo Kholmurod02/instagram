@@ -1,21 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { format } from "date-fns";
 import { Smile, Mic, ImageIcon, Sticker, Heart, ArrowLeft, MoreVertical, Phone, Video, SendHorizontal } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { useNavigate, useParams } from "react-router";
 import { useDeleteMessageMutation, useGetChatByIdQuery, useSendMessageMutation } from "@/entities/chats/chat-api";
 import { jwtDecode } from "jwt-decode";
-import { Dialog } from "@/shared/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { useGetProfileByIdQuery } from "@/app/store/profileSlice/profileSlice";
 
 // const formSchema = z.object({
 //   message: z.string().min(1, { message: "Message cannot be empty." }),
@@ -23,7 +17,7 @@ import { useGetProfileByIdQuery } from "@/app/store/profileSlice/profileSlice";
 
 export function ChatByIdPage() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id  : string } = useParams();
   const allEmojis = [
     "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
     "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
@@ -58,7 +52,7 @@ export function ChatByIdPage() {
   ];
 
 
-  let [message, setMessage] = useState("")
+  const [message, setMessage] = useState("")
   const [file, setFile] = useState("")
   const formData = new FormData()
   formData.append("ChatId", id)
@@ -74,7 +68,7 @@ export function ChatByIdPage() {
 
 
   const { data,error,isLoading } = useGetChatByIdQuery(id, {
-    skip: !id, // Не отправляем запрос, если id нет
+    skip: !id, 
   });
 
   const [sendMessage] = useSendMessageMutation()
