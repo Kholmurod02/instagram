@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { LoginForm } from "../../(protected)/authForm";
 import { useLoginMutation } from "../../../entities/account/api/authApi";
 import WebLogo from "../../../assets/photo_2025-04-04_16-36-44.jpg";
-import "../../../app/i18n"; 
+// import "../../../app/i18n"; 
 
 export default function LoginPage() {
   // const [isDarkMode, setDarkMode] = useState(false);
@@ -11,23 +12,32 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
+<<<<<<< HEAD
   const handleLogin = async (data: { userName: string; password: string }) => {
+=======
+  const handleLogin = async (data: { email: string; password: string }) => {
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
     try {
       const response = await login(data).unwrap();
   
-      const token = response?.data; // The token is directly in response.data
+      const token = response?.data;
   
       if (token) {
-        localStorage.setItem("access_token", token);
+        localStorage.setItem("access_token", token.token); 
         navigate("/");
       } else {
-        console.error(error);
-        setError(error);
+        setError("Invalid login response");
       }
+<<<<<<< HEAD
     } catch (error: any) {
      console.error(error)
+=======
+    } catch (error) {
+     console.log(error)
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
     }
   };
+  
   
 
   return (

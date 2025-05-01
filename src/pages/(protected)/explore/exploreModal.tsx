@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Like from '@/features/component/Like'
 import Comment from '@/features/component/comment'
 import Save from '@/features/component/saved'
@@ -14,21 +16,6 @@ import { MessageCircle, MoreHorizontal, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router'
 
-// @ts-ignore
-interface Post {
-	id: string
-	url: string
-	type: 'image' | 'video'
-	likes: number
-	caption?: string
-	createdAt: string
-	user?: {
-		username: string
-		avatarUrl?: string
-	}
-	comments?: { username: string; text: string }[]
-	saved?: boolean
-}
 
 export function InstagramDialog({
 	children,

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-explicit-any */
+=======
+/* eslint-disable @typescript-eslint/no-unused-vars */
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Smile, Mic, ImageIcon, Sticker, Heart, ArrowLeft, MoreVertical, Phone, Video, SendHorizontal } from "lucide-react";
@@ -31,7 +35,11 @@ interface JwtPayload {
 
 export function ChatByIdPage() {
   const navigate = useNavigate();
+<<<<<<< HEAD
   const { id } = useParams<{ id: string }>();
+=======
+  const { id  : string } = useParams();
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
   const allEmojis = [
     "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
     "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
@@ -54,6 +62,7 @@ export function ChatByIdPage() {
   const [file, setFile] = useState<FileList | null>(null);
   const [userName, setUserName] = useState("");
 
+<<<<<<< HEAD
   const formData = new FormData();
   formData.append("ChatId", id || "");
   formData.append("MessageText", message);
@@ -66,6 +75,25 @@ export function ChatByIdPage() {
   const [deleteMessage] = useDeleteMessageMutation();
   const { data, error, isLoading } = useGetChatByIdQuery(id || "", {
     skip: !id 
+=======
+  const [message, setMessage] = useState("")
+  const [file, setFile] = useState("")
+  const formData = new FormData()
+  formData.append("ChatId", id)
+  formData.append("MessageText", message)
+  for (let i = 0; i < file.length; i++) {
+    formData.append("file", file[i])
+
+  }
+
+  const [deleteMessage] = useDeleteMessageMutation()
+
+
+
+
+  const { data,error,isLoading } = useGetChatByIdQuery(id, {
+    skip: !id, 
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
   });
   const [sendMessage] = useSendMessageMutation();
 

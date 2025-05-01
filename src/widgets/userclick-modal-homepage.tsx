@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetPostsHomepageQuery } from '@/entities/posts-homepage/post-homepage'
 import {
 	Dialog,
@@ -13,7 +14,7 @@ const UserclickModalHomepage = () => {
 	const { data, error, isLoading } = useGetPostsHomepageQuery(undefined)
 	const [followState, setFollowState] = useState({})
 
-	const handleFollowClick = (userId) => {
+	const handleFollowClick = (userId: string | number) => {
 		setFollowState((prev) => ({
 			...prev,
 			[userId]: !prev[userId],
@@ -55,7 +56,7 @@ const UserclickModalHomepage = () => {
 					>
 						{data && (
 							<ul>
-								{data.data.map((user) => (
+								{data.data.map((user : any) => (
 									<li key={user.id} className='py-3'>
 										<div className='flex items-center justify-between gap-2'>
 											<div className='flex items-center gap-2'>
