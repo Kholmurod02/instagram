@@ -1,7 +1,18 @@
 import Like from '@/features/component/Like'
 import { Bookmark, MessageCircle, MoreHorizontal, Send, Volume2Icon, VolumeOff, X } from 'lucide-react'
 import { useRef, useState } from 'react'
-
+interface Post {
+	id: string;
+	userImage: string;
+	userName: string;
+	description: string;
+	postLikeCount: number;
+	liked: boolean;
+	likes: number;
+	postId: string;
+	images: string[];
+ }
+ 
 export default function InstagramModal({
 	open,
 	setOpen,
@@ -9,7 +20,7 @@ export default function InstagramModal({
 }: {
 	open: boolean
 	setOpen: (open: boolean) => void
-	post: any
+	post: Post 
 }) {
 	const [isMuted, setIsMuted] = useState(true)
 	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
@@ -51,7 +62,10 @@ export default function InstagramModal({
 												autoPlay
 												loop
 												muted={isMuted}
-												ref={(el) => (videoRefs.current[index] = el)}
+												ref={(el) => {
+													videoRefs.current[index] = el;
+												 }}
+												 
 												className='max-h-full max-w-full object-contain'
 											>
 												<source 
