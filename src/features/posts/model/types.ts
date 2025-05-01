@@ -1,4 +1,8 @@
 export interface IPost {
+	likes: number | undefined
+	liked: boolean | undefined
+	description: string
+	id: null | undefined
 	postId: number | string
 	userId: string
 	userName: string
@@ -30,4 +34,4 @@ export interface PostData {
 	postLikeCount: number
 	commentCount: number
 	saved: boolean
- }
+}
