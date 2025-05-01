@@ -8,8 +8,6 @@ import {
 	useFollowingMutation,
 	useGetReelsQuery,
 	useLikeReelMutation,
-	useProFileQuery,
-	useViewMutation,
 } from '@/entities/reels/reels'
 import {
 	AlertDialog,
@@ -42,13 +40,10 @@ import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { Link } from 'react-router'
 
 export default function ReelsPage() {
-	const { data: profile } = useProFileQuery('')
-	const [activeVideo, setActiveVideo] = useState<number | null>(null)
 	const videoRefs = useRef<HTMLVideoElement[]>([])
 	const { data: reels, error, isLoading } = useGetReelsQuery('')
 	const [followUser] = useFollowingMutation()
 	const [pausedVideo, setPausedVideo] = useState<number | null>(null)
-	const [liked, setLiked] = useState<{ [key: string]: boolean }>({})
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const [postNameComment, setPostNameComment] = useState<string>('')
 	const [isMuted, setIsMuted] = useState<boolean>(false)
@@ -59,20 +54,17 @@ export default function ReelsPage() {
 
 	const [follow, setFollow] = useState<boolean>(false)
 
-	const [idxComment, setIdxComment] = useState<null>(null)
 	const [save, setSave] = useState<null | string | number | boolean>()
 	const [deletComment] = useDeleteCommentMutation()
-	const [viewReels] = useViewMutation()
 	const [favorite] = useFavoRiteMutation()
 	const [likeReel] = useLikeReelMutation()
 	const [commentAddReel] = useCommentPostMutation()
-	const [cnt, setCnt] = useState<number>(0)
 	const [style, setStyle] = useState(false)
 	const [activeId, setActiveId] = useState<boolean | number | string | null>(
 		null
 	)
 	const [like, setLike] = useState<boolean>(false)
-	let [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
+	const [imgDecode, setImgDecode] = useState<JwtPayload | null>(null)
 
 	console.log(imgDecode?.sub)
 	
@@ -328,7 +320,7 @@ export default function ReelsPage() {
 	const [search, setSearch] = useState<string>('')
 	const [emoji, setEmoji] = useState<boolean>(false)
 
-	const [sendGet, setSendGet] = useState([
+	const sendGet = [
 		{
 			id: 1,
 			name: 'Hasan',
@@ -359,7 +351,7 @@ export default function ReelsPage() {
 			name: 'Wuayb',
 			img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwjGbch-tmbYGlBdUmxsqOF_ybn1-TIPZ9iw&s',
 		},
-	])
+	]
 	useEffect(() => {
 		if (isLoading || error) {
 			return
@@ -401,7 +393,6 @@ export default function ReelsPage() {
 		if (video) {
 			video.scrollIntoView({ behavior: 'smooth', block: 'center' })
 			video.play()
-			setActiveVideo(currentIndex)
 			setPausedVideo(null)
 		}
 	}, [currentIndex, reels?.data])
@@ -444,17 +435,13 @@ export default function ReelsPage() {
 				}
 			})
 			video.play()
-			setActiveVideo(index)
 			setPausedVideo(null)
 		} else {
 			video.pause()
-			setPausedVideo(index)
-			setActiveVideo(null)
 		}
 	}
 
 	const handleLikeClick = (reelId: string) => {
-		setLiked(prev => ({ ...prev, [reelId]: !prev[reelId] }))
 		likeReel(reelId)
 	}
 
@@ -618,7 +605,6 @@ export default function ReelsPage() {
 														className='w-6 h-6 hover:text-[#ffffff4f]'
 														onClick={() => {
 															setOpenedCommentDialog(index),
-																setIdxComment(reel.userId),
 																setIdx(reel.postId)
 														}}
 													/>
