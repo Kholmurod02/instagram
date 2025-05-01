@@ -10,7 +10,18 @@ import {
 	X,
 } from 'lucide-react'
 import { useRef, useState } from 'react'
-
+interface Post {
+	id: string;
+	userImage: string;
+	userName: string;
+	description: string;
+	postLikeCount: number;
+	liked: boolean;
+	likes: number;
+	postId: string;
+	images: string[];
+ }
+ 
 export default function InstagramModal({
 	open,
 	setOpen,
@@ -18,7 +29,11 @@ export default function InstagramModal({
 }: {
 	open: boolean
 	setOpen: (open: boolean) => void
+<<<<<<< HEAD
 	post: IPost
+=======
+	post: Post 
+>>>>>>> 59d48aa28cf8063713ad9dda3031311331980604
 }) {
 	const [isMuted, setIsMuted] = useState(true)
 	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
@@ -61,9 +76,16 @@ export default function InstagramModal({
 												autoPlay
 												loop
 												muted={isMuted}
+<<<<<<< HEAD
 												ref={el => {
 													videoRefs.current[index] = el
 												}}
+=======
+												ref={(el) => {
+													videoRefs.current[index] = el;
+												 }}
+												 
+>>>>>>> 59d48aa28cf8063713ad9dda3031311331980604
 												className='max-h-full max-w-full object-contain'
 											>
 												<source
