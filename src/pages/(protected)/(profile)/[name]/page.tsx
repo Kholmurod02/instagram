@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	useGetFavoritePostsQuery,
 	useGetMyPostsQuery,
@@ -15,14 +16,14 @@ import InfoFollowers from '@/shared/ui/infoFollowers'
 import InfoProfile from '@/shared/ui/infoProfile'
 import ReelsDiv from '@/shared/ui/reels-div'
 import ReelsDiv2 from '@/shared/ui/ReelsDiv2'
-import DefaultImageUser from "@/assets/UserIcon.png"
+import DefaultImageUser from '@/assets/UserIcon.png'
 import StoryCircle from '@/shared/ui/story-circle'
 
 import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
 import { StoryModal } from '@/widgets/StoriesModal'
-import InstagramModalView from '@/widgets/VeiwModal'
+import InstagramModalView, { Post } from '@/widgets/VeiwModal'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { skipToken } from '@reduxjs/toolkit/query'
@@ -37,7 +38,7 @@ export default function ProfileByNamePage() {
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
 	const [view, setView] = useState<boolean>(false)
-	const [selectPost, setSelectPost] = useState({})
+	const [selectPost, setSelectPost] = useState<Post | null | any >(null)
 	const { id } = useParams()
 	function clickOpenModal() {
 		setIsViewed(true)
@@ -147,31 +148,29 @@ export default function ProfileByNamePage() {
 							: 'bg-gradient-to-tr from-yellow-400 to-pink-600'
 					}`}
 				>
-					
 					<Avatar
-	className='w-full h-full rounded-full'
-	onClick={clickOpenModal}
->
-	<AvatarImage
-		src={
-			profileData?.data?.image
-				? `https://instagram-api.softclub.tj/images/${profileData?.data?.image}`
-				: profileIdData?.data?.image
-				? `https://instagram-api.softclub.tj/images/${profileIdData?.data?.image}`
-				: DefaultImageUser
-		}
-		className='w-full h-full rounded-full object-cover'
-		alt='Profile Image'
-	/>
-	<AvatarFallback>
-		<img
-			src={DefaultImageUser}
-			className='w-full h-full rounded-full object-cover'
-			alt='Default Profile Image'
-		/>
-	</AvatarFallback>
-</Avatar>
-
+						className='w-full h-full rounded-full'
+						onClick={clickOpenModal}
+					>
+						<AvatarImage
+							src={
+								profileData?.data?.image
+									? `https://instagram-api.softclub.tj/images/${profileData?.data?.image}`
+									: profileIdData?.data?.image
+									? `https://instagram-api.softclub.tj/images/${profileIdData?.data?.image}`
+									: DefaultImageUser
+							}
+							className='w-full h-full rounded-full object-cover'
+							alt='Profile Image'
+						/>
+						<AvatarFallback>
+							<img
+								src={DefaultImageUser}
+								className='w-full h-full rounded-full object-cover'
+								alt='Default Profile Image'
+							/>
+						</AvatarFallback>
+					</Avatar>
 				</div>
 
 				<StoryModal
@@ -284,29 +283,31 @@ export default function ProfileByNamePage() {
 			{OpenPosts && (
 				<ReelsContainer>
 					{postsData || PostsById.data ? (
-						(postsData || PostsById.data)?.toReversed()?.map(
-							(post: {
-								commentCount: string | number
-								images: unknown[]
-								postLikeCount: number
-								comments: object
-								id: number | string
-							}) => (
-								<div
-									className=''
-									onClick={() => {
-										setView(true)
-										setSelectPost(post)
-									}}
-								>
-									<ReelsDiv
-										img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
-										likes={post.postLikeCount}
-										comments={post.commentCount}
-									/>
-								</div>
+						(postsData || PostsById.data)
+							?.toReversed()
+							?.map(
+								(post: {
+									commentCount: string | number
+									images: unknown[]
+									postLikeCount: number
+									comments: object
+									id: number | string
+								}) => (
+									<div
+										className=''
+										onClick={() => {
+											setView(true)
+											setSelectPost(post)
+										}}
+									>
+										<ReelsDiv
+											img={`https://instagram-api.softclub.tj/images/${post.images[0]}`}
+											likes={post.postLikeCount}
+											comments={post.commentCount}
+										/>
+									</div>
+								)
 							)
-						)
 					) : (
 						<div className='w-full h-full flex items-center justify-center'>
 							<div className=''>
@@ -372,7 +373,9 @@ export default function ProfileByNamePage() {
 					)}
 				</ReelsContainer>
 			)}
-			<InstagramModalView open={view} setOpen={setView} post={selectPost} />
+			{selectPost && (
+				<InstagramModalView open={view} setOpen={setView} post={selectPost} />
+			)}{' '}
 		</div>
 	)
 }
