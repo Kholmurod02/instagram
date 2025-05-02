@@ -23,7 +23,7 @@ import HeaderSectionProfile from '@/widgets/header-section-profile'
 import ReelsContainer from '@/widgets/reels-container'
 import StorySection from '@/widgets/section-story'
 import { StoryModal } from '@/widgets/StoriesModal'
-import InstagramModalView, { Post } from '@/widgets/VeiwModal'
+import InstagramModalView from '@/widgets/VeiwModal'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { skipToken } from '@reduxjs/toolkit/query'
@@ -38,7 +38,7 @@ export default function ProfileByNamePage() {
 	const [OpenSave, setOpenSave] = useState<boolean>(false)
 	const [OpenReels, setOpenReels] = useState<boolean>(false)
 	const [view, setView] = useState<boolean>(false)
-	const [selectPost, setSelectPost] = useState<Post | null | any >(null)
+	const [selectPost, setSelectPost] = useState< null | any >(null)
 	const { id } = useParams()
 	function clickOpenModal() {
 		setIsViewed(true)

@@ -21,7 +21,7 @@ export const chatApi = createApi({
         }),
         getChatById: builder.query({
             query: (id) => `/Chat/get-chat-by-id?chatId=${id}`,
-            providesTags: (result, error, id) => [{ type: "Chats", id }], 
+            providesTags: (id) => [{ type: "Chats", id }], 
         }),
         sendMessage: builder.mutation({
             query: (formData) => ({
