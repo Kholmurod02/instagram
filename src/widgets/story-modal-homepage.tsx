@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ShareModal from '@/features/component/shere'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import { Dialog, DialogContent } from '@/shared/ui/dialog'
@@ -50,8 +49,7 @@ export function StoryModalHomepage({
   const [isMuted, setIsMuted] = useState<boolean[]>([])
   const [videoDurations, setVideoDurations] = useState<number[]>([])
   const [progress, setProgress] = useState(0)
-  // @ts-ignore
-  const progressInterval = useRef<NodeJS.Timeout>()
+  const progressInterval = useRef<NodeJS.Timeout | number | undefined>(undefined)
   const isInitialMount = useRef(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [likedStories, setLikedStories] = useState<boolean[]>([])

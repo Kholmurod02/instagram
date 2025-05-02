@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
 export function ChatByIdPage() {
   const navigate = useNavigate();
-  const { id  : string } = useParams();
+  const  id:string = useParams().id;
   const allEmojis = [
     "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
     "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
