@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
-import { Smile } from 'lucide-react' 
-import { useAddCommentMutation } from '../../entities/post/postApi'
+import { Smile } from 'lucide-react'
+import {
+	useAddCommentMutation,
+	useGetPostsQuery,
+} from '../../entities/post/postApi'
 import { Popover, PopoverTrigger, PopoverContent } from '@/shared/ui/popover'
 
 interface CommentProps {
@@ -11,6 +14,8 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 	const [commentText, setCommentText] = useState('')
 	const [addComment] = useAddCommentMutation()
+	const { refetch } = useGetPostsQuery(undefined)
+	const [comments, setComments] = useState<string[]>(initialComments || [])
 
 	const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setCommentText(e.target.value)
@@ -19,15 +24,19 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 	const handleAddComment = async () => {
 		if (commentText.trim()) {
 			try {
-				await addComment({ postId, comment: commentText })
+				const comment = {
+					postId,
+					comment: commentText,
+				}
+				await addComment(comment)
+				refetch()
+				setComments(prev => [...prev, commentText])
 				setCommentText('')
 			} catch (err) {
 				console.error('Error adding comment:', err)
 			}
 		}
 	}
-
-	const comments = Array.isArray(initialComments) ? initialComments : []
 
 	const emojis = [
 		'😀',
@@ -281,6 +290,13 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 	return (
 		<div className='flex flex-col'>
 			<div className='flex flex-col space-y-2'>
+			<div className='space-y-2 mt-4'>
+					{comments.map((comment, index) => (
+						<div key={index} className='text-sm text-white'>
+							{comment}
+						</div>
+					))}
+				</div>
 				<div className='flex items-center gap-2 mt-2'>
 					<Popover>
 						<PopoverTrigger asChild>
@@ -319,13 +335,7 @@ const Comment: React.FC<CommentProps> = ({ postId, initialComments }) => {
 					</button>
 				</div>
 
-				<div className='space-y-2 mt-4'>
-					{comments.map((comment, index) => (
-						<div key={index} className='text-sm text-gray-700'>
-							{comment}
-						</div>
-					))}
-				</div>
+				
 			</div>
 		</div>
 	)
