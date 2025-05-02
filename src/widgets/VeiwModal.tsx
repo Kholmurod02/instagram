@@ -1,9 +1,9 @@
 import Like from '@/features/component/Like'
 import { Bookmark, MessageCircle, MoreHorizontal, Send, Volume2Icon, VolumeOff, X } from 'lucide-react'
 import { useRef, useState } from 'react'
-interface Post {
-	id: string;
-	userImage?: string;
+export interface Post {
+	id: string | number;
+	userImage?: string | number | undefined ;
 	userName: string;
 	description?: string;
 	postLikeCount: number;
@@ -11,6 +11,8 @@ interface Post {
 	likes: number;
 	postId: string;
 	images: string[];
+	commentCount: string ;
+	comments: object;
  }
  
 export default function InstagramModal({
