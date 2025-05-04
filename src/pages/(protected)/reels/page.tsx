@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	useCommentPostMutation,
 	useDeleteCommentMutation,
@@ -42,7 +39,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { Link } from 'react-router'
 
 export default function ReelsPage() {
-	const { data: profile } = useProFileQuery('')
+
 	const [activeVideo, setActiveVideo] = useState<number | null>(null)
 	const videoRefs = useRef<HTMLVideoElement[]>([])
 	const { data: reels, error, isLoading } = useGetReelsQuery('')
@@ -496,7 +493,7 @@ export default function ReelsPage() {
 								</div>
 							</div>
 						)}
-						<div className='absolute top-[160px] right-[-420px]  w-[400px]  h-[70vh] sm:h-fit bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
+						<div className='absolute top-[100px] right-[-420px]  w-[400px]  h-[70vh] sm:h-fit bg-[#262626] text-white p-4 rounded-xl shadow-lg border border-gray-700 z-50'>
 							<div className='flex justify-between items-center border-b border-gray-600 pb-2'>
 								<h2 className='font-semibold text-lg'>
 									{reels.data[currentIndex]?.comments?.length || 0} Комментариев
