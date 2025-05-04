@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,6 +7,7 @@ import { z } from "zod";
 import { FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Logo from '../../assets/photo_2025-04-04_16-36-39.jpg';
+import { useNavigate } from 'react-router'
 
 const loginSchema = z.object({
   userName: z.string().min(3, "Имя пользователя должно содержать минимум 3 символа"),
@@ -68,7 +70,7 @@ const LoginOptions = () => {
 };
 
 export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
-  const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(loginSchema) });
+  const { register, handleSubmit, } = useForm({ resolver: zodResolver(loginSchema) });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -95,13 +97,14 @@ export function LoginForm({ onSubmit }: { onSubmit: (data: any) => void }) {
 
 export function RegisterForm({ onSubmit }: { onSubmit: (data: any) => void }) {
   const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(registerSchema) });
+  const navigate = useNavigate()
 
   const handleFacebookLogin = () => {
     window.location.href = "https://www.facebook.com/login/";
   };
 
   const handleLogin = () => {
-    window.location.href = "/login";
+    navigate("/login")
   };
 
   return (

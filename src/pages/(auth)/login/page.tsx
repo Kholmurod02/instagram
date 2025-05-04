@@ -12,10 +12,13 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
+<<<<<<< HEAD
+  const handleLogin = async (data: { userName: string; password: string }) => {
+=======
   const handleLogin = async (data: { email: string; password: string }) => {
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
     try {
       const response = await login(data).unwrap();
-      console.log("Успешный вход:", response);
   
       const token = response?.data;
   
@@ -25,8 +28,13 @@ export default function LoginPage() {
       } else {
         setError("Invalid login response");
       }
+<<<<<<< HEAD
+    } catch (error: any) {
+     console.error(error)
+=======
     } catch (error) {
      console.log(error)
+>>>>>>> e4766e3beb45db785fde0e37310d3e02eb3bbe29
     }
   };
   

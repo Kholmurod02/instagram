@@ -1,7 +1,16 @@
 import Like from '@/features/component/Like'
-import { Bookmark, MessageCircle, MoreHorizontal, Send, Volume2Icon, VolumeOff, X } from 'lucide-react'
+import { IPost } from '@/features/posts/model/types'
+import {
+	Bookmark,
+	MessageCircle,
+	MoreHorizontal,
+	Send,
+	Volume2Icon,
+	VolumeOff,
+	X,
+} from 'lucide-react'
 import { useRef, useState } from 'react'
-
+ 
 export default function InstagramModal({
 	open,
 	setOpen,
@@ -9,13 +18,13 @@ export default function InstagramModal({
 }: {
 	open: boolean
 	setOpen: (open: boolean) => void
-	post: any
+	post: IPost
 }) {
 	const [isMuted, setIsMuted] = useState(true)
 	const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 	const mutedVideo = () => {
 		setIsMuted(!isMuted)
-		videoRefs.current.forEach((video) => {
+		videoRefs.current.forEach(video => {
 			if (video) video.muted = isMuted
 		})
 	}
@@ -24,8 +33,7 @@ export default function InstagramModal({
 		<>
 			{open && (
 				<div
-					onClick={(e) => {
-						
+					onClick={e => {
 						if (e.target === e.currentTarget) {
 							setOpen(false)
 						}
@@ -40,26 +48,34 @@ export default function InstagramModal({
 					</button>
 
 					<div className='flex flex-col md:flex-row w-full max-w-6xl h-[90vh] bg-black'>
-						
 						<div className='relative flex-1 bg-black flex items-center justify-center min-h-[50vh] md:min-h-full'>
 							<div className='w-full h-full flex items-center justify-center'>
 								{post?.images?.map((img: string, index: number) =>
 									img.toLowerCase().endsWith('.mp4') ? (
-										<div key={post.id} className='relative w-[70%] h-[100%] left-[18%]'>
+										<div
+											key={post.id}
+											className='relative w-[70%] h-[100%] left-[18%]'
+										>
 											<video
 												key={index}
 												autoPlay
 												loop
 												muted={isMuted}
-												ref={(el) => (videoRefs.current[index] = el)}
+												ref={el => {
+													videoRefs.current[index] = el
+												}}
+
 												className='max-h-full max-w-full object-contain'
 											>
-												<source 
+												<source
 													src={`https://instagram-api.softclub.tj/images/${img}`}
 													type='video/mp4'
 												/>
 											</video>
-											<button onClick={mutedVideo} className='bg-[#202020] absolute rounded-full p-[10px] z-50 right-60 cursor-pointer bottom-0'>
+											<button
+												onClick={mutedVideo}
+												className='bg-[#202020] absolute rounded-full p-[10px] z-50 right-60 cursor-pointer bottom-0'
+											>
 												{isMuted ? (
 													<VolumeOff className='text-[#fff]' size={15} />
 												) : (
@@ -101,7 +117,6 @@ export default function InstagramModal({
 								</button>
 							</div>
 
-							
 							<div className='flex-1 overflow-y-auto p-4'>
 								<div className='flex'>
 									<div className='w-8 h-8 rounded-full overflow-hidden'>
@@ -129,10 +144,13 @@ export default function InstagramModal({
 								</div>
 							</div>
 
-							
 							<div className='border-t border-gray-800 p-4 flex justify-between'>
 								<div className='flex space-x-4 cursor-pointer'>
-									<Like postId={post.postId} initialLiked={post.liked} initialLikes={post.likes} />
+									<Like
+										postId={String(post.postId)}
+										initialLiked={post.liked}
+										initialLikes={post.likes}
+									/>
 									<button>
 										<MessageCircle size={24} />
 									</button>

@@ -13,15 +13,15 @@ export const chatApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ["Chats"], // Исправил на Chats (с большой буквы, это стандарт Redux)
+    tagTypes: ["Chats"], 
     endpoints: (builder) => ({
         getChats: builder.query({
             query: () => "/Chat/get-chats",
-            providesTags: ["Chats"], // Чаты кешируются
+            providesTags: ["Chats"],
         }),
         getChatById: builder.query({
             query: (id) => `/Chat/get-chat-by-id?chatId=${id}`,
-            providesTags: (result, error, id) => [{ type: "Chats", id }], // Кеширование по ID
+            providesTags: (id) => [{ type: "Chats", id }], 
         }),
         sendMessage: builder.mutation({
             query: (formData) => ({

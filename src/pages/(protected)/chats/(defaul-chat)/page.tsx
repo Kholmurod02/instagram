@@ -11,8 +11,17 @@ import {
 } from "@/shared/ui/dialog"
 import { Input } from "@/shared/ui/input"
 import { useSearchUsersQuery } from "@/entities/search/search"
-import { NavLink, useNavigate } from "react-router"
 import { useCreateChatMutation } from "@/entities/chats/chat-api"
+interface User {
+  id: string | string;
+  userId: string;
+  userName: string;
+  userImage: string;
+  avatar: string;  
+  fullName: string; 
+  subscribersCount: number; 
+}
+
 
 export default function DefaultChatPage() {
   const [open, setOpen] = useState(false)
@@ -26,7 +35,7 @@ const handleChat=(id:string)=>{
 }
 
   return (
-    <div className="flex flex-col items-center justify-center  min-h-[100vh] bg-black text-white p-24 w-[720px]">
+    <div className="flex flex-col items-center justify-center  min-h-[100vh] bg-black text-white p-24 w-[600px]">
       <div className="flex flex-col items-center gap-6 max-w-md text-center mb-10">
         <div className="rounded-full bg-black p-5 border-2 border-white/80 w-28 h-28 flex items-center justify-center 
                     hover:border-white hover:scale-[1.03] transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
@@ -71,9 +80,8 @@ const handleChat=(id:string)=>{
             <div className="flex flex-col gap-3 overflow-hidden">
               {
                 value == '' ? '' :
-                  data?.data?.slice(0, 3).map((user) => {
+                  data?.data?.slice(0, 3).map((user:User) => {
                     return <>
-                      {/* <NavLink to={`/chat/${chatId}`}> */}
 
                       <div key={user.id}
                        className='flex py-[8px] hover:bg-[#20272b] items-center gap-[20px] px-[20px]'
@@ -84,9 +92,8 @@ const handleChat=(id:string)=>{
                           <p className='text-[16px] tracking-[1px] font-semibold'>{user.userName}</p>
                           <p className='text-[12px]'>{user.fullName} • Подписчики: {user.subscribersCount} </p>
                         </div>
-                      </div>
+                      </div> 
 
-                      {/* </NavLink> */}
                     </>
                   })
               }

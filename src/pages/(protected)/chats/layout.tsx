@@ -1,16 +1,12 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import { Edit, ChevronDown } from "lucide-react"
 import { Avatar } from "@/shared/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import userImg from '@/assets/UserIcon.png'
-import { Outlet, useLocation, useNavigate, useParams } from "react-router"
+import { Outlet, useNavigate, useParams } from "react-router"
 import { useDeleteChatMutation, useGetChatsQuery } from "@/entities/chats/chat-api"
 import { jwtDecode } from 'jwt-decode'
-import { useGetProfileByIdQuery } from "@/app/store/profileSlice/profileSlice"
-import DefaultChatPage from "./(defaul-chat)/page"
-import { Dialog } from "@/shared/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 import { Button } from "@/shared/ui/button"
 
@@ -25,7 +21,6 @@ interface UserType {
 }
 
 export default function LayoutChats() {
-  const [activeTab, setActiveTab] = useState("messages")
   const [selectedChat, setSelectedChat] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
@@ -33,16 +28,16 @@ export default function LayoutChats() {
 
   const { data, error, isLoading } = useGetChatsQuery()
 
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+	useEffect(() => {
+		const checkIfMobile = () => {
+			setIsMobile(window.innerWidth < 768)
+		}
 
-    checkIfMobile()
-    window.addEventListener('resize', checkIfMobile)
+		checkIfMobile() 
+		window.addEventListener('resize', checkIfMobile)
 
-    return () => window.removeEventListener('resize', checkIfMobile)
-  }, [])
+		return () => window.removeEventListener('resize', checkIfMobile)
+	}, [])
 
   const [tokenId, setTokenId] = useState(null)
   const [userName, setUserName] = useState("")
@@ -72,13 +67,13 @@ export default function LayoutChats() {
     localStorage.setItem("user",JSON.stringify(chat))
   }
 
-  const handleBackToList = () => {
-    navigate('/chats')
-  }
+	const handleBackToList = () => {
+		navigate('/chats')
+	}
 
-  const [deleteChat] = useDeleteChatMutation()
+	const [deleteChat] = useDeleteChatMutation()
 
-  const showBackButton = isMobile && selectedChat !== null
+	const showBackButton = isMobile && selectedChat !== null
 
   return (
     <div className="flex w-full   bg-black text-white">
@@ -89,22 +84,22 @@ export default function LayoutChats() {
         md:flex md:w-96 lg:w-[30rem] h-[100vh] 
         flex-col bg-black border-r border-gray-800
       `}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold truncate max-w-[180px]">
-              {userName}
-            </h1>
-            <ChevronDown className="h-5 w-5 flex-shrink-0 text-gray-400" />
-          </div>
-          <button
-            className="p-2 hover:bg-gray-800 rounded-full transition-colors"
-            aria-label="Edit"
-          >
-            <Edit className="h-5 w-5 text-gray-400" />
-          </button>
-        </div>
+			>
+				{/* Header */}
+				<div className='flex items-center justify-between p-4 border-b border-gray-800'>
+					<div className='flex items-center gap-2'>
+						<h1 className='text-xl font-bold truncate max-w-[180px]'>
+							{userName}
+						</h1>
+						<ChevronDown className='h-5 w-5 flex-shrink-0 text-gray-400' />
+					</div>
+					<button
+						className='p-2 hover:bg-gray-800 rounded-full transition-colors'
+						aria-label='Edit'
+					>
+						<Edit className='h-5 w-5 text-gray-400' />
+					</button>
+				</div>
 
         {/* Messages List */}
         <div className="flex-1 flex flex-col md:w-full w-[385px] h-[calc(100%-64px)] overflow-y-auto">
@@ -189,9 +184,9 @@ export default function LayoutChats() {
 
       </div>
 
-      {/* Right content area - full width on mobile when chat selected */}
-      <div
-        className={`
+			{/* Right content area - full width on mobile when chat selected */}
+			<div
+				className={`
         ${!selectedChat && isMobile ? 'hidden' : 'flex w-full'}
         md:flex md:flex-1
         flex-col h-full bg-black

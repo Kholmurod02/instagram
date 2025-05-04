@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetPostsHomepageQuery } from '@/entities/posts-homepage/post-homepage'
 import {
 	Dialog,
@@ -8,20 +9,25 @@ import {
 import { useState } from 'react'
 import { Link } from 'react-router'
 
+// Define the type for followState
+interface FollowState {
+	[userId: string]: boolean // Assuming userId is a string and the value is a boolean indicating if the user is followed
+}
+
 const UserclickModalHomepage = () => {
 	const [open, setOpen] = useState(false)
 	const { data, error, isLoading } = useGetPostsHomepageQuery(undefined)
-	const [followState, setFollowState] = useState({})
+	const [followState, setFollowState] = useState<FollowState>({})
 
-	const handleFollowClick = (userId) => {
-		setFollowState((prev) => ({
+	const handleFollowClick = (userId: string | number) => {
+		setFollowState(prev => ({
 			...prev,
-			[userId]: !prev[userId],
+			[userId]: !prev[userId], // Toggle follow state for the user
 		}))
 	}
 
-	if (error) return <div></div>
-	if (!data || data.length === 0) return <div></div>
+	if (error) return <div>Error loading data</div>
+	if (!data || data.length === 0) return <div>No data available</div>
 	if (isLoading)
 		return (
 			<div className='flex justify-center items-center h-full text-white font-semibold'>
@@ -32,7 +38,7 @@ const UserclickModalHomepage = () => {
 	return (
 		<>
 			<div className='flex justify-between'>
-				<h2 className='text-gray-300'>Recomendate for you</h2>
+				<h2 className='text-gray-300'>Recommended for you</h2>
 				<p
 					className='hover:text-gray-400 cursor-pointer'
 					onClick={() => setOpen(true)}
@@ -44,7 +50,7 @@ const UserclickModalHomepage = () => {
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className='max-h-[90vh] overflow-hidden'>
 					<DialogHeader>
-						<DialogTitle>Recomendations</DialogTitle>
+						<DialogTitle>Recommendations</DialogTitle>
 					</DialogHeader>
 					<div
 						className='overflow-y-auto max-h-[calc(90vh-100px)]'
@@ -55,8 +61,8 @@ const UserclickModalHomepage = () => {
 					>
 						{data && (
 							<ul>
-								{data.data.map((user) => (
-									<li key={user.id} className='py-3'>
+								{data.data.map((user: any) => (
+									<li key={user.postId} className='py-3'>
 										<div className='flex items-center justify-between gap-2'>
 											<div className='flex items-center gap-2'>
 												<div className='w-12 h-12 rounded-full p-[1px] border-2 border-transparent cursor-pointer'>
