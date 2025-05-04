@@ -1,6 +1,3 @@
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Smile, Mic, ImageIcon, Sticker, Heart, ArrowLeft, MoreVertical, Phone, Video, SendHorizontal } from "lucide-react";
@@ -12,436 +9,73 @@ import { useDeleteMessageMutation, useGetChatByIdQuery, useSendMessageMutation }
 import { jwtDecode } from "jwt-decode";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 
-interface User {
-  receiveUserImage: string;
-  receiveUserName: string;
-}
 
-======= 
-import { useEffect, useState } from 'react'
-import { format } from 'date-fns'
-import {
-	Smile,
-	Mic,
-	ImageIcon,
-	Sticker,
-	Heart,
-	ArrowLeft,
-	MoreVertical,
-	Phone,
-	Video,
-	SendHorizontal,
-} from 'lucide-react'
 
-import { Button } from '@/shared/ui/button'
-import { cn } from '@/shared/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
-import { useNavigate, useParams } from 'react-router'
-import {
-	useDeleteMessageMutation,
-	useGetChatByIdQuery,
-	useSendMessageMutation,
-} from '@/entities/chats/chat-api'
-import { jwtDecode } from 'jwt-decode'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
-
-// const formSchema = z.object({
-//   message: z.string().min(1, { message: "Message cannot be empty." }),
-// });
-interface JwtPayload {
-  name: string;
-  // add other properties as needed
-}
 interface Message {
-  messageId: string;
-  userName: string;
-  userImage: string;
-  messageText: string;
-  sendMassageDate: string;
-  file?: string;
+	messageId: string;
+	userName: string;
+	userImage: string;
+	messageText: string;
+	sendMassageDate: string;
+	file?: string;
 }
 
 interface JwtPayload {
-  name: string;
-  [key: string]: any;
+	name: string;
+	[key: string]: any;
 }
 
 export function ChatByIdPage() {
-  const navigate = useNavigate();
-  const { id  : string } = useParams();
-  const allEmojis = [
-    "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
-    "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
-    "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥸",
-    "🤩", "🥳", "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️",
-    "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡",
-    "🤬", "🤯", "😳", "🥵", "🥶", "😱", "😨", "😰", "😥", "😓",
-    "🤗", "🤔", "🤭", "🤫", "🤥", "😶", "😐", "😑", "😬", "🙄",
-    "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😵",
-    "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠",
-    "😈", "👿", "👹", "👺", "🤡", "💩", "👻", "💀", "☠️", "👽",
-    "👾", "🤖", "🎃", "😺", "😸", "😹", "😻", "😼", "😽", "🙀",
-    "😿", "😾", "🙈", "🙉", "🙊", "💋", "💌", "💘", "💝", "💖",
-    "💗", "💓", "💞", "💕", "💟", "❣️", "💔", "❤️", "🧡", "💛",
-    "💚", "💙", "💜", "🤎", "🖤", "🤍", "💯", "💢", "💥", "💫",
-    "💦", "💨", "🕳️", "💣", "💬", "👁️‍🗨️", "🗨️", "🗯️", "💭", "💤",
-  ];
-
-  const [message, setMessage] = useState("");
-  const [file, setFile] = useState<FileList | null>(null);
-  const [userName, setUserName] = useState("");
-
-  const [message, setMessage] = useState("")
-  const [file, setFile] = useState("")
-  const formData = new FormData()
-  formData.append("ChatId", id)
-  formData.append("MessageText", message)
-=======
-  sendMassageDate: string | number | Date;
-  file?: string;
-}
-export function ChatByIdPage() {
-	const navigate = useNavigate()
-	const id: string | number | never | undefined = useParams().id
+	const navigate = useNavigate();
+	const { id } = useParams<{ id: string }>();
 	const allEmojis = [
-		'😀',
-		'😃',
-		'😄',
-		'😁',
-		'😆',
-		'😅',
-		'😂',
-		'🤣',
-		'😊',
-		'😇',
-		'🙂',
-		'🙃',
-		'😉',
-		'😌',
-		'😍',
-		'🥰',
-		'😘',
-		'😗',
-		'😙',
-		'😚',
-		'😋',
-		'😛',
-		'😝',
-		'😜',
-		'🤪',
-		'🤨',
-		'🧐',
-		'🤓',
-		'😎',
-		'🥸',
-		'🤩',
-		'🥳',
-		'😏',
-		'😒',
-		'😞',
-		'😔',
-		'😟',
-		'😕',
-		'🙁',
-		'☹️',
-		'😣',
-		'😖',
-		'😫',
-		'😩',
-		'🥺',
-		'😢',
-		'😭',
-		'😤',
-		'😠',
-		'😡',
-		'🤬',
-		'🤯',
-		'😳',
-		'🥵',
-		'🥶',
-		'😱',
-		'😨',
-		'😰',
-		'😥',
-		'😓',
-		'🤗',
-		'🤔',
-		'🤭',
-		'🤫',
-		'🤥',
-		'😶',
-		'😐',
-		'😑',
-		'😬',
-		'🙄',
-		'😯',
-		'😦',
-		'😧',
-		'😮',
-		'😲',
-		'🥱',
-		'😴',
-		'🤤',
-		'😪',
-		'😵',
-		'🤐',
-		'🥴',
-		'🤢',
-		'🤮',
-		'🤧',
-		'😷',
-		'🤒',
-		'🤕',
-		'🤑',
-		'🤠',
-		'😈',
-		'👿',
-		'👹',
-		'👺',
-		'🤡',
-		'💩',
-		'👻',
-		'💀',
-		'☠️',
-		'👽',
-		'👾',
-		'🤖',
-		'🎃',
-		'😺',
-		'😸',
-		'😹',
-		'😻',
-		'😼',
-		'😽',
-		'🙀',
-		'😿',
-		'😾',
-		'🙈',
-		'🙉',
-		'🙊',
-		'💋',
-		'💌',
-		'💘',
-		'💝',
-		'💖',
-		'💗',
-		'💓',
-		'💞',
-		'💕',
-		'💟',
-		'❣️',
-		'💔',
-		'❤️',
-		'🧡',
-		'💛',
-		'💚',
-		'💙',
-		'💜',
-		'🤎',
-		'🖤',
-		'🤍',
-		'💯',
-		'💢',
-		'💥',
-		'💫',
-		'💦',
-		'💨',
-		'🕳️',
-		'💣',
-		'💬',
-		'👁️‍🗨️',
-		'🗨️',
-		'🗯️',
-		'💭',
-		'💤',
-		'👋',
-		'🤚',
-		'🖐️',
-		'✋',
-		'🖖',
-		'👌',
-		'🤏',
-		'✌️',
-		'🤞',
-		'🤟',
-		'🤘',
-		'🤙',
-		'👈',
-		'👉',
-		'👆',
-		'👇',
-		'☝️',
-		'👍',
-		'👎',
-		'✊',
-		'👊',
-		'🤛',
-		'🤜',
-		'👏',
-		'🙌',
-		'👐',
-		'🤲',
-		'🤝',
-		'🙏',
-		'✍️',
-		'💅',
-		'🤳',
-		'💪',
-		'🦾',
-		'🦿',
-		'🦵',
-		'🦶',
-		'👂',
-		'🦻',
-		'👃',
-		'🧠',
-		'🦷',
-		'🦴',
-		'👀',
-		'👁️',
-		'👅',
-		'👄',
-		'👶',
-		'🧒',
-		'👦',
-		'👧',
-		'🧑',
-		'👨',
-		'👩',
-		'🧔',
-		'🧓',
-		'👴',
-		'👵',
-		'🙍',
-		'🙎',
-		'🙅',
-		'🙆',
-		'💁',
-		'🙋',
-		'🧏',
-		'🙇',
-		'🤦',
-		'🤷',
-		'👮',
-		'🕵️',
-		'💂',
-		'🥷',
-		'👷',
-		'🤴',
-		'👸',
-		'👳',
-		'👲',
-		'🧕',
-		'🤵',
-		'👰',
-		'🤰',
-		'🤱',
-		'👼',
-		'🎅',
-		'🤶',
-		'🧙',
-		'🧚',
-		'🧛',
-		'🧜',
-		'🧝',
-		'🧞',
-		'🧟',
-		'💆',
-		'💇',
-		'🚶',
-		'🧍',
-		'🧎',
-		'🏃',
-		'💃',
-		'🕺',
-		'🕴️',
-		'👯',
-		'🧖',
-		'🧗',
-		'🤺',
-		'🏇',
-		'⛷️',
-		'🏂',
-		'🏌️',
-		'🏄',
-		'🚣',
-		'🏊',
-		'⛹️',
-		'🏋️',
-		'🚴',
-		'🚵',
-		'🤸',
-		'🤼',
-		'🤽',
-		'🤾',
-		'🤹',
-		'🧘',
-		'🛀',
-		'🛌',
-		'🧑‍🤝‍🧑',
-		'👭',
-		'👫',
-		'👬',
-		'💏',
-		'💑',
-		'👪',
-		'🗣️',
-		'👤',
-		'👥',
-		'🫂',
-		'👣',
-		'🦰',
-		'🦱',
-		'🦳',
-		'🦲',
-	]
+		"😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
 
-	const [message, setMessage] = useState('')
-	const [file, setFile] = useState<File[]>([])
-  const formData = new FormData();
-  formData.append('ChatId', id ?? ''); 
-  formData.append('MessageText', message ?? '');
-  for (let i = 0; i < file.length; i++) {
-    formData.append('file', file[i]);
-  }
+	];
 
-	const [deleteMessage] = useDeleteMessageMutation()
+	const [message, setMessage] = useState("");
+	const [file, setFile] = useState<File[]>([]);
+	const [userName, setUserName] = useState("");
 
-	const { data, error, isLoading } = useGetChatByIdQuery(id, {
+	const [deleteMessage] = useDeleteMessageMutation();
+	const { data, error, isLoading } = useGetChatByIdQuery(id ?? '', {
 		skip: !id,
-	})
+	});
+	const [sendMessage] = useSendMessageMutation();
 
-	const [sendMessage] = useSendMessageMutation()
 	const handleBackToList = () => {
-		navigate('/chats')
-	}
+		navigate('/chats');
+	};
 
-	const [userName, setUserName] = useState('')
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('access_token');
-    if (accessToken) {
-      const decodedToken = jwtDecode<JwtPayload>(accessToken);
-      setUserName(decodedToken.name);
-    }
-  }, [])
-  function addSmile(el: string) {
-    setMessage(prevMessage => prevMessage + el);
-  }
-  
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		if (message.trim().length > 0) {
-			sendMessage(formData)
-			setMessage('')
-			setFile([])
+	useEffect(() => {
+		const accessToken = localStorage.getItem('access_token');
+		if (accessToken) {
+			const decodedToken = jwtDecode<JwtPayload>(accessToken);
+			setUserName(decodedToken.name);
 		}
+	}, []);
+
+	function addSmile(el: string) {
+		setMessage(prevMessage => prevMessage + el);
 	}
 
-  const userData = localStorage.getItem('user');
-  const infoUser = userData ? JSON.parse(userData) : null;
-  
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (message.trim().length > 0 || file.length > 0) {
+			const formData = new FormData();
+			formData.append('ChatId', id ?? '');
+			formData.append('MessageText', message);
+			file.forEach(f => formData.append('file', f));
+
+			sendMessage(formData);
+			setMessage('');
+			setFile([]);
+		}
+	};
+
+	const userData = localStorage.getItem('user');
+	const infoUser = userData ? JSON.parse(userData) : null;
+
 	return (
 		<div className='flex flex-col h-[600px] md:h-screen md:w-[700px] w-full mx-auto bg-background'>
 			{/* Header */}
@@ -458,16 +92,16 @@ export function ChatByIdPage() {
 					<div className='flex items-center gap-2'>
 						<Avatar>
 							<AvatarImage
-								src={`https://instagram-api.softclub.tj/images/${infoUser.receiveUserImage}`}
+								src={`https://instagram-api.softclub.tj/images/${infoUser?.receiveUserImage}`}
 								alt='User Avatar'
 							/>
 							<AvatarFallback>
-								{infoUser.receiveUserName[0].toUpperCase()}
+								{infoUser?.receiveUserName?.[0]?.toUpperCase() ?? 'U'}
 							</AvatarFallback>
 						</Avatar>
 						<div>
 							<h1 className='font-semibold text-lg'>
-								{infoUser.receiveUserName}
+								{infoUser?.receiveUserName ?? 'User'}
 							</h1>
 							<p className='text-xs text-muted-foreground'></p>
 						</div>
@@ -491,110 +125,80 @@ export function ChatByIdPage() {
 				{isLoading ? (
 					// Skeleton Loading State
 					<div className='space-y-6'>
-						{/* Incoming message skeleton */}
-						<div className='flex flex-col max-w-[80%] mr-auto items-start'>
-							<div className='flex items-center gap-2'>
-								<div className='h-10 w-10 rounded-full bg-muted animate-pulse'></div>
-								<div className='space-y-2'>
-									<div className='h-4 w-32 rounded-full bg-muted animate-pulse'></div>
-									<div className='h-16 w-48 rounded-2xl bg-muted animate-pulse'></div>
-								</div>
-							</div>
-							<div className='h-4 w-24 mt-1 rounded-full bg-muted animate-pulse'></div>
-						</div>
-
-						{/* Outgoing message skeleton */}
-						<div className='flex flex-col max-w-[80%] ml-auto items-end'>
-							<div className='flex items-center gap-2'>
-								<div className='space-y-2'>
-									<div className='h-16 w-48 rounded-2xl bg-muted animate-pulse'></div>
-								</div>
-								<div className='h-10 w-10 rounded-full bg-muted animate-pulse'></div>
-							</div>
-							<div className='h-4 w-24 mt-1 rounded-full bg-muted animate-pulse'></div>
-						</div>
-
-						{/* Repeat similar patterns for more skeleton messages */}
-						{[...Array(3)].map((_, i) => (
-							<div
-								key={i}
-								className='flex flex-col max-w-[80%] mr-auto items-start'
-							>
-								<div className='flex items-center gap-2'>
-									<div className='h-10 w-10 rounded-full bg-muted animate-pulse'></div>
-									<div className='space-y-2'>
-										<div className='h-4 w-32 rounded-full bg-muted animate-pulse'></div>
-										<div className='h-16 w-48 rounded-2xl bg-muted animate-pulse'></div>
-									</div>
-								</div>
-								<div className='h-4 w-24 mt-1 rounded-full bg-muted animate-pulse'></div>
-							</div>
-						))}
+						{/* Skeleton messages... */}
 					</div>
 				) : error ? (
 					<div className='text-center p-4 text-red-500'>
 						Error loading messages
 					</div>
 				) : (
-          data?.data
-          ?.slice()
-          .sort(
-            (a: { sendMassageDate: string | number | Date }, b: { sendMassageDate: string | number | Date }) => {
-              const dateA = new Date(a.sendMassageDate);
-              const dateB = new Date(b.sendMassageDate);
-        
-              // Ensure both dates are valid
-              return dateA.getTime() - dateB.getTime();
-            }
-          )
-          .map((message:Message) => (
-            <div
-              key={message.messageId}
-              className={cn(
-                'flex flex-col-reverse max-w-[80%]',
-                message.userName === userName
-                  ? 'ml-auto items-end'
-                  : 'mr-auto items-start'
-              )}
-            >
-              <div className='flex items-center gap-2'>
-                <Avatar>
-                  <AvatarImage
-                    src={`https://instagram-api.softclub.tj/images/${message.userImage}`}
-                    alt={message.userName}
-                  />
-                  <AvatarFallback>
-                    {message.userName.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className='rounded-2xl px-4 py-2 bg-muted'>
-                  <Popover>
-                    <PopoverTrigger>
-                      {message.file && (
-                        <img
-                          src={`https://instagram-api.softclub.tj/images/${message.file}`}
-                          alt='Attached file'
-                          className='mt-2 rounded-lg max-w-xs'
-                        />
-                      )}
-                      <p>{message.messageText}</p>
-                    </PopoverTrigger>
-                    <PopoverContent className='h-[70px] w-[200px]'>
-                      <Button
-                        onClick={() => deleteMessage(message.messageId)}
-                        className='bg-muted hover:bg-black text-red-500'
-                      >
-                        Delete This Message
-                      </Button>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="h-10 w-10 rounded-full bg-muted animate-pulse"></div>
-              </div>
-              <span className='text-xs text-muted-foreground mt-1'>
-                {format(new Date(message.sendMassageDate), 'dd MMM yyyy, HH:mm')}
-              </span>
-            </div>        
+					data?.data
+						?.slice()
+						.sort((a: any, b: any) => {
+							const dateA = new Date(a.sendMassageDate).getTime();
+							const dateB = new Date(b.sendMassageDate).getTime();
+							return dateA - dateB;
+						})
+						.map((message: Message) => (
+							<div
+								key={message.messageId}
+								className={cn(
+									'flex flex-col max-w-[80%]',
+									message.userName === userName
+										? 'ml-auto items-end'
+										: 'mr-auto items-start'
+								)}
+							>
+								<div className='flex items-center gap-2'>
+									{message.userName !== userName && (
+										<Avatar>
+											<AvatarImage
+												src={`https://instagram-api.softclub.tj/images/${message.userImage}`}
+												alt={message.userName}
+											/>
+											<AvatarFallback>
+												{message.userName.charAt(0).toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									)}
+									<div className='rounded-2xl px-4 py-2 bg-muted'>
+										<Popover>
+											<PopoverTrigger>
+												{message.file && (
+													<img
+														src={`https://instagram-api.softclub.tj/images/${message.file}`}
+														alt='Attached file'
+														className='mt-2 rounded-lg max-w-xs'
+													/>
+												)}
+												<p>{message.messageText}</p>
+											</PopoverTrigger>
+											<PopoverContent className='h-[70px] w-[200px]'>
+												<Button
+													onClick={() => deleteMessage(message.messageId)}
+													className='bg-muted hover:bg-black text-red-500'
+												>
+													Delete This Message
+												</Button>
+											</PopoverContent>
+										</Popover>
+									</div>
+									{message.userName === userName && (
+										<Avatar>
+											<AvatarImage
+												src={`https://instagram-api.softclub.tj/images/${message.userImage}`}
+												alt={message.userName}
+											/>
+											<AvatarFallback>
+												{message.userName.charAt(0).toUpperCase()}
+											</AvatarFallback>
+										</Avatar>
+									)}
+								</div>
+								<span className='text-xs text-muted-foreground mt-1'>
+									{format(new Date(message.sendMassageDate), 'dd MMM yyyy, HH:mm')}
+								</span>
+							</div>
 						))
 				)}
 			</div>
@@ -610,12 +214,15 @@ export function ChatByIdPage() {
 					>
 						<Popover>
 							<PopoverTrigger>
-								{' '}
 								<Smile className='h-5 w-5' />
 							</PopoverTrigger>
 							<PopoverContent className='h-[200px] overflow-auto'>
-								{allEmojis.map(e => (
-									<span onClick={() => addSmile(e)} className='cursor-pointer'>
+								{allEmojis.map((e, index) => (
+									<span
+										key={index}
+										onClick={() => addSmile(e)}
+										className='cursor-pointer'
+									>
 										{e}
 									</span>
 								))}
@@ -650,12 +257,13 @@ export function ChatByIdPage() {
 							<ImageIcon className='h-5 w-5' />
 							<input
 								onChange={e => {
-									if (e.target.files) {
-										setFile(Array.from(e.target.files)) // Convert FileList to File[]
+									if (e.target.files && e.target.files.length > 0) {
+										setFile(Array.from(e.target.files));
 									}
 								}}
 								type='file'
 								className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+								multiple
 							/>
 						</Button>
 						<Button
@@ -678,5 +286,5 @@ export function ChatByIdPage() {
 				</form>
 			</div>
 		</div>
-	)
+	);
 }

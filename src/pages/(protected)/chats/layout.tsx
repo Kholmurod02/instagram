@@ -20,13 +20,24 @@ interface UserType {
   receiveUserImage: string
 }
 
+interface JwtPayload {
+  sid: string;
+  name: string;
+  email: string;
+  sub: string;
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+  exp: number;
+  iss: string;
+  aud: string;
+}
+
 export default function LayoutChats() {
   const [selectedChat, setSelectedChat] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
   const params = useParams()
 
-  const { data, error, isLoading } = useGetChatsQuery()
+  const { data, error, isLoading } = useGetChatsQuery([])
 
 	useEffect(() => {
 		const checkIfMobile = () => {
@@ -39,7 +50,7 @@ export default function LayoutChats() {
 		return () => window.removeEventListener('resize', checkIfMobile)
 	}, [])
 
-  const [tokenId, setTokenId] = useState(null)
+  const [tokenId, setTokenId] = useState("")
   const [userName, setUserName] = useState("")
 
   useEffect(() => {
@@ -54,7 +65,7 @@ export default function LayoutChats() {
   useEffect(() => {
     const accessToken = localStorage.getItem("access_token")
     if (accessToken) {
-      const decoded = jwtDecode(accessToken)
+      const decoded = jwtDecode<JwtPayload>(accessToken)
       setTokenId(decoded.sid)
       setUserName(decoded.name)
     }
@@ -122,7 +133,7 @@ export default function LayoutChats() {
                 Error loading chats
               </div>
             ) : (
-              data?.data?.toReversed().map((chat) => (
+              data?.data?.toReversed().map((chat:UserType) => (
                 <div className={`flex justify-between hover:bg-gray-800/50 active:bg-gray-700
                   transition-colors w-full cursor-pointer 
                   ${selectedChat === chat.chatId ? 'bg-grey-900' : ''}`}>
