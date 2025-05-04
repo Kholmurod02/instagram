@@ -3,13 +3,10 @@
 import { useState, useEffect } from "react"
 import { Edit, ChevronDown } from "lucide-react"
 import { Avatar } from "@/shared/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import userImg from '@/assets/UserIcon.png'
-import { Outlet, useLocation, useNavigate, useParams } from "react-router"
+import { Outlet, useNavigate, useParams } from "react-router"
 import { useDeleteChatMutation, useGetChatsQuery } from "@/entities/chats/chat-api"
 import { jwtDecode } from 'jwt-decode'
-import DefaultChatPage from "./(defaul-chat)/page"
-import { Dialog } from "@/shared/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 import { Button } from "@/shared/ui/button"
 
@@ -24,7 +21,6 @@ interface UserType {
 }
 
 export default function LayoutChats() {
-  const [activeTab, setActiveTab] = useState("messages")
   const [selectedChat, setSelectedChat] = useState<number | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()

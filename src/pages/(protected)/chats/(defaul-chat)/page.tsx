@@ -12,14 +12,14 @@ import {
 import { Input } from "@/shared/ui/input"
 import { useSearchUsersQuery } from "@/entities/search/search"
 import { useCreateChatMutation } from "@/entities/chats/chat-api"
-
-
-interface IUserProfile {
-  id: string;
-  avatar: string;
-  fullName: string;
-  subscribersCount: number;
+interface User {
+  id: string | string;
+  userId: string;
   userName: string;
+  userImage: string;
+  avatar: string;  
+  fullName: string; 
+  subscribersCount: number; 
 }
 
 
@@ -80,7 +80,7 @@ const handleChat=(id:string)=>{
             <div className="flex flex-col gap-3 overflow-hidden">
               {
                 value == '' ? '' :
-                  data?.data?.slice(0, 3).map((user:IUserProfile) => {
+                  data?.data?.slice(0, 3).map((user:User) => {
                     return <>
 
                       <div key={user.id}
@@ -92,7 +92,7 @@ const handleChat=(id:string)=>{
                           <p className='text-[16px] tracking-[1px] font-semibold'>{user.userName}</p>
                           <p className='text-[12px]'>{user.fullName} • Подписчики: {user.subscribersCount} </p>
                         </div>
-                      </div>
+                      </div> 
 
                     </>
                   })
